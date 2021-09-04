@@ -61,34 +61,23 @@ Open the `server` and `client` in separate VSCode workspaces or open the combine
 
 ### Purpose
 
-The system would be a platform where users can find other users to play video games with based on the type of game, the user’s preferred gaming platform, or the user’s prefered ranks. Users can create accounts that would contain information about their game platform usernames, game genre preferences, and previous post history. The purpose of this website is to be able to more easily find people to play with.
+With this website, the focus orients around displaying images/artwork in a curated environment. Users will be able to create collections of images, view other users’ collections, upload images/artwork, and also search by tag in order to build up their own collections of favorite pieces. 
 
 ### Pages
 
-* Log-in Screen: The log-in screen will prompt a user to enter their credentials and display the logo of the website. If no user      credentials exist, they will be prompted to create an account.
+* Create account: In the user account page creation of a user is done by creating a username, password, selecting a user icon based on presets and small bio about themselves. After creating an account the user is redirected to the “Home page.”
 
-* Account Creation: This page shall be used to create an account for a user. A user will be able to enter their username, their  password, their preferred games, and report their rank as a player. The page shall display text entry fields for the above as well as interactable components for the player to select.
+* Log-in: In the log-in page, the user will be able to input their username and password that they have previously created. Upon successfully logging in they will be redirected to the “Home page.” If they have not made an account, they will be able to be redirected to the create account page.
 
-* Home Page: The home page will show a user the popular and  featured games of our website, as well as the games a user has indicated a preference for. A user will be able to navigate to these games from this page. The page should also provide navigation to other screens in the website such as to the user’s profile, activity feed, and notification hub.
+* Home page: On the home page, a user will see the following: an option to be redirected to view their user page, an option to be redirected to the view post page. By default, there will also be a display of tags from our presets from user uploaded images. A filtering option will be presented to a user which, when a user selects an option from a list of tags, the display of images will update as per their selection. 
 
-* Games: Navigating to this page shall display the full list of games supported by this website. From here, a user will be able to select/deselect their preferred games, which in turn changes which games will be displayed on their home page.
-Event Creator: The event creator will allow users to create an event and specify the event details. Specific event details would include the game the users will be playing, the time of the event, event user limit, prefered player rank, private or public event. When users are in an event there will be an event-restricted messaging system to allow for users to communicate.
+* User page: The user page would contain details on the user, such as their username, user icon, and bio. The user’s collections would also be shown on their page. Each user will have a default collection containing all their uploaded posts and a collection containing their favorite posts. The collections will have a thumbnail from the first image in that collection. There will also be an icon to create a new collection, which will cause a pop-out menu to appear. This pop-out menu will then take its input as the collection’s name.
 
-* Event Page (Specific): The event page would display a list of users (their icon and username). The event page will also display the duration of the event (start and end time) as well as the number of players that have currently joined the event, e.g 20/25.
+* Post creation page: In the post creation page, a user is able to upload an artwork; after which, the user is told to add post criteria which include: add related tags, add a description, add a title, add the artwork into the uploader’s prefered collection (which also includes the option to add a collection). After adding the post criteria, the user can post the artwork to which the uploaded artwork will be added to the uploads collection in the user page automatically.
 
-* Event Browser: The event browser will display active events. The user can also filter the type of events based on the event game, type of event (duos, casual, pvp/pve etc), and platform the event will take place on.
+* View post page: When a user selects a post, the “View Post” page will be opened. In this page, users will see the artwork that has been uploaded, a title of the post, and a brief description of the post. Along with this, the uploader’s icon and username will also be displayed. If the username of the uploader is selected, the user will be redirected to the uploaders profile page. Users can also select an icon to add the post to one of their existing collections via a drop down menu, or they can select the heart icon to add the post to their default favorites collection (The heart icon would include the number of favorites from other users. This heart will be filled in once the user selects the heart). If the uploader of the post is on this page, they will have the option to edit the post title, description and choose to delete this post. Lastly, users can also leave a rating, which will be done via selecting stars from 1-5. An average star rating will then be displayed on the post.
 
-* User Profile: Within the user profile the user's icon, username, prefered platforms and games, posts and post history, ‘active’ LFG posts, and Self-reported ranks for games (Beginner, Casual, Intermediate, Diamond/Pro/Etc) will be displayed. If a user is on their own profile page, they can select a settings cog that will let them edit their profile.
-
-* User settings: The user settings screen would let the user edit their user icon, username, preferred platforms, and rank.
-
-* Notifications: The notifications page would display event join requests, and alerts of events that are starting in 30 minutes. The user can select to delete read notifications, and mute notifications.
-
-* Team Finder: The team finder would be a filtering system to assist in team fills. Users would be able to filter based on user ranks, private or public groups and their prefered game & platform.
-
-* Group: The group page would display a list of users that are in the group, including their username, and icons. The creator of the group would have a gold crown over their icon. The group page will contain a messaging system that acts as a group chat. Information on the group will also be displayed, such as the number of players currently in that group, game & game platform, and preferred rank. Users will have the option to leave the group, and the group creator can also remove users from the group. If the group creator leaves the group, another member will randomly be assigned as the “group creator”/owner.
-
-* Group creation: The group creation page allows users to create groups to play together with others. Within the group creation page details of the group are to be selected, these include, selecting the game and platform to play on, preferred player rank and selecting to make the group private or public.
+* Inside a collection page: On this page, a user will be able to see all of the posts that exist inside of that specific collection. A user will be able to then edit the collection details for the collections that they have specifically added (such as renaming the collection or deleting it). A user can also select one of the posts that exists inside of that collection to be redirected to the “View post page.”
 
 ### Entity-Relationship (ER) Diagram
 
