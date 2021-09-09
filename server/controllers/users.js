@@ -35,9 +35,9 @@ router.get("/api/users/:id", function (req, res) {
     if (user == null) {
       return res.status(404).json({ message: "User not found" });
     }
-  });
   console.log('user with specified id retreived');
-  res.json(user);
+  res.json(user);  
+  });
 });
 
 router.put("/api/users/:id", function (req, res, next) {
