@@ -36,6 +36,7 @@ app.get('/api', function(req, res) {
     res.json({'message': 'Welcome to your DIT341 backend ExpressJS project!'});
 });
 
+app.use('/uploads', express.static('uploads')); // makes uploads folder public
 app.use(postController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)

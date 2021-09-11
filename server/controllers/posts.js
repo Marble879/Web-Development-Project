@@ -3,11 +3,42 @@
 var express = require('express');
 var router = express.Router();
 var Post = require('../models/post');
+var multer = require('multer');
+
+// Allows us to define how files are stored.
+var storage = multer.diskStorage({
+    destination: function(req, image, next){ // function defines where incoming image should be stored.
+        next(null, './uploads/');
+    },
+    filename: function(req, image, next) {
+        next(null, image.originalname);
+    } 
+});
+
+var imageFilter = function(req, image, next) {
+    if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png') {
+        //accepts image
+        next(null, true); // where null is, error message etc can be added!
+    } else {
+        //rejects image
+        next(null, false);
+    }
+};
+
+var imgUpload = multer({
+    storage: storage,
+    fileFilter: imageFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 80 // accepts file sizes up to 80mb
+    }
+}); // {dest: '/uploads/'} will specify a destination folder where multer will   store incoming files.
 
 router.use(express.json());
 
-router.post('/api/posts', function (req, res, next) {
+router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
+    console.log(req.file);
     var post = new Post(req.body);
+    post.image = req.file.path;
     post.save(function (err, post) {
         if (err) { next(err) }
         console.log('post created');
