@@ -1,3 +1,5 @@
+//NOTE: Image handling was referenced from the following link: https://www.youtube.com/watch?v=srPXMt1Q0nY
+
 var express = require('express');
 var router = express.Router();
 var Post = require('../models/post');
@@ -78,7 +80,7 @@ router.delete('/api/posts/:id', function (req, res, next) {
 });
 
 //DELETE ALL POSTS FOR TESTING PURPOSES
-router.delete('/api/posts', function(res, req, next) { 
+router.delete('/api/posts', function(req, res, next) { 
     Post.deleteMany({}, function(err, deleteInformation) { 
         if (err) { return next(err); }
         res.status(200).json(deleteInformation);
