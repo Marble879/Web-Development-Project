@@ -36,7 +36,7 @@ router.get("/api/users/:id/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": "Collection not found" });
         }
         console.log('Collection with specified id retreived');
-        res.json(user);
+        res.json(collection);
     });
 });
 
