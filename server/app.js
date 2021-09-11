@@ -5,6 +5,7 @@ var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
 var userController = require('./controllers/users');
+var collectionController = require('./controllers/collections');
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
@@ -37,6 +38,7 @@ app.get('/api', function(req, res) {
 });
 
 app.use(userController);
+app.use(collectionController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

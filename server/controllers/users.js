@@ -7,7 +7,7 @@ router.use(bodyParser.json());
 
 router.post("/api/users", function (req, res, next) {
   var user = new User(req.body);
-  user.save(function (err, camel) {
+  user.save(function (err, user) {
     if (err) {
       return next(err);
     }
@@ -26,14 +26,14 @@ router.get("/api/users", function (req, res, next) {
   });
 });
 
-router.get("/api/users/:id", function (req, res) {
+router.get("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ "message": "User not found" });
     }
     console.log('user with specified id retreived');
     res.json(user);
@@ -47,7 +47,7 @@ router.put("/api/users/:id", function (req, res, next) {
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ "message": "User not found" });
     }
     user.username = req.body.username;
     user.password = req.body.password;
@@ -83,7 +83,7 @@ router.delete("/api/users/:id", function (req, res, next) {
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ "message": "User not found" });
     }
     res.json(user);
     console.log('user deleted');
