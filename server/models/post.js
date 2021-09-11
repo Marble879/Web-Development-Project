@@ -6,7 +6,7 @@ var postSchema = new Schema({
     description: { type: String },
     numberOfFavorites: {type: Number },
     tags : {type: [String]},
-    image : { data: Buffer, contentType: Sting}
+    image : { data: Buffer, contentType: String}
 });
 
 module.exports = mongoose.model("post", postSchema);
