@@ -25,7 +25,7 @@ router.get("/api/users", function (req, res, next) {
   });
 });
 
-router.get("/api/users/:id", function (req, res) {
+router.get("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
   User.findById(req.params.id, function (err, user) {
     if (err) {
