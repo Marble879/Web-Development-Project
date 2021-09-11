@@ -47,30 +47,40 @@ router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
 });
 
 router.get('/api/posts', function (req, res, next) {
-    Post.find(function (err, post) {
+    Post.find(function (err, posts) {
         if (err) {
             return next(err);
         }
         console.log('post retreived');
-        res.status(200).json({ post: post });
+        res.status(200).json({ "posts": posts });
     });
 });
 
 router.get('/api/posts/:id', function(req, res, next) {
     var id = req.params.id;
-    Post.findById(req.params.id, function (err, post) {
+    Post.findById(id, function (err, posts) {
         if (err) { return next(err); }
-        if (user == null) { return res.status(404).json({ message: "Post not found"}); }
+        if (posts.length == 0) { return res.status(404).json({ message: "Post not found"}); }
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
 });
 
+router.get('/api/posts/tag/:tag', function(req, res, next) {
+    var tag = req.params.tag;
+    Post.find({ tags: { $all: tag } }, function (err, posts) {
+        if (err) { return next(err); }
+        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + "found"}); }
+        console.log('Post with specified tag retreived');
+        res.status(200).json({ "posts": posts });
+    });
+});
+
 router.put('/api/posts/:id', function(req, res, next) {
     var id = req.params.id;
-    Post.findById(req.params.id, function(err, post) {
+    Post.findById(id, function(err, post) {
         if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "User not found"}); }
+        if (post == null) { return res.status(404).json({ message: "Post not found"}); }
         post.title = req.body.title;
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
@@ -84,7 +94,7 @@ router.put('/api/posts/:id', function(req, res, next) {
 
 
 
-router.patch('api/posts/:id', function (req, res, next) {
+router.patch('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
