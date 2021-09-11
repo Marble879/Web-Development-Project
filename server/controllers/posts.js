@@ -1,4 +1,7 @@
-//NOTE: Image handling was referenced from the following link: https://www.youtube.com/watch?v=srPXMt1Q0nY
+/** NOTE: Image handling was referenced from the following links: 
+ * https://www.youtube.com/watch?v=srPXMt1Q0nY
+ * https://github.com/expressjs/multer#error-handling
+*/
 
 var express = require('express');
 var router = express.Router();
@@ -7,21 +10,21 @@ var multer = require('multer');
 
 // Allows us to define how files are stored.
 var storage = multer.diskStorage({
-    destination: function(req, image, next){ // function defines where incoming image should be stored.
-        next(null, './uploads/');
+    destination: function(req, file, cb){ // function defines where incoming image should be stored.
+        cb(null, './uploads/');
     },
-    filename: function(req, image, next) {
-        next(null, image.originalname);
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
     } 
 });
 
-var imageFilter = function(req, image, next) {
+var imageFilter = function(req, image, cb) {
     if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png') {
         //accepts image
-        next(null, true); // where null is, error message etc can be added!
+        cb(null, true); // where null is, error message etc can be added!
     } else {
         //rejects image
-        next(null, false);
+        cb(new Error('ERROR: Image file type is not supported'), false);
     }
 };
 
