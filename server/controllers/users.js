@@ -6,7 +6,7 @@ router.use(express.json());
 
 router.post("/api/users", function (req, res, next) {
   var user = new User(req.body);
-  user.save(function (err, camel) {
+  user.save(function (err, user) {
     if (err) {
       return next(err);
     }
