@@ -118,7 +118,10 @@ router.delete('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findOneAndDelete({ _id: id}, function(err, post) {
         if (err) { return next(err); } 
-        if (post == null) { return res.status(404).json({ message: "Post not found" }); }       
+        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
+        fs.unlink(post.image, function (err) {
+            if (err) { return next(err); }
+        });
         res.status(200).json(post);
         console.log('post deleted');
     });
