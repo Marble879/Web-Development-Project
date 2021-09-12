@@ -2,10 +2,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
-    title: { type: String },
+    post_id: { type: mongoose.ObjectId },
+    title: { type: String, required: true },
     description: { type: String },
-    numberOfFavorites: {type: Number },
-    tags : {type: [String]},
+    numberOfFavorites: {type: Number, default: 0 },
+    tags : { type: [String] },
     image : { type: String, required: true }
 });
 
