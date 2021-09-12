@@ -11,9 +11,6 @@ var router = express.Router();
 var Post = require('../models/post');
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
-var fs = require('fs');
-var path = require('path');
-const imageDirectory = './uploads/';
 
 
 router.use(express.json());
