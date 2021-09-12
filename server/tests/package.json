@@ -85,7 +85,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						}
 					]
 				},
@@ -181,7 +181,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						}
 					]
 				},
@@ -684,7 +684,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						}
 					]
 				},
@@ -781,7 +781,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						},
 						{
 							"key": "tags[1]",

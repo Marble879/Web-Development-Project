@@ -41,7 +41,7 @@ router.get('/api/posts/:id', function(req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == 0) { return res.status(404).json({ message: "Post not found"}); }
+        if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found"}); }
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
@@ -51,7 +51,7 @@ router.get('/api/posts/tag/:tag', function(req, res, next) {
     var tag = req.params.tag;
     Post.find({ tags: { $all: tag } }, function (err, posts) {
         if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + "found"}); }
+        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found"}); }
         console.log('Post with specified tag retreived');
         res.status(200).json({ "posts": posts });
     });
