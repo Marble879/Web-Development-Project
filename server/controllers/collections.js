@@ -80,7 +80,7 @@ router.delete("/api/users/:id/collections/:id", function (req, res, next) {
         if (err) {
             return next(err);
         }
-        if (user == null) {
+        if (collection == null) {
             return res.status(404).json({ "message": "Collection not found" });
         }
         res.json(collection);
