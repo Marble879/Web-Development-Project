@@ -64,6 +64,65 @@
 			"response": []
 		},
 		{
+			"name": "POST api/users/id/collections",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var collectionId = jsonData._id;\r",
+							"pm.environment.set(\"collection_id\", collectionId);\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Landscape Pictures\",\r\n    \"thumbnail\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET api/users",
 			"event": [
 				{
@@ -87,6 +146,26 @@
 					"path": [
 						"api",
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET api/users/id/collections",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections"
 					]
 				}
 			},
@@ -137,6 +216,50 @@
 						"api",
 						"users",
 						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET api/users/id/collections/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Response is created\", function() {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response should have valid JSON data\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql('Landscape Pictures');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections/{{collection_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections",
+						"{{collection_id}}"
 					]
 				}
 			},
@@ -196,6 +319,59 @@
 			"response": []
 		},
 		{
+			"name": "PUT api/users/id/collections/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Response is created\", function() {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response should have valid JSON data\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql('Landscape Art');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Landscape Art\",\r\n    \"thumbnail\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections/{{collection_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections",
+						"{{collection_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "PATCH api/users/id",
 			"event": [
 				{
@@ -249,6 +425,59 @@
 			"response": []
 		},
 		{
+			"name": "PATCH api/users/id/collections/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Response is created\", function() {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response should have valid JSON data\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql('Cosplay');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Cosplay\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections/{{collection_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections",
+						"{{collection_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "DELETE api/users/id",
 			"event": [
 				{
@@ -293,6 +522,50 @@
 			"response": []
 		},
 		{
+			"name": "DELETE api/users/id/collections/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Response is created\", function() {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response should have valid JSON data\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql('Cosplay');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections/{{collection_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections",
+						"{{collection_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "DELETEALL api/users",
 			"request": {
 				"method": "DELETE",
@@ -305,6 +578,26 @@
 					"path": [
 						"api",
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETEALL api/users/id/collections",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections"
 					]
 				}
 			},
