@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
-    post_id: { type: mongoose.ObjectId },
+    post_id: { type: Schema.Types.ObjectId, required: true },
     title: { type: String, required: true },
     description: { type: String },
     numberOfFavorites: {type: Number, default: 0 },
@@ -10,4 +10,4 @@ var postSchema = new Schema({
     image : { type: String, required: true }
 });
 
-module.exports = mongoose.model("posts", postSchema,);
+module.exports = mongoose.model("posts", postSchema);

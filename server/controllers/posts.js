@@ -11,6 +11,7 @@ var router = express.Router();
 var Post = require('../models/post');
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
+var mongoose = require('mongoose');
 
 
 router.use(express.json());
@@ -18,6 +19,7 @@ router.use(express.json());
 router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
     console.log(req.file);
     var post = new Post(req.body);
+    post.post_id = mongoose.Types.ObjectId();
     post.image = req.file.path;
     post.save(function (err, post) {
         if (err) { return next(err) }
