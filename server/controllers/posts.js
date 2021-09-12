@@ -7,6 +7,7 @@ var express = require('express');
 var router = express.Router();
 var Post = require('../models/post');
 var multer = require('multer');
+var fs = require('fs');
 
 // Allows us to define how files are stored.
 var storage = multer.diskStorage({
@@ -115,7 +116,7 @@ router.patch('/api/posts/:id', function (req, res, next) {
 
 router.delete('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
-    Post.findOneAndDelte({ _id: id}, function(err, user) {
+    Post.findOneAndDelete({ _id: id}, function(err, post) {
         if (err) { return next(err); } 
         if (post == null) { return res.status(404).json({ message: "Post not found" }); }       
         res.status(200).json(post);
