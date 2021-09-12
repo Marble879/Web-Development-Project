@@ -31,9 +31,8 @@ router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
 
 router.get('/api/posts', function (req, res, next) {
     Post.find(function (err, posts) {
-        if (err) {
-            return next(err);
-        }
+        if (err) { return next(err); }
+        if (posts.length == 0) { return res.status(404).json({ message: "Post not found"}); }
         console.log('post retreived');
         res.status(200).json({ "posts": posts });
     });
@@ -41,9 +40,9 @@ router.get('/api/posts', function (req, res, next) {
 
 router.get('/api/posts/:id', function(req, res, next) {
     var id = req.params.id;
-    Post.findById(id, function (err, posts) {
+    Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "Post not found"}); }
+        if (post == 0) { return res.status(404).json({ message: "Post not found"}); }
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
