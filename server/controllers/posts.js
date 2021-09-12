@@ -3,44 +3,18 @@
  * https://github.com/expressjs/multer#error-handling
  * https://stackoverflow.com/questions/27072866/how-to-remove-all-files-from-directory-without-removing-directory-in-node-js/49125621
  * https://stackoverflow.com/questions/31592726/how-to-store-a-file-with-file-extension-with-multer
+ * https://www.tabnine.com/code/javascript/functions/fs%2Fpromises/unlink
 */
 
 var express = require('express');
 var router = express.Router();
 var Post = require('../models/post');
-var multer = require('multer');
+var imgUpload = require('../image_handling/imageUploadHandler');
+var imgDelete = require('../image_handling/imageDeleteHandler');
 var fs = require('fs');
 var path = require('path');
 const imageDirectory = './uploads/';
 
-// Allows us to define how files are stored.
-var storage = multer.diskStorage({
-    destination: function(req, file, cb){ // function defines where incoming image should be stored.
-        cb(null, imageDirectory);
-    },
-    filename: function(req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
-    } 
-});
-
-
-var imageFilter = function(req, image, cb) {
-    if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png' || image.mimetype === 'image/jpg') {
-        //accepts image
-        cb(null, true); 
-    } else {
-        //rejects image
-        cb(new Error('ERROR: Image file type is not supported'), false); // Error message added here due to this being the fail/rejected case
-    }
-};
-
-var imgUpload = multer({
-    storage: storage,
-    fileFilter: imageFilter,
-    limits: {
-        fileSize: 1024 * 1024 * 80 // accepts file sizes up to 80mb
-    }
-});
 
 router.use(express.json());
 
@@ -119,37 +93,34 @@ router.patch('/api/posts/:id', function (req, res, next) {
     });
 });
 
-router.delete('/api/posts/:id', function (req, res, next) {
+router.delete('/api/posts/:id', async function (req, res, next) {
     var id = req.params.id;
-    Post.findOneAndDelete({ _id: id}, function(err, post) {
+    Post.findOneAndDelete({ _id: id}, async function(err, post) {
         if (err) { return next(err); } 
         if (post == null) { return res.status(404).json({ message: "Post not found" }); }
-        fs.unlink(post.image, function (err) {
-            if (err) { return next(err); }
-        });
-        res.status(200).json(post);
-        console.log('post deleted');
+        try {
+            await imgDelete.deleteSingleImage(post);
+            res.status(200).json(post);
+            console.log('specific post deleted');
+        } catch (err) {
+            next(err);
+        }
     });
 });
 
 //DELETE ALL POSTS FOR TESTING PURPOSES
-router.delete('/api/posts', function(req, res, next) { 
-    Post.deleteMany({}, function(err, deleteInformation) { 
+router.delete('/api/posts', async function(req, res, next) { 
+    Post.deleteMany({}, async function(err, deleteInformation) { 
         if (err) { return next(err); }
-        fs.readdir(imageDirectory, function(err, images) {
-            if (err) { return next(err); }
-            for (var image of images) {
-                fs.unlink(path.join(imageDirectory, image), function(err) {
-                    if (err) { return next(err); }
-                });
-            }    
-        });
-        res.status(200).json(deleteInformation);
-        console.log('All posts deleted');
+        try {
+            await imgDelete.deleteAllImages('./uploads/');
+            res.status(200).json(deleteInformation);
+            console.log('All posts deleted');
+        } catch (err) {
+            next(err);
+        }
     });
 });
-
-  
 
 module.exports = router;
 
