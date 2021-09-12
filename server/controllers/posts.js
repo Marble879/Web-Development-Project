@@ -64,7 +64,6 @@ router.put('/api/posts/:id', function(req, res, next) {
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
         post.tags = req.body.tags;
-        post.image = req.body.image;
         post.save();
         res.status(200).json(post);
         console.log('post saved');
@@ -82,7 +81,6 @@ router.patch('/api/posts/:id', function (req, res, next) {
         post.description = (req.body.description || post.description);
         post.numberOfFavorites = (req.body.numberOfFavorites || post.numberOfFavorites);
         post.tags = (req.body.tags || post.tags);
-        post.image = (req.body.image || post.image);
         post.save();
         res.status(200).json(post);
         console.log('post saved');
