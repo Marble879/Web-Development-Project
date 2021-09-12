@@ -2,6 +2,7 @@
  * https://www.youtube.com/watch?v=srPXMt1Q0nY
  * https://github.com/expressjs/multer#error-handling
  * https://stackoverflow.com/questions/27072866/how-to-remove-all-files-from-directory-without-removing-directory-in-node-js/49125621
+ * https://stackoverflow.com/questions/31592726/how-to-store-a-file-with-file-extension-with-multer
 */
 
 var express = require('express');
@@ -18,12 +19,22 @@ var storage = multer.diskStorage({
         cb(null, imageDirectory);
     },
     filename: function(req, file, cb) {
-        cb(null, file.originalname);
+        cb(null, Date.now() + path.extname(file.originalname));
     } 
 });
 
+/*var getFileExtension = function(mimeType){
+    if ( mimeType=== 'image/png') {
+        return '.png';
+    } else if ( mimeType=== 'image/jpg') {
+        return '.jpg';
+    } else if ( mimeType === 'image/jpeg'){
+        return '.jpeg';
+    }
+}*/
+
 var imageFilter = function(req, image, cb) {
-    if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png') {
+    if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png' || image.mimetype === 'image/jpg') {
         //accepts image
         cb(null, true); 
     } else {
