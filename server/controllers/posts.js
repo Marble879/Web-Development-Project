@@ -1,6 +1,7 @@
 /** NOTE: Image handling was referenced from the following links: 
  * https://www.youtube.com/watch?v=srPXMt1Q0nY
  * https://github.com/expressjs/multer#error-handling
+ * https://stackoverflow.com/questions/27072866/how-to-remove-all-files-from-directory-without-removing-directory-in-node-js/49125621
 */
 
 var express = require('express');
@@ -8,11 +9,13 @@ var router = express.Router();
 var Post = require('../models/post');
 var multer = require('multer');
 var fs = require('fs');
+var path = require('path');
+const imageDirectory = './uploads/';
 
 // Allows us to define how files are stored.
 var storage = multer.diskStorage({
     destination: function(req, file, cb){ // function defines where incoming image should be stored.
-        cb(null, './uploads/');
+        cb(null, imageDirectory);
     },
     filename: function(req, file, cb) {
         cb(null, file.originalname);
@@ -131,6 +134,14 @@ router.delete('/api/posts/:id', function (req, res, next) {
 router.delete('/api/posts', function(req, res, next) { 
     Post.deleteMany({}, function(err, deleteInformation) { 
         if (err) { return next(err); }
+        fs.readdir(imageDirectory, function(err, images) {
+            if (err) { return next(err); }
+            for (var image of images) {
+                fs.unlink(path.join(imageDirectory, image), function(err) {
+                    if (err) { return next(err); }
+                });
+            }    
+        });
         res.status(200).json(deleteInformation);
         console.log('All posts deleted');
     });
