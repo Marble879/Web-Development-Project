@@ -20,7 +20,7 @@ router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
     var post = new Post(req.body);
     post.image = req.file.path;
     post.save(function (err, post) {
-        if (err) { next(err) }
+        if (err) { return next(err) }
         console.log('post created');
         res.status(201).json(post); 
     });
