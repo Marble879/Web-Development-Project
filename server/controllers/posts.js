@@ -23,15 +23,6 @@ var storage = multer.diskStorage({
     } 
 });
 
-/*var getFileExtension = function(mimeType){
-    if ( mimeType=== 'image/png') {
-        return '.png';
-    } else if ( mimeType=== 'image/jpg') {
-        return '.jpg';
-    } else if ( mimeType === 'image/jpeg'){
-        return '.jpeg';
-    }
-}*/
 
 var imageFilter = function(req, image, cb) {
     if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png' || image.mimetype === 'image/jpg') {
