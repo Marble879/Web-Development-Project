@@ -21,10 +21,10 @@ var storage = multer.diskStorage({
 var imageFilter = function(req, image, cb) {
     if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png') {
         //accepts image
-        cb(null, true); // where null is, error message etc can be added!
+        cb(null, true); 
     } else {
         //rejects image
-        cb(new Error('ERROR: Image file type is not supported'), false);
+        cb(new Error('ERROR: Image file type is not supported'), false); // Error message added here due to this being the fail/rejected case
     }
 };
 
@@ -34,7 +34,7 @@ var imgUpload = multer({
     limits: {
         fileSize: 1024 * 1024 * 80 // accepts file sizes up to 80mb
     }
-}); // {dest: '/uploads/'} will specify a destination folder where multer will   store incoming files.
+});
 
 router.use(express.json());
 
