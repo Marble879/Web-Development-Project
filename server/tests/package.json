@@ -1,315 +1,10 @@
 {
 	"info": {
-		"_postman_id": "cbce39f3-b507-455c-a1c7-d475ea27123f",
+		"_postman_id": "50509aa5-0e41-49d1-8b67-61b442613f8e",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "POST api/users",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var  jsonData = pm.response.json();\r",
-							"var userId = jsonData._id;\r",
-							"pm.environment.set(\"user_id\", userId);\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
-							"\r",
-							"pm.test(\"Status code is 201\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
-							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
-							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
-							"})\r",
-							"\r",
-							"pm.test(\"Body has _id\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.be.a('String');\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Fred\",\r\n    \"password\": \"freddie\",\r\n    \"bio\": \"Hi my name is Fred\",\r\n    \"icon\": \"\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{host}}/api/users",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET api/users",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/users",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GET api/users/id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
-							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Fred');\r",
-							"    pm.expect(jsonData.password).to.eql('freddie');\r",
-							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{host}}/api/users/{{user_id}}",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{user_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PUT api/users/id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
-							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('bob');\r",
-							"    pm.expect(jsonData.password).to.eql('123');\r",
-							"    pm.expect(jsonData.bio).to.eql('bio');\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"bob\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bio\",\r\n    \"icon\": \"\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{host}}/api/users/{{user_id}}",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{user_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "PATCH api/users/id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
-							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Henry');\r",
-							"    pm.expect(jsonData.password).to.eql('Harry');\r",
-							"    pm.expect(jsonData.bio).to.eql(\"bio\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Henry\",\r\n    \"password\": \"Harry\",\r\n    \"icon\": \"\"   \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{host}}/api/users/{{user_id}}",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{user_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETE api/users/id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
-							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Henry');\r",
-							"    pm.expect(jsonData.password).to.eql('Harry');\r",
-							"    pm.expect(jsonData.bio).to.eql(\"bio\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/users/{{user_id}}",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{user_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETEALL api/users",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/users",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
 		{
 			"name": "Create a post",
 			"event": [
@@ -390,7 +85,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						}
 					]
 				},
@@ -486,7 +181,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						}
 					]
 				},
@@ -989,7 +684,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						}
 					]
 				},
@@ -1086,7 +781,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "./tests/test_image.jpg"
+							"src": "/home/younis/Pictures/cat_test.jpg"
 						},
 						{
 							"key": "tags[1]",
@@ -1185,10 +880,6 @@
 			"key": "host",
 			"value": "http://localhost:3000",
 			"type": "string"
-		},
-		{
-			"key": "user_id",
-			"value": "613a5abcdf286056f003df6f"
 		}
 	]
 }
