@@ -20,8 +20,13 @@ router.get("/api/users", function (req, res, next) {
     if (err) {
       return next(err);
     }
-    console.log('user retreived');
-    res.json({ user: user });
+    console.log('User retreived');
+  }).populate('Collection').exec(function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    console.log(`User Collections`);
+    res.json(user);
   });
 });
 
@@ -84,6 +89,7 @@ router.delete("/api/users/:id", function (req, res, next) {
     if (user == null) {
       return res.status(404).json({ "message": "User not found" });
     }
+    user.remove();
     res.json(user);
     console.log('user deleted');
   });

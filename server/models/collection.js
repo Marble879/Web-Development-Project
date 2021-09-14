@@ -3,8 +3,7 @@ var Schema = mongoose.Schema;
 
 var collectionSchema = new Schema({
     title: { type: String },
-    thumbnail: { data: Buffer, contentType: String },
-    user_id: { type: Schema.Types.ObjectId, ref: "user" }
+    thumbnail: { data: Buffer, contentType: String }
 });
 
 module.exports = mongoose.model("collection", collectionSchema);
