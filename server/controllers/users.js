@@ -21,7 +21,7 @@ router.get("/api/users", function (req, res, next) {
       return next(err);
     }
     console.log('User retreived');
-  }).populate('Collection').exec(function (err, user) {
+  }).populate('collections').exec(function (err, user) {
     if (err) {
       return next(err);
     }
