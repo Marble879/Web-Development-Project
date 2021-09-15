@@ -28,6 +28,7 @@
 							"    pm.expect(jsonData.description).to.eql('eg_description');",
 							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
 							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
 							"});",
 							"",
 							"pm.test('Body has an image url', function () {",
@@ -56,12 +57,6 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "",
-							"type": "file",
-							"src": [],
-							"disabled": true
-						},
-						{
 							"key": "title",
 							"value": "test_title",
 							"type": "text"
@@ -80,6 +75,11 @@
 							"key": "tags",
 							"value": "testtag",
 							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
 							"type": "text"
 						},
 						{
@@ -124,6 +124,7 @@
 							"    pm.expect(jsonData.description).to.eql('eg_descriptioncopy');",
 							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
 							"    pm.expect(jsonData.tags).to.eql(['testtagcopy']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
 							"});",
 							"",
 							"pm.test('Body has an image url', function () {",
@@ -152,12 +153,6 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "",
-							"type": "file",
-							"src": [],
-							"disabled": true
-						},
-						{
 							"key": "title",
 							"value": "test_titlecopy",
 							"type": "text"
@@ -176,6 +171,11 @@
 							"key": "tags",
 							"value": "testtagcopy",
 							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
 							"type": "text"
 						},
 						{
@@ -234,6 +234,8 @@
 							"    pm.expect(jsonDataPostTwo.description).to.eql('eg_descriptioncopy');",
 							"    pm.expect(jsonDataPostTwo.numberOfFavorites).to.eql(3);",
 							"    pm.expect(jsonDataPostTwo.tags).to.eql(['testtagcopy']);",
+							"    pm.expect(jsonDataPostOne.event).to.eql('post');",
+							"    pm.expect(jsonDataPostTwo.event).to.eql('post');",
 							"});",
 							"",
 							"pm.test('Body has an image url', function () {",
@@ -312,6 +314,7 @@
 							"    pm.expect(jsonData.description).to.eql('eg_description');",
 							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
 							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
 							"});",
 							"",
 							"pm.test('Body has an image url', function () {",
@@ -369,6 +372,7 @@
 							"    pm.expect(jsonData.description).to.eql('eg_description');",
 							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
 							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
 							"});",
 							"",
 							"pm.test('Body has an image url', function () {",
@@ -572,6 +576,7 @@
 							"    pm.expect(jsonData.description).to.eql('This is a new patch description');",
 							"    pm.expect(jsonData.numberOfFavorites).to.eql(10);",
 							"    pm.expect(jsonData.tags).to.eql(['new tag 1', 'new tag 2']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
 							"});",
 							"",
 							"pm.test('Body has an image url', function () {",
@@ -655,19 +660,8 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "",
-							"type": "file",
-							"src": [],
-							"disabled": true
-						},
-						{
 							"key": "title",
 							"value": "test_title2",
-							"type": "text"
-						},
-						{
-							"key": "description",
-							"value": "eg_description2",
 							"type": "text"
 						},
 						{
@@ -676,9 +670,19 @@
 							"type": "text"
 						},
 						{
+							"key": "description",
+							"value": "eg_description2",
+							"type": "text"
+						},
+						{
 							"key": "tags",
 							"value": "testtag",
 							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
 							"type": "text"
 						},
 						{
@@ -752,12 +756,6 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "",
-							"type": "file",
-							"src": [],
-							"disabled": true
-						},
-						{
 							"key": "title",
 							"value": "test_title3",
 							"type": "text"
@@ -779,14 +777,19 @@
 							"type": "text"
 						},
 						{
-							"key": "image",
-							"type": "file",
-							"src": "./tests/test_image.jpg"
-						},
-						{
 							"key": "tags[1]",
 							"value": "testtag3",
 							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "./tests/test_image.jpg"
 						}
 					]
 				},
