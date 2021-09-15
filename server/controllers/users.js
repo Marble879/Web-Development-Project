@@ -103,7 +103,7 @@ router.delete("/api/users", async function (req, res, next) {
       return next(err);
     }
     try {
-      await imgDelete.deleteAllImages('./uploads/')
+      await imgDelete.deleteAllImages('./icons/')
       res.json(deleteInformation);
       console.log('all users deleted');
     } catch (err) {
