@@ -4,6 +4,7 @@
  * https://stackoverflow.com/questions/27072866/how-to-remove-all-files-from-directory-without-removing-directory-in-node-js/49125621
  * https://stackoverflow.com/questions/31592726/how-to-store-a-file-with-file-extension-with-multer
  * https://www.tabnine.com/code/javascript/functions/fs%2Fpromises/unlink
+ * https://stackoverflow.com/questions/48842006/to-use-multer-to-save-files-in-different-folders
 */
 
 var express = require('express');
@@ -17,6 +18,7 @@ var mongoose = require('mongoose');
 router.use(express.json());
 
 router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
+    //NOTE: When creating a post, the event variable has to be passed before the image!
     console.log(req.file);
     var post = new Post(req.body);
     post.post_id = mongoose.Types.ObjectId();
@@ -95,7 +97,7 @@ router.delete('/api/posts/:id', async function (req, res, next) {
         if (err) { return next(err); } 
         if (post == null) { return res.status(404).json({ message: "Post not found" }); }
         try {
-            await imgDelete.deleteSingleImage(post);
+            await imgDelete.deleteSingleImage(post.image);
             res.status(200).json(post);
             console.log('specific post deleted');
         } catch (err) {
