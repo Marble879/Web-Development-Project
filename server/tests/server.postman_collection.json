@@ -68,7 +68,7 @@
 						{
 							"key": "icon",
 							"type": "file",
-							"src": "/C:/Users/nilsd/OneDrive/Desktop/DIT341/group-15-web/server/tests/test_icon.jpg"
+							"src": "./tests/test_icon.jpg"
 						}
 					]
 				},
@@ -148,7 +148,7 @@
 						{
 							"key": "icon",
 							"type": "file",
-							"src": "/C:/Users/nilsd/OneDrive/Desktop/DIT341/group-15-web/server/tests/test_icon.jpg"
+							"src": "./tests/test_icon.jpg"
 						}
 					]
 				},
@@ -541,7 +541,7 @@
 						{
 							"key": "icon",
 							"type": "file",
-							"src": "/C:/Users/nilsd/OneDrive/Desktop/DIT341/group-15-web/server/tests/test_icon.jpg"
+							"src": "./tests/test_icon.jpg"
 						}
 					]
 				},
