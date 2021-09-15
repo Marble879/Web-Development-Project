@@ -15,33 +15,15 @@ router.post('/api/users/:id/collections', function (req, res, next) {
     });
 });
 
-router.get("/api/collections", function (req, res, next) {
+router.get("/api/users/:id/collections", function (req, res, next) {
     Collection.find(function (err, collection) {
         if (err) {
             return next(err);
         }
-        console.log('Collection retreived');
-    }).populate('user_id').exec(function (err, collection) {
-        if (err) {
-            return next(err);
-        }
-        console.log(`Collection of this user`);
+        console.log('Collections retreived');
         res.json(collection);
     });
 });
-
-
-/*router.get("/api/users/:id/collections", function (req, res, next) {
-    var id = req.params.id;
-    Collection.findById(id).populate('user_id').exec(function (err, collection) {
-        if (err) {
-            return next(err);
-        }
-        console.log(`Collection of this user`);
-        res.json(collection);
-    })
-});
-*/
 
 router.get("/api/users/:id/collections/:id", function (req, res, next) {
     var id = req.params.id;
