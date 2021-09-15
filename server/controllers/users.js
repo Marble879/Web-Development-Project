@@ -6,7 +6,7 @@ var imgDelete = require('../image_handling/imageDeleteHandler');
 
 router.use(express.json());
 
-router.post("/api/users", imgUpload.single('image'), function (req, res, next) {
+router.post("/api/users", imgUpload.single('icon'), function (req, res, next) {
   //NOTE: When creating a user, the event variable has to be passed before the image!
   var user = new User(req.body);
   user.icon = req.file.path;
