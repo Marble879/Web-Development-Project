@@ -1,13 +1,14 @@
 var multer = require('multer');
 var path = require('path');
-const postImageDirectory = './uploads/';
+const iconImageDirectory = './icons/';
+
 
 
 // Allows us to define how files are stored.
 var storage = multer.diskStorage({
     destination: function(req, file, cb) { // function defines where incoming image should be stored.
-        if (req.body.event == 'post') { 
-            cb(null, postImageDirectory)
+        if (req.body.event == 'icon') { 
+            cb(null, iconImageDirectory)
         };
     },
     filename: function(req, file, cb) {
