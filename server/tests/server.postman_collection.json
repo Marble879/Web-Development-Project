@@ -396,15 +396,19 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/api/posts/tag/{{post_tag}}",
+					"raw": "{{host}}/api/posts?tag={{post_tag}}",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"api",
-						"posts",
-						"tag",
-						"{{post_tag}}"
+						"posts"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "{{post_tag}}"
+						}
 					]
 				}
 			},

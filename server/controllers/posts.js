@@ -17,6 +17,15 @@ var mongoose = require('mongoose');
 
 router.use(express.json());
 
+function queryByTag(tag, req, res, next) {
+    Post.find({ tags: { $all: tag } }, function (err, posts) {
+        if (err) { return next(err); }
+        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found"}); }
+        console.log('Post with specified tag retreived');
+        res.status(200).json({ "posts": posts });
+    }); 
+}
+
 router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
     //NOTE: When creating a post, the event variable has to be passed before the image!
     console.log(req.file);
@@ -31,12 +40,17 @@ router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
 });
 
 router.get('/api/posts', function (req, res, next) {
+    if (req.query.tag != null){
+        var tag = req.query.tag;
+        queryByTag(tag, req, res, next);
+    } else {
     Post.find(function (err, posts) {
         if (err) { return next(err); }
         if (posts.length == 0) { return res.status(404).json({ message: "Post not found"}); }
         console.log('post retreived');
         res.status(200).json({ "posts": posts });
     });
+    }
 });
 
 router.get('/api/posts/:id', function(req, res, next) {
@@ -46,16 +60,6 @@ router.get('/api/posts/:id', function(req, res, next) {
         if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found"}); }
         console.log('Post with specified id retreived');
         res.status(200).json(post);
-    });
-});
-
-router.get('/api/posts/tag/:tag', function(req, res, next) {
-    var tag = req.params.tag;
-    Post.find({ tags: { $all: tag } }, function (err, posts) {
-        if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found"}); }
-        console.log('Post with specified tag retreived');
-        res.status(200).json({ "posts": posts });
     });
 });
 
@@ -73,8 +77,6 @@ router.put('/api/posts/:id', function(req, res, next) {
         console.log('post saved');
     });
 });
-
-
 
 router.patch('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
