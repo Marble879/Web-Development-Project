@@ -153,6 +153,17 @@
 		},
 		{
 			"name": "GET api/users/id/collections",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -403,7 +414,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Henry\",\r\n    \"password\": \"Harry\",\r\n    \"icon\": \"\"   \r\n}",
+					"raw": "{\r\n    \"username\": \"Henry\",\r\n    \"password\": \"Harry\",\r\n    \"bio\": \"bio\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
