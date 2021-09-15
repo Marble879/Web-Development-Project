@@ -20,7 +20,7 @@ router.get("/api/users", function (req, res, next) {
     if (err) {
       return next(err);
     }
-    console.log('User retreived');
+    console.log('user retreived');
   }).populate('collections').exec(function (err, user) {
     if (err) {
       return next(err);
@@ -57,6 +57,7 @@ router.put("/api/users/:id", function (req, res, next) {
     user.password = req.body.password;
     user.bio = req.body.bio;
     user.icon = req.body.icon;
+    user.collections = req.body.collections;
     user.save();
     res.json(user);
     console.log('user saved');
@@ -74,6 +75,7 @@ router.patch("/api/users/:id", function (req, res, next) {
     user.password = (req.body.password || user.password);
     user.bio = (req.body.bio || user.bio);
     user.icon = (req.body.icon || user.icon);
+    user.collections = (req.body.collections || user.collections);
     user.save();
     res.json(user);
     console.log('user updated');
