@@ -25,7 +25,12 @@ router.get("/api/users", function (req, res, next) {
       return next(err);
     }
     console.log('user retreived');
-    res.status(200).json({ user: user });
+  }).populate('collections').exec(function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    console.log(`User Collections`);
+    res.status(200).json({ "users": user });
   });
 });
 
@@ -36,7 +41,7 @@ router.get("/api/users/:id", function (req, res, next) {
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ "message": "User not found" });
     }
     console.log('user with specified id retreived');
     res.status(200).json(user);
@@ -50,11 +55,12 @@ router.put("/api/users/:id", function (req, res, next) {
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ "message": "User not found" });
     }
     user.username = req.body.username;
     user.password = req.body.password;
     user.bio = req.body.bio;
+    user.collections = req.body.collections;
     user.save();
     res.status(200).json(user);
     console.log('user saved');
@@ -71,6 +77,7 @@ router.patch("/api/users/:id", function (req, res, next) {
     user.username = (req.body.username || user.username);
     user.password = (req.body.password || user.password);
     user.bio = (req.body.bio || user.bio);
+    user.collections = (req.body.collections || user.collections);
     user.save();
     res.status(200).json(user);
     console.log('user updated');
@@ -84,12 +91,13 @@ router.delete("/api/users/:id", async function (req, res, next) {
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ "message": "User not found" });
     }
     try {
+      user.remove();
       await imgDelete.deleteSingleImage(user.icon);
       res.status(200).json(user);
-      console.log('')
+      console.log('User with specific ID removed');
     } catch (err) {
       next(err);
     }

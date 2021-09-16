@@ -1,26 +1,32 @@
 var multer = require('multer');
 var path = require('path');
-const imageDirectory = './uploads/';
+const postImageDirectory = './uploads/';
 const iconImageDirectory = './icons/';
+const thumbnailImageDirectory = './thumbnails/';
+
 
 // Allows us to define how files are stored.
 var storage = multer.diskStorage({
-    destination: function(req, file, cb) { // function defines where incoming image should be stored.
-        if (req.body.event == 'icon') { 
+    destination: function (req, file, cb) { // function defines where incoming image should be stored.
+        if (req.body.event == 'post') {
+            cb(null, postImageDirectory)
+        }
+        if (req.body.event == 'icon') {
             cb(null, iconImageDirectory)
-        } else {
-            cb(null, imageDirectory);
-        };
+        }
+        if (req.body.event == 'thumbnail') {
+            cb(null, thumbnailImageDirectory)
+        }
     },
-    filename: function(req, file, cb) {
+    filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));
-    } 
+    }
 });
 
-var imageFilter = function(req, image, cb) {
+var imageFilter = function (req, image, cb) {
     if (image.mimetype === 'image/jpeg' || image.mimetype === 'image/png' || image.mimetype === 'image/jpg') {
         //accepts image
-        cb(null, true); 
+        cb(null, true);
     } else {
         //rejects image
         cb(new Error('ERROR: Image file type is not supported'), false); // Error message added here due to this being the fail/rejected case
