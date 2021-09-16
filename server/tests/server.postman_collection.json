@@ -1,19 +1,272 @@
 {
 	"info": {
-		"_postman_id": "f7ee95b5-9cb9-442f-a6a9-42de46138872",
+		"_postman_id": "764d868e-5143-4cfb-9286-a6f45257fa31",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "GET /api",
+			"name": "POST api/users",
 			"event": [
 				{
-					"listen": "prerequest",
+					"listen": "test",
 					"script": {
-						"id": "b58d92ec-5214-450c-adb0-28e068aa71b9",
 						"exec": [
-							""
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.environment.set(\"user_id\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Fred",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "freddie",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "Hi my name is Fred",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SECOND POST api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.environment.set(\"user_id2\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Carl\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"whippedcream\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"I like long walks on the leash\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"})\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Carl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "whippedcream",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "I like long walks on the leash",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonDataUserOne = pm.response.json().user[0];\r",
+							"var jsonDataUserTwo = pm.response.json().user[1];\r",
+							"\r",
+							"var getUser_IdOne = pm.variables.get('user_id');\r",
+							"var getUser_IdTwo = pm.variables.get('user_id2');\r",
+							"\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('First User in body has correct id', function () {\r",
+							"    pm.expect(jsonDataUserOne._id).to.eql(getUser_IdOne);\r",
+							"});\r",
+							"\r",
+							"pm.test('Second User in body has correct id', function () {\r",
+							"    pm.expect(jsonDataUserTwo._id).to.eql(getUser_IdTwo);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonDataUserOne.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonDataUserOne.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonDataUserOne.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonDataUserOne.event).to.eql(\"icon\");\r",
+							"    pm.expect(jsonDataUserTwo.username).to.eql(\"Carl\");\r",
+							"    pm.expect(jsonDataUserTwo.password).to.eql(\"whippedcream\");\r",
+							"    pm.expect(jsonDataUserTwo.bio).to.eql(\"I like long walks on the leash\");\r",
+							"    pm.expect(jsonDataUserTwo.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonDataUserOne.icon).to.be.a('String');\r",
+							"    pm.expect(jsonDataUserTwo.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonDataUserOne._id).to.be.a('String');\r",
+							"    pm.expect(jsonDataUserTwo._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET api/users/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var getUser_Id = pm.variables.get(\"user_id\");\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id ', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -29,12 +282,327 @@
 					}
 				],
 				"url": {
-					"raw": "{{host}}/api",
+					"raw": "{{host}}/api/users/{{user_id}}",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
-						"api"
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT api/users/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var getUser_Id = pm.variables.get(\"user_id\");\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"123\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bob cares about you\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bob\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH api/users/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var getUser_Id = pm.variables.get(\"user_id\");\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"123\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bob loves you <3\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bio\": \"bob loves you <3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE api/users/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var getUser_Id = pm.variables.get(\"user_id\");\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"123\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bob loves you <3\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VALIDATION POST api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.environment.set(\"user_id\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Fred",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "freddie",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "Hi my name is Fred",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETEALL api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var numberOfMatchedDocuments = jsonData.n;\r",
+							"var isDeleteSuccesful = jsonData.ok;\r",
+							"var deletedCount = jsonData.deletedCount;\r",
+							"\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Has deleted sucesfully', function() {\r",
+							"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of documents deleted', function() {\r",
+							"    pm.expect(numberOfMatchedDocuments).to.eql(2);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of deletes have occured', function() {\r",
+							"    pm.expect(deletedCount).to.eql(2);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
 					]
 				}
 			},
@@ -45,7 +613,6 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "05864cff-5cba-4070-bac3-a59328954ebf",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -55,7 +622,6 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "e9c319be-3306-4fc5-ba34-fcf64391213a",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -65,11 +631,12 @@
 	],
 	"variable": [
 		{
-			"id": "cd185905-a834-4211-8030-583d17702534",
 			"key": "host",
-			"value": "http://localhost:3000",
-			"type": "string"
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "user_id",
+			"value": "613a5abcdf286056f003df6f"
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
