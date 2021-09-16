@@ -71,6 +71,8 @@ router.put('/api/posts/:id', function(req, res, next) {
         post.title = req.body.title;
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
+        post.user_id = req.body.user_id;
+        post.event = req.body.event;
         post.tags = req.body.tags;
         post.save();
         res.status(200).json(post);

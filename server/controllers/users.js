@@ -88,8 +88,9 @@ router.delete("/api/users/:id", async function (req, res, next) {
     }
     try {
       await imgDelete.deleteSingleImage(user.icon);
+      user.remove();
       res.status(200).json(user);
-      console.log('')
+      console.log('User with specific ID removed')
     } catch (err) {
       next(err);
     }

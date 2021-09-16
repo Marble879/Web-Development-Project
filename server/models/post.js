@@ -7,6 +7,7 @@ var postSchema = new Schema({
     description: { type: String },
     numberOfFavorites: {type: Number, default: 0 },
     tags : { type: [String] },
+    user_id : { type: Schema.Types.ObjectId, ref: 'user', required: true},
     event : { type: String, required: true },
     image : { type: String, required: true }
 });
