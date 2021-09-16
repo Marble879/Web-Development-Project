@@ -9,6 +9,7 @@ var userController = require('./controllers/users');
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
 var port = process.env.PORT || 3000;
+postController = require('./controllers/posts');
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function(err) {
@@ -36,6 +37,10 @@ app.get('/api', function(req, res) {
     res.json({'message': 'Welcome to your DIT341 backend ExpressJS project!'});
 });
 
+
+app.use('/uploads', express.static('uploads')); // makes uploads folder public
+app.use('/icons', express.static('icons')); 
+app.use(postController);
 app.use(userController);
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
