@@ -12,7 +12,7 @@ var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevel
 var port = process.env.PORT || 3000;
 
 // Connect to MongoDB
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function(err) {
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
     if (err) {
         console.error(`Failed to connect to MongoDB with URI: ${mongoURI}`);
         console.error(err.stack);
@@ -33,10 +33,12 @@ app.options('*', cors());
 app.use(cors());
 
 // Import routes
-app.get('/api', function(req, res) {
-    res.json({'message': 'Welcome to your DIT341 backend ExpressJS project!'});
+app.get('/api', function (req, res) {
+    res.json({ 'message': 'Welcome to your DIT341 backend ExpressJS project!' });
 });
 
+app.use('/uploads', express.static('uploads')); //make uploads folder public
+app.use('/icons', express.static('icons'));
 app.use(userController);
 app.use(collectionController);
 
