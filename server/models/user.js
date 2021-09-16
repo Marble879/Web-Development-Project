@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 var Collection = require('./collection')
+var Post = require('./post');
 
 var userSchema = new Schema({
   username: { type: String, unique: true, required: true },
@@ -18,6 +19,8 @@ userSchema.pre('remove', async function (next) {
         $in: this.collections
       }
     });
+    await Post.updateMany({ user_id: this._id },
+      { user_id: null }).exec();
     next();
   } catch (err) {
     next(err);

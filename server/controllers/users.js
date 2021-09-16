@@ -30,7 +30,7 @@ router.get("/api/users", function (req, res, next) {
       return next(err);
     }
     console.log(`User Collections`);
-    res.status(200).json({ users: user });
+    res.status(200).json({ "users": user });
   });
 });
 
@@ -97,7 +97,7 @@ router.delete("/api/users/:id", async function (req, res, next) {
       user.remove();
       await imgDelete.deleteSingleImage(user.icon);
       res.status(200).json(user);
-      console.log('user deleted');
+      console.log('User with specific ID removed');
     } catch (err) {
       next(err);
     }

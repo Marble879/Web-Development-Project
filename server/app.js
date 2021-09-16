@@ -10,6 +10,7 @@ var collectionController = require('./controllers/collections');
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
 var port = process.env.PORT || 3000;
+postController = require('./controllers/posts');
 
 // Connect to MongoDB
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, function (err) {
@@ -37,8 +38,9 @@ app.get('/api', function (req, res) {
     res.json({ 'message': 'Welcome to your DIT341 backend ExpressJS project!' });
 });
 
-app.use('/uploads', express.static('uploads')); //make uploads folder public
+app.use('/uploads', express.static('uploads')); // makes uploads folder public
 app.use('/icons', express.static('icons'));
+app.use(postController);
 app.use(userController);
 app.use(collectionController);
 
@@ -60,7 +62,7 @@ app.use(express.static(client));
 // Error handler (i.e., when exception is thrown) must be registered last
 var env = app.get('env');
 // eslint-disable-next-line no-unused-vars
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     console.error(err.stack);
     var err_res = {
         'message': err.message,
@@ -74,7 +76,7 @@ app.use(function(err, req, res, next) {
     res.json(err_res);
 });
 
-app.listen(port, function(err) {
+app.listen(port, function (err) {
     if (err) throw err;
     console.log(`Express server listening on port ${port}, in ${env} mode`);
     console.log(`Backend: http://localhost:${port}/api/`);

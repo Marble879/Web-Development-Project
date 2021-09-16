@@ -1,12 +1,12 @@
 {
 	"info": {
-		"_postman_id": "cbce39f3-b507-455c-a1c7-d475ea27123f",
+		"_postman_id": "5074ff1a-8e61-4e50-b73c-fb1b4d419f49",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "[USER] Create a post",
+			"name": "[USER] Create a user",
 			"event": [
 				{
 					"listen": "test",
@@ -86,7 +86,7 @@
 			"response": []
 		},
 		{
-			"name": "[USER] Create second post to show in next test",
+			"name": "[USER] Create second user to show in next test",
 			"event": [
 				{
 					"listen": "test",
@@ -178,9 +178,11 @@
 							"var getUser_IdOne = pm.variables.get('user_id');\r",
 							"var getUser_IdTwo = pm.variables.get('user_id2');\r",
 							"\r",
+							"\r",
 							"pm.test('Status code is 200', function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
+							"\r",
 							"\r",
 							"pm.test('First User in body has correct id', function () {\r",
 							"    pm.expect(jsonDataUserOne._id).to.eql(getUser_IdOne);\r",
@@ -607,6 +609,1257 @@
 			"response": []
 		},
 		{
+			"name": "[USER] Create a user for the post tests",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.environment.set(\"user_id\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Fred",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "freddie",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "Hi my name is Fred",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[USER] Create second user to show in next test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.environment.set(\"user_id2\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Carl\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"whippedcream\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"I like long walks on the leash\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"})\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Carl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "whippedcream",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "I like long walks on the leash",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Create a post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"var postId = jsonData._id;",
+							"var postTag = jsonData.tags;",
+							"var userForeignKey = pm.environment.get('user_id');",
+							"",
+							"pm.environment.set(\"post_id\", postId);",
+							"pm.environment.set(\"post_tag\", postTag);",
+							"",
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourits, tags, event and foreign key', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_title');",
+							"    pm.expect(jsonData.description).to.eql('eg_description');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
+							"    pm.expect(jsonData.user_id).to.eql(userForeignKey);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "test_title",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "eg_description",
+							"type": "text"
+						},
+						{
+							"key": "numberOfFavorites",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "tags",
+							"value": "testtag",
+							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "{{user_id}}",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "./tests/test_image.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Create second post to show in next test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"var postId = jsonData._id;",
+							"var postTag = jsonData.tags;",
+							"var userForeignKey = pm.environment.get('user_id2');",
+							"",
+							"pm.environment.set(\"post_id2\", postId);",
+							"",
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourits, tags, event and foreign key', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_titlecopy');",
+							"    pm.expect(jsonData.description).to.eql('eg_descriptioncopy');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonData.tags).to.eql(['testtagcopy']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
+							"    pm.expect(jsonData.user_id).to.eql(userForeignKey);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "test_titlecopy",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "eg_descriptioncopy",
+							"type": "text"
+						},
+						{
+							"key": "numberOfFavorites",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "tags",
+							"value": "testtagcopy",
+							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "{{user_id2}}",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "./tests/test_image.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Get all posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonDataPostOne = pm.response.json().posts[0];",
+							"var jsonDataPostTwo  = pm.response.json().posts[1];",
+							"",
+							"var getPost_IdOne = pm.variables.get('post_id');",
+							"var getPost_IdTwo = pm.variables.get('post_id2');",
+							"",
+							"var getForeignkeyOne = pm.environment.get('user_id');",
+							"var getForeignkeyTwo = pm.environment.get('user_id2');",
+							"",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test('First Post in body has correct id', function () {",
+							"    pm.expect(jsonDataPostOne._id).to.eql(getPost_IdOne);",
+							"});",
+							"",
+							"pm.test('Second Post in body has correct id', function () {",
+							"    pm.expect(jsonDataPostTwo._id).to.eql(getPost_IdTwo);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, tags, event and foreign key', function () {",
+							"    pm.expect(jsonDataPostOne.title).to.eql('test_title');",
+							"    pm.expect(jsonDataPostOne.description).to.eql('eg_description');",
+							"    pm.expect(jsonDataPostOne.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonDataPostOne.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonDataPostTwo.title).to.eql('test_titlecopy');",
+							"    pm.expect(jsonDataPostTwo.description).to.eql('eg_descriptioncopy');",
+							"    pm.expect(jsonDataPostTwo.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonDataPostTwo.tags).to.eql(['testtagcopy']);",
+							"    pm.expect(jsonDataPostOne.event).to.eql('post');",
+							"    pm.expect(jsonDataPostTwo.event).to.eql('post');",
+							"    pm.expect(jsonDataPostOne.user_id).to.eql(getForeignkeyOne);",
+							"    pm.expect(jsonDataPostTwo.user_id).to.eql(getForeignkeyTwo);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonDataPostOne.image).to.be.a('String');",
+							"    pm.expect(jsonDataPostTwo.image).to.be.a('String');",
+							"});",
+							"",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonDataPostOne._id).to.be.a('String');",
+							"    pm.expect(jsonDataPostTwo._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonDataPostOne.post_id).to.be.a('String');",
+							"    pm.expect(jsonDataPostTwo.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[USER] Delete specific user to test foreign key deletion in post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var getUser_Id = pm.variables.get(\"user_id\");\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Get all posts to confirm foreign key is deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonDataPostOne = pm.response.json().posts[0];",
+							"var jsonDataPostTwo  = pm.response.json().posts[1];",
+							"",
+							"var getPost_IdOne = pm.variables.get('post_id');",
+							"var getPost_IdTwo = pm.variables.get('post_id2');",
+							"",
+							"var getForeignkey = pm.environment.get('user_id2');",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test('First Post in body has correct id', function () {",
+							"    pm.expect(jsonDataPostOne._id).to.eql(getPost_IdOne);",
+							"});",
+							"",
+							"pm.test('Second Post in body has correct id', function () {",
+							"    pm.expect(jsonDataPostTwo._id).to.eql(getPost_IdTwo);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, and tags', function () {",
+							"    pm.expect(jsonDataPostOne.title).to.eql('test_title');",
+							"    pm.expect(jsonDataPostOne.description).to.eql('eg_description');",
+							"    pm.expect(jsonDataPostOne.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonDataPostOne.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonDataPostTwo.title).to.eql('test_titlecopy');",
+							"    pm.expect(jsonDataPostTwo.description).to.eql('eg_descriptioncopy');",
+							"    pm.expect(jsonDataPostTwo.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonDataPostTwo.tags).to.eql(['testtagcopy']);",
+							"    pm.expect(jsonDataPostOne.event).to.eql('post');",
+							"    pm.expect(jsonDataPostTwo.event).to.eql('post');",
+							"});",
+							"",
+							"pm.test('Body has correct foreign keys', function() {",
+							"    pm.expect(jsonDataPostOne.user_id).to.eql(null);",
+							"    pm.expect(jsonDataPostTwo.user_id).to.eql(getForeignkey);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonDataPostOne.image).to.be.a('String');",
+							"    pm.expect(jsonDataPostTwo.image).to.be.a('String');",
+							"});",
+							"",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonDataPostOne._id).to.be.a('String');",
+							"    pm.expect(jsonDataPostTwo._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonDataPostOne.post_id).to.be.a('String');",
+							"    pm.expect(jsonDataPostTwo.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Get post with specific ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has correct _id ', function () {",
+							"    pm.expect(jsonData._id).to.eql(getPost_Id);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, tags, event and foreign key', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_title');",
+							"    pm.expect(jsonData.description).to.eql('eg_description');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
+							"    pm.expect(jsonData.user_id).to.eql(null);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Get post with specific tag",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json().posts[0];",
+							"",
+							"var getPostTag = pm.variables.get('post_tag');",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test('Body has correct tag', function () {",
+							"    pm.expect(jsonData.tags).to.eql(getPostTag);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, tags, events and foreign key', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_title');",
+							"    pm.expect(jsonData.description).to.eql('eg_description');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
+							"    pm.expect(jsonData.user_id).to.eql(null);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts?tag={{post_tag}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "{{post_tag}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Put test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"var getForeignKey = pm.variables.get('user_id2');",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has correct _id', function () {",
+							"    pm.expect(jsonData._id).to.eql(getPost_Id);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, tags,w event and foreign key', function () {",
+							"    pm.expect(jsonData.title).to.eql('new title test');",
+							"    pm.expect(jsonData.description).to.eql('new description test');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(10);",
+							"    pm.expect(jsonData.tags).to.eql(['new tag 1', 'new tag 2']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
+							"    pm.expect(jsonData.user_id).to.eql(getForeignKey);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"new title test\",\n    \"description\": \"new description test\",\n    \"numberOfFavorites\": 10,\n    \"event\": \"post\",\n    \"user_id\": \"{{user_id2}}\",\n    \"tags\": [\n        \"new tag 1\",\n        \"new tag 2\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Patch test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has correct _id', function () {",
+							"    pm.expect(jsonData._id).to.eql(getPost_Id);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, and tags', function () {",
+							"    pm.expect(jsonData.title).to.eql('new title test');",
+							"    pm.expect(jsonData.description).to.eql('This is a new patch description');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(10);",
+							"    pm.expect(jsonData.tags).to.eql(['new tag 1', 'new tag 2']);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"This is a new patch description\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Delete specific post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has correct _id', function () {",
+							"    pm.expect(jsonData._id).to.eql(getPost_Id);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, and tags', function () {",
+							"    pm.expect(jsonData.title).to.eql('new title test');",
+							"    pm.expect(jsonData.description).to.eql('This is a new patch description');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(10);",
+							"    pm.expect(jsonData.tags).to.eql(['new tag 1', 'new tag 2']);",
+							"    pm.expect(jsonData.event).to.eql('post');",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Post to show that delete all posts works",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"var postId = jsonData._id;",
+							"var postTag = jsonData.tags;",
+							"",
+							"pm.environment.set(\"post_id\", postId);",
+							"pm.environment.set(\"post_tag\", postTag);",
+							"",
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourits, and tags', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_title2');",
+							"    pm.expect(jsonData.description).to.eql('eg_description2');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(1);",
+							"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "test_title2",
+							"type": "text"
+						},
+						{
+							"key": "numberOfFavorites",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "eg_description2",
+							"type": "text"
+						},
+						{
+							"key": "tags",
+							"value": "testtag",
+							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "{{user_id2}}",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "./tests/test_image.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Second post to show that delete all posts works Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"var postId = jsonData._id;",
+							"var postTag = jsonData.tags;",
+							"",
+							"pm.environment.set(\"post_id\", postId);",
+							"pm.environment.set(\"post_tag\", postTag);",
+							"",
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourits, and tags', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_title3');",
+							"    pm.expect(jsonData.description).to.eql('eg_description3');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonData.tags).to.eql(['testtag', 'testtag3']);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "test_title3",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "eg_description3",
+							"type": "text"
+						},
+						{
+							"key": "numberOfFavorites",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "tags[0]",
+							"value": "testtag",
+							"contentType": "",
+							"type": "text"
+						},
+						{
+							"key": "tags[1]",
+							"value": "testtag3",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "{{user_id2}}",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "post",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "./tests/test_image.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/posts",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[POST] Delete all posts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var numberOfMatchedDocuments = jsonData.n;",
+							"var isDeleteSuccesful = jsonData.ok;",
+							"var deletedCount = jsonData.deletedCount;",
+							"",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Has deleted sucesfully', function() {",
+							"    pm.expect(isDeleteSuccesful).to.eql(1);",
+							"});",
+							"",
+							"pm.test('Correct number of documents deleted', function() {",
+							"    pm.expect(numberOfMatchedDocuments).to.eql(3);",
+							"});",
+							"",
+							"pm.test('Correct number of deletes have occured', function() {",
+							"    pm.expect(deletedCount).to.eql(3);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts/",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[USER] Delete all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var numberOfMatchedDocuments = jsonData.n;\r",
+							"var isDeleteSuccesful = jsonData.ok;\r",
+							"var deletedCount = jsonData.deletedCount;\r",
+							"\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Has deleted sucesfully', function() {\r",
+							"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of documents deleted', function() {\r",
+							"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of deletes have occured', function() {\r",
+							"    pm.expect(deletedCount).to.eql(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "[COLLECTION] Create a collection",
 			"event": [
 				{
@@ -934,11 +2187,8 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "http://localhost:3000"
-		},
-		{
-			"key": "user_id",
-			"value": "613a5abcdf286056f003df6f"
+			"value": "http://localhost:3000",
+			"type": "string"
 		}
 	]
 }
