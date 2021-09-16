@@ -1,16 +1,20 @@
 var express = require('express');
 var router = express.Router();
+var imgUpload = require('../image_handling/imageUploadHandler');
+var imgDelete = require('../image_handling/imageDeleteHandler');
 var Collection = require('../models/collection');
 
 router.use(express.json());
 
-router.post('/api/users/:id/collections', function (req, res, next) {
+router.post('/api/users/:id/collections', imgUpload.single('image'), function (req, res, next) {
+    console.log(req.file);
     var collection = new Collection(req.body);
+    post.thumbnail = req.file.path;
     collection.save(function (err, collection) {
         if (err) {
             return next(err);
         }
-        console.log('Collection created');
+        console.log('collection created');
         res.status(201).json(collection);
     });
 });
@@ -20,8 +24,8 @@ router.get("/api/users/:id/collections", function (req, res, next) {
         if (err) {
             return next(err);
         }
-        console.log('Collections retreived');
-        res.json(collection);
+        console.log('collections retreived');
+        res.status(200).json({ "collections": collection });
     });
 });
 
@@ -32,10 +36,10 @@ router.get("/api/users/:id/collections/:id", function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "Collection not found" });
+            return res.status(404).json({ "message": "collection not found" });
         }
-        console.log('Collection with specified id retreived');
-        res.json(collection);
+        console.log('collection with specified id retreived');
+        res.status(200).json(collection);
     });
 });
 
@@ -46,13 +50,13 @@ router.put("/api/users/:id/collections/:id", function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": " Collection not found" });
+            return res.status(404).json({ "message": " collection not found" });
         }
         collection.title = req.body.title;
         collection.thumbnail = req.body.thumbnail;
         collection.save();
-        res.json(collection);
-        console.log("Collection saved");
+        res.status(200).json(collection);
+        console.log("collection saved");
     });
 });
 
@@ -63,13 +67,13 @@ router.patch("/api/users/:id/collections/:id", function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "User not found" });
+            return res.status(404).json({ "message": "user not found" });
         }
         collection.title = (req.body.title || collection.title);
         collection.thumbnail = (req.body.thumbnail || collection.thumbnail);
         collection.save();
-        res.json(collection);
-        console.log("Collection updated");
+        res.status(200).json(collection);
+        console.log("collection updated");
     });
 });
 
@@ -80,10 +84,15 @@ router.delete("/api/users/:id/collections/:id", function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "Collection not found" });
+            return res.status(404).json({ "message": "collection not found" });
         }
-        res.json(collection);
-        console.log("Collection deleted");
+        try {
+            await imgDelete.deleteSingleImage(collection.thumbnail);
+            res.status(200).json(collection);
+            console.log('specific collection deleted');
+        } catch (err) {
+            next(err);
+        }
     });
 });
 
@@ -93,8 +102,13 @@ router.delete("/api/users/:id/collections", function (req, res, next) {
         if (err) {
             return next(err);
         }
-        res.json(deleteInformation);
-        console.log("All collections deleted");
+        try {
+            await imgDelete.deleteAllImages('./thumbnails/');
+            res.status(200).json(deleteInformation);
+            console.log('all collections deleted');
+        } catch (err) {
+            next(err);
+        }
     });
 });
 

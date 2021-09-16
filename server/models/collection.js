@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var collectionSchema = new Schema({
     title: { type: String },
-    thumbnail: { data: Buffer, contentType: String }
+    thumbnail: { type: String, required: true }
 });
 
-module.exports = mongoose.model("collection", collectionSchema);
+module.exports = mongoose.model("collections", collectionSchema);
