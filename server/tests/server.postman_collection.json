@@ -1172,10 +1172,18 @@
 							"var  jsonData = pm.response.json();",
 							"var ratingId = jsonData._id;",
 							"",
+							"var getUser_Id = pm.collectionVariables.get('user_id');",
+							"var getPost_Id = pm.collectionVariables.get('post_id');",
 							"pm.collectionVariables.set(\"rating_id\", ratingId);",
 							"",
 							"pm.test('Status code is 201', function () {",
 							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Body has star rating, user, and post', function () {",
+							"    pm.expect(jsonData.starRating).to.eql(5);",
+							"    pm.expect(jsonData.user).to.eql(getUser_Id);",
+							"    pm.expect(jsonData.post).to.eql(getPost_Id);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1219,7 +1227,21 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"var jsonDataRatingOne = pm.response.json().ratings[0];\r",
+							"\r",
+							"var getRating_IdOne = pm.collectionVariables.get('rating_id');\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('First Rating in body has correct id', function () {\r",
+							"    pm.expect(jsonDataRatingOne._id).to.eql(getRating_IdOne);\r",
+							"});\r",
+							"\r",
+							"pm.test('First Rating in body has correct start rating', function () {\r",
+							"    pm.expect(jsonDataRatingOne.starRating).to.eql(5);\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}

@@ -47,7 +47,7 @@ router.get('/api/ratings', function (req, res, next) {
         if (err) { return next(err); }
         if (ratings.length == 0) { return res.status(404).json({ message: "Ratings not found"}); }
         console.log('Ratings retreived');
-        return res.status(200).json(ratings);
+        return res.status(200).json({"ratings": ratings});
     })
     .populate('user')
     .populate('post');
