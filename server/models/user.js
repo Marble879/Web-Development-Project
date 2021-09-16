@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var Rating = require('./rating');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({

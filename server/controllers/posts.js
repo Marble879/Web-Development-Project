@@ -9,6 +9,7 @@
 var express = require('express');
 var router = express.Router();
 var Post = require('../models/post');
+var Rating = require('../models/rating');
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
 var mongoose = require('mongoose');
@@ -96,6 +97,7 @@ router.delete('/api/posts/:id', async function (req, res, next) {
         if (post == null) { return res.status(404).json({ message: "Post not found" }); }
         try {
             await imgDelete.deleteSingleImage(post);
+            post.remove();
             res.status(200).json(post);
             console.log('specific post deleted');
         } catch (err) {
@@ -110,6 +112,7 @@ router.delete('/api/posts', async function(req, res, next) {
         if (err) { return next(err); }
         try {
             await imgDelete.deleteAllImages('./uploads/');
+            await Rating.deleteMany();
             res.status(200).json(deleteInformation);
             console.log('All posts deleted');
         } catch (err) {

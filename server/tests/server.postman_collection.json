@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "cbce39f3-b507-455c-a1c7-d475ea27123f",
+		"_postman_id": "e23a9977-db95-4f13-84e6-62f1568e2991",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,9 +14,7 @@
 						"exec": [
 							"var  jsonData = pm.response.json();\r",
 							"var userId = jsonData._id;\r",
-							"pm.environment.set(\"user_id\", userId);\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
+							"pm.collectionVariables.set(\"user_id\", userId);\r",
 							"\r",
 							"pm.test(\"Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
@@ -151,7 +149,7 @@
 						"exec": [
 							"var jsonData = pm.response.json();\r",
 							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
+							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
 							"\r",
 							"pm.test(\"Response is created\", function() {\r",
 							"   pm.expect(pm.response.code).to.eql(200);\r",
@@ -204,7 +202,7 @@
 						"exec": [
 							"var jsonData = pm.response.json();\r",
 							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
+							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
 							"\r",
 							"pm.test(\"Response is created\", function() {\r",
 							"   pm.expect(pm.response.code).to.eql(200);\r",
@@ -249,68 +247,6 @@
 			"response": []
 		},
 		{
-			"name": "DELETE api/users/id",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var jsonData = pm.response.json();\r",
-							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
-							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
-							"});\r",
-							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Henry');\r",
-							"    pm.expect(jsonData.password).to.eql('Harry');\r",
-							"    pm.expect(jsonData.bio).to.eql(\"bio\");\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/users/{{user_id}}",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users",
-						"{{user_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DELETEALL api/users",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/users",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Create a post",
 			"event": [
 				{
@@ -321,8 +257,8 @@
 							"var postId = jsonData._id;",
 							"var postTag = jsonData.tags;",
 							"",
-							"pm.environment.set(\"post_id\", postId);",
-							"pm.environment.set(\"post_tag\", postTag);",
+							"pm.collectionVariables.set(\"post_id\", postId);",
+							"pm.collectionVariables.set(\"post_tag\", postTag);",
 							"",
 							"pm.test('Status code is 201', function () {",
 							"    pm.response.to.have.status(201);",
@@ -418,7 +354,7 @@
 							"var postId = jsonData._id;",
 							"var postTag = jsonData.tags;",
 							"",
-							"pm.environment.set(\"post_id2\", postId);",
+							"pm.collectionVariables.set(\"post_id2\", postId);",
 							"",
 							"pm.test('Status code is 201', function () {",
 							"    pm.response.to.have.status(201);",
@@ -720,7 +656,7 @@
 						"exec": [
 							"var  jsonData = pm.response.json();",
 							"",
-							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"var getPost_Id = pm.collectionVariables.get(\"post_id\");",
 							"",
 							"pm.test('Status code is 200', function () {",
 							"    pm.response.to.have.status(200);",
@@ -789,7 +725,7 @@
 						"exec": [
 							"var  jsonData = pm.response.json();",
 							"",
-							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"var getPost_Id = pm.collectionVariables.get(\"post_id\");",
 							"",
 							"pm.test('Status code is 200', function () {",
 							"    pm.response.to.have.status(200);",
@@ -850,66 +786,6 @@
 			"response": []
 		},
 		{
-			"name": "Delete specific post",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"var  jsonData = pm.response.json();",
-							"",
-							"var getPost_Id = pm.variables.get(\"post_id\");",
-							"",
-							"pm.test('Status code is 200', function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"pm.test('Body has _id', function () {",
-							"    pm.expect(jsonData._id).to.be.a('String');",
-							"});",
-							"",
-							"pm.test('Body has correct _id', function () {",
-							"    pm.expect(jsonData._id).to.eql(getPost_Id);",
-							"});",
-							"",
-							"pm.test('Body has correct title, description, number of favourites, and tags', function () {",
-							"    pm.expect(jsonData.title).to.eql('new title test');",
-							"    pm.expect(jsonData.description).to.eql('This is a new patch description');",
-							"    pm.expect(jsonData.numberOfFavorites).to.eql(10);",
-							"    pm.expect(jsonData.tags).to.eql(['new tag 1', 'new tag 2']);",
-							"});",
-							"",
-							"pm.test('Body has an image url', function () {",
-							"    pm.expect(jsonData.image).to.be.a('String');",
-							"});",
-							"",
-							"pm.test('Body has a post_id', function() {",
-							"    pm.expect(jsonData.post_id).to.be.a('String');",
-							"})",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{host}}/api/posts/{{post_id}}",
-					"host": [
-						"{{host}}"
-					],
-					"path": [
-						"api",
-						"posts",
-						"{{post_id}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Post to show that delete all posts works",
 			"event": [
 				{
@@ -920,8 +796,8 @@
 							"var postId = jsonData._id;",
 							"var postTag = jsonData.tags;",
 							"",
-							"pm.environment.set(\"post_id\", postId);",
-							"pm.environment.set(\"post_tag\", postTag);",
+							"pm.collectionVariables.set(\"post_id\", postId);",
+							"pm.collectionVariables.set(\"post_tag\", postTag);",
 							"",
 							"pm.test('Status code is 201', function () {",
 							"    pm.response.to.have.status(201);",
@@ -1017,8 +893,8 @@
 							"var postId = jsonData._id;",
 							"var postTag = jsonData.tags;",
 							"",
-							"pm.environment.set(\"post_id\", postId);",
-							"pm.environment.set(\"post_tag\", postTag);",
+							"pm.collectionVariables.set(\"post_id\", postId);",
+							"pm.collectionVariables.set(\"post_tag\", postTag);",
 							"",
 							"pm.test('Status code is 201', function () {",
 							"    pm.response.to.have.status(201);",
@@ -1109,6 +985,247 @@
 			"response": []
 		},
 		{
+			"name": "POST new rating",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"var ratingId = jsonData._id;",
+							"",
+							"pm.collectionVariables.set(\"rating_id\", ratingId);",
+							"",
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"starRating\": 5,\r\n    \"user\": \"{{user_id}}\",\r\n    \"post\": \"{{post_id}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}/ratings",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}",
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET api/ratings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/ratings",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ratings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH rating",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"var getRating_Id = pm.collectionVariables.get(\"rating_id\");",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has correct _id', function () {",
+							"    pm.expect(jsonData._id).to.eql(getRating_Id);",
+							"});",
+							"",
+							"pm.test('Star rating changed', function () {",
+							"    pm.expect(jsonData.starRating).to.eql(4);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"starRating\": 4\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/ratings/{{rating_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"ratings",
+						"{{rating_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete specific rating",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var getPost_Id = pm.collectionVariables.get(\"post_id\");",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}/ratings/{{rating_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}",
+						"ratings",
+						"{{rating_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete specific post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();",
+							"",
+							"var getPost_Id = pm.collectionVariables.get(\"post_id\");",
+							"",
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Body has _id', function () {",
+							"    pm.expect(jsonData._id).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has correct _id', function () {",
+							"    pm.expect(jsonData._id).to.eql(getPost_Id);",
+							"});",
+							"",
+							"pm.test('Body has correct title, description, number of favourites, and tags', function () {",
+							"    pm.expect(jsonData.title).to.eql('test_title3');",
+							"    pm.expect(jsonData.description).to.eql('eg_description3');",
+							"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+							"    pm.expect(jsonData.tags).to.eql(['testtag', 'testtag3']);",
+							"});",
+							"",
+							"pm.test('Body has an image url', function () {",
+							"    pm.expect(jsonData.image).to.be.a('String');",
+							"});",
+							"",
+							"pm.test('Body has a post_id', function() {",
+							"    pm.expect(jsonData.post_id).to.be.a('String');",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/posts/{{post_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"posts",
+						"{{post_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Delete all posts",
 			"event": [
 				{
@@ -1146,14 +1263,88 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{host}}/api/posts/",
+					"raw": "{{host}}/api/posts",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"api",
-						"posts",
-						""
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE api/users/id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
+							"\r",
+							"pm.test(\"Response is created\", function() {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"response should have valid JSON data\", () => {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
+							"    pm.expect(jsonData.username).to.eql('Henry');\r",
+							"    pm.expect(jsonData.password).to.eql('Harry');\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bio\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETEALL api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response is created\", function() {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
 					]
 				}
 			},
@@ -1183,12 +1374,27 @@
 	"variable": [
 		{
 			"key": "host",
-			"value": "http://localhost:3000",
-			"type": "string"
+			"value": "http://localhost:3000"
 		},
 		{
 			"key": "user_id",
-			"value": "613a5abcdf286056f003df6f"
+			"value": ""
+		},
+		{
+			"key": "post_id",
+			"value": ""
+		},
+		{
+			"key": "post_tag",
+			"value": ""
+		},
+		{
+			"key": "post_id2",
+			"value": ""
+		},
+		{
+			"key": "rating_id",
+			"value": ""
 		}
 	]
 }
