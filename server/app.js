@@ -5,6 +5,7 @@ var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
 var userController = require('./controllers/users');
+var ratingController = require('./controllers/ratings');
 var collectionController = require('./controllers/collections');
 
 // Variables
@@ -42,6 +43,7 @@ app.use('/uploads', express.static('uploads')); // makes uploads folder public
 app.use('/icons', express.static('icons'));
 app.use('/thumbnails', express.static('thumbnails'));
 app.use(postController);
+app.use(ratingController);
 app.use(userController);
 app.use(collectionController);
 

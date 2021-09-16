@@ -42,4 +42,3 @@ var imgUpload = multer({
 });
 
 module.exports = imgUpload;
-
