@@ -20,12 +20,12 @@ router.use(express.json());
 function queryByTag(tag, req, res, next) {
     Post.find({ tags: { $all: tag } }, function (err, posts) {
         if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found"}); }
-    }).populate('user_id').exec(function(err, posts) {
+        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found" }); }
+    }).populate('user_id').exec(function (err, posts) {
         if (err) { return next(err); }
         console.log('Posts with specified tag retreived');
-        res.status(200).json({"posts": posts});
-    });; 
+        res.status(200).json({ "posts": posts });
+    });;
 }
 
 router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
@@ -37,43 +37,43 @@ router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
     post.save(function (err, post) {
         if (err) { return next(err) }
         console.log('post created');
-        res.status(201).json(post); 
+        res.status(201).json(post);
     });
 });
 
 router.get('/api/posts', function (req, res, next) {
-    if (req.query.tag != null){
+    if (req.query.tag != null) {
         var tag = req.query.tag;
         queryByTag(tag, req, res, next);
     } else {
-    Post.find(function (err, posts) {
-        if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "Post not found"}); }
-    }).populate('user_id').exec(function(err, posts) {
-        if (err) { return next(err); }
-        console.log('posts retreived');
-        res.status(200).json({"posts": posts});
-    });
+        Post.find(function (err, posts) {
+            if (err) { return next(err); }
+            if (posts.length == 0) { return res.status(404).json({ message: "Post not found" }); }
+        }).populate('user_id').exec(function (err, posts) {
+            if (err) { return next(err); }
+            console.log('posts retreived');
+            res.status(200).json({ "posts": posts });
+        });
     }
 });
 
-router.get('/api/posts/:id', function(req, res, next) {
+router.get('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found"}); }
-    }).populate('user_id').exec(function(err, post) {
+        if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found" }); }
+    }).populate('user_id').exec(function (err, post) {
         if (err) { return next(err); }
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
 });
 
-router.put('/api/posts/:id', function(req, res, next) {
+router.put('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
-    Post.findById(id, function(err, post) {
+    Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found"}); }
+        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
         post.title = req.body.title;
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
@@ -89,7 +89,7 @@ router.patch('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found"}); }
+        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
         post.title = (req.body.title || post.title);
         post.description = (req.body.description || post.description);
         post.numberOfFavorites = (req.body.numberOfFavorites || post.numberOfFavorites);
@@ -102,10 +102,11 @@ router.patch('/api/posts/:id', function (req, res, next) {
 
 router.delete('/api/posts/:id', async function (req, res, next) {
     var id = req.params.id;
-    Post.findOneAndDelete({ _id: id}, async function(err, post) {
-        if (err) { return next(err); } 
+    Post.findOneAndDelete({ _id: id }, async function (err, post) {
+        if (err) { return next(err); }
         if (post == null) { return res.status(404).json({ message: "Post not found" }); }
         try {
+            post.remove();
             await imgDelete.deleteSingleImage(post.image);
             res.status(200).json(post);
             console.log('specific post deleted');
@@ -116,8 +117,8 @@ router.delete('/api/posts/:id', async function (req, res, next) {
 });
 
 //DELETE ALL POSTS FOR TESTING PURPOSES
-router.delete('/api/posts', async function(req, res, next) { 
-    Post.deleteMany({}, async function(err, deleteInformation) { 
+router.delete('/api/posts', async function (req, res, next) {
+    Post.deleteMany({}, async function (err, deleteInformation) {
         if (err) { return next(err); }
         try {
             await imgDelete.deleteAllImages('./uploads/');

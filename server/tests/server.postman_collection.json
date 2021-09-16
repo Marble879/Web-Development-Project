@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5074ff1a-8e61-4e50-b73c-fb1b4d419f49",
+		"_postman_id": "218dfa98-ec07-43e0-bc91-d0941d8e6a9e",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1882,20 +1882,20 @@
 							"var collectionId = jsonData._id;\r",
 							"pm.environment.set(\"collection_id\", collectionId);\r",
 							"\r",
-							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
-							"\r",
 							"pm.test(\"Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
 							"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
-							"})\r",
+							"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an thumbnail url', function () {\r",
+							"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
+							"});\r",
 							"\r",
 							"pm.test(\"Body has _id\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData._id).to.be.a('String');\r",
 							"});"
 						],
@@ -1923,6 +1923,11 @@
 							"key": "thumbnail",
 							"type": "file",
 							"src": "./tests/test_thumnail.jpg"
+						},
+						{
+							"key": "post_id",
+							"value": "{{post_id2}}",
+							"type": "text"
 						}
 					],
 					"options": {
@@ -1955,22 +1960,22 @@
 						"exec": [
 							"var  jsonData = pm.response.json();\r",
 							"var collectionId = jsonData._id;\r",
-							"pm.environment.set(\"collection_id\", collectionId);\r",
-							"\r",
-							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"pm.environment.set(\"collection_id2\", collectionId);\r",
 							"\r",
 							"pm.test(\"Status code is 201\", function () {\r",
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
-							"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
-							"})\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.title).to.eql(\"Dog Pictures\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an thumbnail url', function () {\r",
+							"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
+							"});\r",
 							"\r",
 							"pm.test(\"Body has _id\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData._id).to.be.a('String');\r",
 							"});"
 						],
@@ -1986,7 +1991,7 @@
 					"formdata": [
 						{
 							"key": "title",
-							"value": "Landscape Pictures",
+							"value": "Dog Pictures",
 							"type": "text"
 						},
 						{
@@ -1998,6 +2003,11 @@
 							"key": "thumbnail",
 							"type": "file",
 							"src": "./tests/test_thumnail.jpg"
+						},
+						{
+							"key": "post_id",
+							"value": "{{post_id2}}",
+							"type": "text"
 						}
 					],
 					"options": {
@@ -2028,7 +2038,41 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
+							"var jsonDataCollectionTwo  = pm.response.json().collections[1];\r",
+							"\r",
+							"var getCollection_IdOne = pm.variables.get('collection_id');\r",
+							"var getCollection_IdTwo = pm.variables.get('collection_id2');\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('First Collection in body has correct id', function () {\r",
+							"    pm.expect(jsonDataCollectionOne._id).to.eql(getCollection_IdOne);\r",
+							"});\r",
+							"\r",
+							"pm.test('Second Collection in body has correct id', function () {\r",
+							"    pm.expect(jsonDataCollectionTwo._id).to.eql(getCollection_IdTwo);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct title and event', function () {\r",
+							"    pm.expect(jsonDataCollectionOne.title).to.eql(\"Landscape Pictures\");\r",
+							"    pm.expect(jsonDataCollectionOne.event).to.eql(\"thumbnail\");\r",
+							"    pm.expect(jsonDataCollectionTwo.title).to.eql(\"Dog Pictures\");\r",
+							"    pm.expect(jsonDataCollectionTwo.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an image url', function () {\r",
+							"    pm.expect(jsonDataCollectionOne.thumbnail).to.be.a('String');\r",
+							"    pm.expect(jsonDataCollectionTwo.thumbnail).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonDataCollectionOne._id).to.be.a('String');\r",
+							"    pm.expect(jsonDataCollectionTwo._id).to.be.a('String');\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -2059,18 +2103,29 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
-							"    pm.expect(jsonData.title).to.eql('Landscape Pictures');\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id ', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct title and event', function () {\r",
+							"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an thumbnail url', function () {\r",
+							"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -2103,18 +2158,29 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
-							"    pm.expect(jsonData.title).to.eql('Landscape Art');\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.title).to.eql(\"Cat Photos\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -2126,7 +2192,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Landscape Art\",\r\n    \"thumbnail\": \"\"\r\n}",
+					"raw": "{\r\n    \"title\": \"Cat Photos\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2156,18 +2222,29 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
-							"    pm.expect(jsonData.title).to.eql('Cosplay');\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct title and event', function () {\r",
+							"    pm.expect(jsonData.title).to.eql(\"Cosplay\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an thumbnail url', function () {\r",
+							"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -2179,7 +2256,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Cosplay\"\r\n}",
+					"raw": "{\r\n    \"title\": \"Cosplay\",\r\n    \"post_id\": [\"61438796e49b6c6fb0fc2329\", \"614387a0e49b6c6fb0fc232c\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2209,18 +2286,29 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
-							"    pm.expect(jsonData.title).to.eql('Cosplay');\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct title and event', function () {\r",
+							"    pm.expect(jsonData.title).to.eql(\"Cosplay\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an thumbnail url', function () {\r",
+							"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -2323,6 +2411,38 @@
 		},
 		{
 			"name": "[COLLECTION] Delete all collections",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var numberOfMatchedDocuments = jsonData.n;\r",
+							"var isDeleteSuccesful = jsonData.ok;\r",
+							"var deletedCount = jsonData.deletedCount;\r",
+							"\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Has deleted sucesfully', function() {\r",
+							"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of documents deleted', function() {\r",
+							"    pm.expect(numberOfMatchedDocuments).to.eql(2);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of deletes have occured', function() {\r",
+							"    pm.expect(deletedCount).to.eql(2);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [],

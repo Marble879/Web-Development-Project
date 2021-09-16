@@ -25,6 +25,11 @@ router.get("/api/users/:id/collections", function (req, res, next) {
             return next(err);
         }
         console.log('collections retreived');
+    }).populate('post_id').exec(function (err, collection) {
+        if (err) {
+            return next(err);
+        }
+        console.log(`collection posts`);
         res.status(200).json({ "collections": collection });
     });
 });
@@ -69,6 +74,7 @@ router.patch("/api/users/:id/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": "user not found" });
         }
         collection.title = (req.body.title || collection.title);
+        collection.post_id = (req.body.post_id || collection.post_id);
         collection.save();
         res.status(200).json(collection);
         console.log("collection updated");
@@ -85,6 +91,7 @@ router.delete("/api/users/:id/collections/:id", async function (req, res, next) 
             return res.status(404).json({ "message": "collection not found" });
         }
         try {
+            collection.remove();
             await imgDelete.deleteSingleImage(collection.thumbnail);
             res.status(200).json(collection);
             console.log('specific collection deleted');
