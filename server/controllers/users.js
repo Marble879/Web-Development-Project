@@ -25,7 +25,7 @@ router.get("/api/users", function (req, res, next) {
       return next(err);
     }
     console.log('user retreived');
-    res.json({ user: user });
+    res.status(200).json({ user: user });
   });
 });
 
@@ -39,7 +39,7 @@ router.get("/api/users/:id", function (req, res, next) {
       return res.status(404).json({ message: "User not found" });
     }
     console.log('user with specified id retreived');
-    res.json(user);
+    res.status(200).json(user);
   });
 });
 
@@ -56,7 +56,7 @@ router.put("/api/users/:id", function (req, res, next) {
     user.password = req.body.password;
     user.bio = req.body.bio;
     user.save();
-    res.json(user);
+    res.status(200).json(user);
     console.log('user saved');
   });
 });
@@ -72,7 +72,7 @@ router.patch("/api/users/:id", function (req, res, next) {
     user.password = (req.body.password || user.password);
     user.bio = (req.body.bio || user.bio);
     user.save();
-    res.json(user);
+    res.status(200).json(user);
     console.log('user updated');
   });
 });
@@ -104,7 +104,7 @@ router.delete("/api/users", async function (req, res, next) {
     }
     try {
       await imgDelete.deleteAllImages('./icons/')
-      res.json(deleteInformation);
+      res.status(200).json(deleteInformation);
       console.log('all users deleted');
     } catch (err) {
       next(err);
