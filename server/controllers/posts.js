@@ -21,9 +21,11 @@ function queryByTag(tag, req, res, next) {
     Post.find({ tags: { $all: tag } }, function (err, posts) {
         if (err) { return next(err); }
         if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found"}); }
-        console.log('Post with specified tag retreived');
-        res.status(200).json({ "posts": posts });
-    }); 
+    }).populate('user_id').exec(function(err, posts) {
+        if (err) { return next(err); }
+        console.log('Posts with specified tag retreived');
+        res.status(200).json({"posts": posts});
+    });; 
 }
 
 router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
@@ -47,8 +49,10 @@ router.get('/api/posts', function (req, res, next) {
     Post.find(function (err, posts) {
         if (err) { return next(err); }
         if (posts.length == 0) { return res.status(404).json({ message: "Post not found"}); }
-        console.log('post retreived');
-        res.status(200).json({ "posts": posts });
+    }).populate('user_id').exec(function(err, posts) {
+        if (err) { return next(err); }
+        console.log('posts retreived');
+        res.status(200).json({"posts": posts});
     });
     }
 });
@@ -58,6 +62,8 @@ router.get('/api/posts/:id', function(req, res, next) {
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
         if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found"}); }
+    }).populate('user_id').exec(function(err, post) {
+        if (err) { return next(err); }
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
@@ -71,9 +77,8 @@ router.put('/api/posts/:id', function(req, res, next) {
         post.title = req.body.title;
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
-        post.user_id = req.body.user_id;
-        post.event = req.body.event;
         post.tags = req.body.tags;
+        post.user_id = req.body.user_id;
         post.save();
         res.status(200).json(post);
         console.log('post saved');
