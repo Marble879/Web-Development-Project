@@ -96,7 +96,8 @@ router.delete('/api/posts/:id', async function (req, res, next) {
         if (err) { return next(err); } 
         if (post == null) { return res.status(404).json({ message: "Post not found" }); }
         try {
-            await imgDelete.deleteSingleImage(post);
+            console.log(post.image);
+            await imgDelete.deleteSingleImage(post.image);
             post.remove();
             res.status(200).json(post);
             console.log('specific post deleted');

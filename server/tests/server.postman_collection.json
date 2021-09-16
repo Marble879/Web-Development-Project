@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "e23a9977-db95-4f13-84e6-62f1568e2991",
-		"name": "server",
+		"_postman_id": "5d110e27-8477-418d-8769-55e6d3323291",
+		"name": "server Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -20,15 +20,18 @@
 							"    pm.response.to.have.status(201);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
 							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
 							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
 							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
-							"})\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
 							"\r",
 							"pm.test(\"Body has _id\", function () {\r",
-							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData._id).to.be.a('String');\r",
 							"});"
 						],
@@ -40,13 +43,114 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Fred\",\r\n    \"password\": \"freddie\",\r\n    \"bio\": \"Hi my name is Fred\",\r\n    \"icon\": \"\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Fred",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "freddie",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "Hi my name is Fred",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
 						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SECOND POST api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.collectionVariables.set(\"user_id2\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Carl\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"whippedcream\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"I like long walks on the leash\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"})\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
 					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Carl",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "whippedcream",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "I like long walks on the leash",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
 				},
 				"url": {
 					"raw": "{{host}}/api/users",
@@ -68,7 +172,47 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							""
+							"var jsonDataUserOne = pm.response.json().user[0];\r",
+							"var jsonDataUserTwo = pm.response.json().user[1];\r",
+							"\r",
+							"var getUser_IdOne = pm.collectionVariables.get('user_id');\r",
+							"var getUser_IdTwo = pm.collectionVariables.get('user_id2');\r",
+							"\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('First User in body has correct id', function () {\r",
+							"    pm.expect(jsonDataUserOne._id).to.eql(getUser_IdOne);\r",
+							"});\r",
+							"\r",
+							"pm.test('Second User in body has correct id', function () {\r",
+							"    pm.expect(jsonDataUserTwo._id).to.eql(getUser_IdTwo);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonDataUserOne.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonDataUserOne.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonDataUserOne.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonDataUserOne.event).to.eql(\"icon\");\r",
+							"    pm.expect(jsonDataUserTwo.username).to.eql(\"Carl\");\r",
+							"    pm.expect(jsonDataUserTwo.password).to.eql(\"whippedcream\");\r",
+							"    pm.expect(jsonDataUserTwo.bio).to.eql(\"I like long walks on the leash\");\r",
+							"    pm.expect(jsonDataUserTwo.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonDataUserOne.icon).to.be.a('String');\r",
+							"    pm.expect(jsonDataUserTwo.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonDataUserOne._id).to.be.a('String');\r",
+							"    pm.expect(jsonDataUserTwo._id).to.be.a('String');\r",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -97,20 +241,31 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getUserId = pm.variables.get(\"user_id\");\r",
+							"var getUser_Id = pm.collectionVariables.get(\"user_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Fred');\r",
-							"    pm.expect(jsonData.password).to.eql('freddie');\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id ', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
 							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -147,20 +302,32 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
+							"var getUser_Id = pm.collectionVariables.get(\"user_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('bob');\r",
-							"    pm.expect(jsonData.password).to.eql('123');\r",
-							"    pm.expect(jsonData.bio).to.eql('bio');\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"123\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bob cares about you\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -172,7 +339,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"bob\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bio\",\r\n    \"icon\": \"\"\r\n}",
+					"raw": "{\r\n    \"username\": \"bob\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -200,20 +367,31 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
+							"var getUser_Id = pm.collectionVariables.get(\"user_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Henry');\r",
-							"    pm.expect(jsonData.password).to.eql('Harry');\r",
-							"    pm.expect(jsonData.bio).to.eql(\"bio\");\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"123\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bob loves you <3\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -225,7 +403,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"Henry\",\r\n    \"password\": \"Harry\",\r\n    \"icon\": \"\"   \r\n}",
+					"raw": "{\r\n    \"bio\": \"bob loves you <3\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -449,8 +627,8 @@
 							"var jsonDataPostOne = pm.response.json().posts[0];",
 							"var jsonDataPostTwo  = pm.response.json().posts[1];",
 							"",
-							"var getPost_IdOne = pm.variables.get('post_id');",
-							"var getPost_IdTwo = pm.variables.get('post_id2');",
+							"var getPost_IdOne = pm.collectionVariables.get('post_id');",
+							"var getPost_IdTwo = pm.collectionVariables.get('post_id2');",
 							"",
 							"",
 							"pm.test('Status code is 200', function () {",
@@ -534,7 +712,7 @@
 						"exec": [
 							"var  jsonData = pm.response.json();",
 							"",
-							"var getPost_Id = pm.variables.get(\"post_id\");",
+							"var getPost_Id = pm.collectionVariables.get(\"post_id\");",
 							"",
 							"pm.test('Status code is 200', function () {",
 							"    pm.response.to.have.status(200);",
@@ -594,7 +772,7 @@
 						"exec": [
 							"var  jsonData = pm.response.json().posts[0];",
 							"",
-							"var getPostTag = pm.variables.get('post_tag');",
+							"var getPostTag = pm.collectionVariables.get('post_tag');",
 							"",
 							"pm.test('Status code is 200', function () {",
 							"    pm.response.to.have.status(200);",
@@ -1282,20 +1460,31 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = pm.response.json();\r",
+							"var  jsonData = pm.response.json();\r",
 							"\r",
-							"var getUserId = pm.collectionVariables.get(\"user_id\");\r",
+							"var getUser_Id = pm.variables.get(\"user_id\");\r",
 							"\r",
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"response should have valid JSON data\", () => {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    pm.expect(jsonData._id).to.eql(getUserId);\r",
-							"    pm.expect(jsonData.username).to.eql('Henry');\r",
-							"    pm.expect(jsonData.password).to.eql('Harry');\r",
-							"    pm.expect(jsonData.bio).to.eql(\"bio\");\r",
+							"pm.test('Body has _id', function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct _id', function () {\r",
+							"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has correct user, password, bio, and event', function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"bob\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"123\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"bob loves you <3\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1320,14 +1509,113 @@
 			"response": []
 		},
 		{
+			"name": "VALIDATION POST api/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var userId = jsonData._id;\r",
+							"pm.environment.set(\"user_id\", userId);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+							"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+							"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+							"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+							"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+							"});\r",
+							"\r",
+							"pm.test('Body has an icon url', function () {\r",
+							"    pm.expect(jsonData.icon).to.be.a('String');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "Fred",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "freddie",
+							"type": "text"
+						},
+						{
+							"key": "bio",
+							"value": "Hi my name is Fred",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "icon",
+							"type": "text"
+						},
+						{
+							"key": "icon",
+							"type": "file",
+							"src": "./tests/test_icon.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/users",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "DELETEALL api/users",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Response is created\", function() {\r",
-							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"var  jsonData = pm.response.json();\r",
+							"\r",
+							"var numberOfMatchedDocuments = jsonData.n;\r",
+							"var isDeleteSuccesful = jsonData.ok;\r",
+							"var deletedCount = jsonData.deletedCount;\r",
+							"\r",
+							"\r",
+							"pm.test('Status code is 200', function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Has deleted sucesfully', function() {\r",
+							"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of documents deleted', function() {\r",
+							"    pm.expect(numberOfMatchedDocuments).to.eql(2);\r",
+							"});\r",
+							"\r",
+							"pm.test('Correct number of deletes have occured', function() {\r",
+							"    pm.expect(deletedCount).to.eql(2);\r",
 							"});"
 						],
 						"type": "text/javascript"
@@ -1394,6 +1682,10 @@
 		},
 		{
 			"key": "rating_id",
+			"value": ""
+		},
+		{
+			"key": "user_id2",
 			"value": ""
 		}
 	]

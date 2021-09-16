@@ -9,7 +9,7 @@ var postSchema = new Schema({
     numberOfFavorites: {type: Number, default: 0 },
     tags: { type: [String] },
     image: { type: String, required: true },
-    ratings: [{ type: Schema.Types.ObjectId, ref: 'rating' }]
+    ratings: [{ type: Schema.Types.ObjectId, ref: 'ratings' }]
 });
 
 postSchema.pre('remove', async function(next) {

@@ -2,8 +2,8 @@ var path = require('path');
 var fs = require('fs');
 
 var imageDeleteHandler = {
-    deleteSingleImage: async function (post) {
-        await fs.promises.unlink(post.image);
+    deleteSingleImage: async function (path) {
+        await fs.promises.unlink(path);
     },
     deleteAllImages: async function (imageDirectory) {
             const images = await fs.promises.readdir(imageDirectory);

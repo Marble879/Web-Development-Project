@@ -1,11 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var imgUpload = require('../image_handling/imageUploadHandler');
+var imgDelete = require('../image_handling/imageDeleteHandler');
 
 router.use(express.json());
 
-router.post("/api/users", function (req, res, next) {
+router.post("/api/users", imgUpload.single('icon'), function (req, res, next) {
+  //NOTE: When creating a user, the event variable has to be passed before the image!
   var user = new User(req.body);
+  user.icon = req.file.path;
   user.save(function (err, user) {
     if (err) {
       return next(err);
@@ -21,7 +25,7 @@ router.get("/api/users", function (req, res, next) {
       return next(err);
     }
     console.log('user retreived');
-    res.json({ user: user });
+    res.status(200).json({ user: user });
   });
 });
 
@@ -35,7 +39,7 @@ router.get("/api/users/:id", function (req, res, next) {
       return res.status(404).json({ message: "User not found" });
     }
     console.log('user with specified id retreived');
-    res.json(user);
+    res.status(200).json(user);
   });
 });
 
@@ -51,9 +55,8 @@ router.put("/api/users/:id", function (req, res, next) {
     user.username = req.body.username;
     user.password = req.body.password;
     user.bio = req.body.bio;
-    user.icon = req.body.icon;
     user.save();
-    res.json(user);
+    res.status(200).json(user);
     console.log('user saved');
   });
 });
@@ -68,35 +71,44 @@ router.patch("/api/users/:id", function (req, res, next) {
     user.username = (req.body.username || user.username);
     user.password = (req.body.password || user.password);
     user.bio = (req.body.bio || user.bio);
-    user.icon = (req.body.icon || user.icon);
     user.save();
-    res.json(user);
+    res.status(200).json(user);
     console.log('user updated');
   });
 });
 
-router.delete("/api/users/:id", function (req, res, next) {
+router.delete("/api/users/:id", async function (req, res, next) {
   var id = req.params.id;
-  User.findOneAndDelete({ _id: id }, function (err, user) {
+  User.findOneAndDelete({ _id: id }, async function (err, user) {
     if (err) {
       return next(err);
     }
     if (user == null) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.json(user);
-    console.log('user deleted');
+    try {
+      await imgDelete.deleteSingleImage(user.icon);
+      res.status(200).json(user);
+      console.log('')
+    } catch (err) {
+      next(err);
+    }
   });
 });
 
 // DELETE ALL USERS FOR TESTING PURPOSES
-router.delete("/api/users", function (req, res, next) {
-  User.deleteMany({}, function (err, deleteInformation) {
+router.delete("/api/users", async function (req, res, next) {
+  User.deleteMany({}, async function (err, deleteInformation) {
     if (err) {
       return next(err);
     }
-    res.json(deleteInformation);
-    console.log('all users deleted');
+    try {
+      await imgDelete.deleteAllImages('./icons/')
+      res.status(200).json(deleteInformation);
+      console.log('all users deleted');
+    } catch (err) {
+      next(err);
+    }
   });
 });
 
