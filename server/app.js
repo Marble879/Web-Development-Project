@@ -39,7 +39,7 @@ app.get('/api', function(req, res) {
 
 
 app.use('/uploads', express.static('uploads')); // makes uploads folder public
-app,use('/icons', express.static('icons')); 
+app.use('/icons', express.static('icons')); 
 app.use(postController);
 app.use(userController);
 
