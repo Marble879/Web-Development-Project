@@ -1895,8 +1895,99 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"title\": \"Landscape Pictures\",\r\n    \"thumbnail\": \"\"\r\n}",
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Landscape Pictures",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "thumbnail",
+							"type": "text"
+						},
+						{
+							"key": "thumbnail",
+							"type": "file",
+							"src": "./tests/test_thumnail.jpg"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[COLLECTION] Create second user to show in next test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var collectionId = jsonData._id;\r",
+							"pm.environment.set(\"collection_id\", collectionId);\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Landscape Pictures",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "thumbnail",
+							"type": "text"
+						},
+						{
+							"key": "thumbnail",
+							"type": "file",
+							"src": "./tests/test_thumnail.jpg"
+						}
+					],
 					"options": {
 						"raw": {
 							"language": "json"
@@ -2138,6 +2229,81 @@
 						"{{user_id}}",
 						"collections",
 						"{{collection_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[COLLECTION] Post to show that delete all collections works",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var  jsonData = pm.response.json();\r",
+							"var collectionId = jsonData._id;\r",
+							"pm.environment.set(\"collection_id\", collectionId);\r",
+							"\r",
+							"var getCollectionId = pm.variables.get(\"collection_id\");\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
+							"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Body has _id\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData._id).to.be.a('String');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "Landscape Pictures",
+							"type": "text"
+						},
+						{
+							"key": "event",
+							"value": "thumbnail",
+							"type": "text"
+						},
+						{
+							"key": "thumbnail",
+							"type": "file",
+							"src": "./tests/test_thumnail.jpg"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/users/{{user_id}}/collections",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"{{user_id}}",
+						"collections"
 					]
 				}
 			},

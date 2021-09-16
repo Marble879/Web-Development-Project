@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var collectionSchema = new Schema({
     title: { type: String },
+    event: { type: String },
     thumbnail: { type: String, required: true }
 });
 

@@ -6,10 +6,10 @@ var Collection = require('../models/collection');
 
 router.use(express.json());
 
-router.post('/api/users/:id/collections', imgUpload.single('image'), function (req, res, next) {
+router.post('/api/users/:id/collections', imgUpload.single('thumbnail'), function (req, res, next) {
     console.log(req.file);
     var collection = new Collection(req.body);
-    post.thumbnail = req.file.path;
+    collection.thumbnail = req.file.path;
     collection.save(function (err, collection) {
         if (err) {
             return next(err);
@@ -53,7 +53,6 @@ router.put("/api/users/:id/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": " collection not found" });
         }
         collection.title = req.body.title;
-        collection.thumbnail = req.body.thumbnail;
         collection.save();
         res.status(200).json(collection);
         console.log("collection saved");
@@ -70,16 +69,15 @@ router.patch("/api/users/:id/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": "user not found" });
         }
         collection.title = (req.body.title || collection.title);
-        collection.thumbnail = (req.body.thumbnail || collection.thumbnail);
         collection.save();
         res.status(200).json(collection);
         console.log("collection updated");
     });
 });
 
-router.delete("/api/users/:id/collections/:id", function (req, res, next) {
+router.delete("/api/users/:id/collections/:id", async function (req, res, next) {
     var id = req.params.id;
-    Collection.findOneAndDelete({ _id: id }, function (err, collection) {
+    Collection.findOneAndDelete({ _id: id }, async function (err, collection) {
         if (err) {
             return next(err);
         }
@@ -97,8 +95,8 @@ router.delete("/api/users/:id/collections/:id", function (req, res, next) {
 });
 
 //DELETE ALL COLLECTIONS FOR TESTING PURPOSES
-router.delete("/api/users/:id/collections", function (req, res, next) {
-    Collection.deleteMany({}, function (err, deleteInformation) {
+router.delete("/api/users/:id/collections", async function (req, res, next) {
+    Collection.deleteMany({}, async function (err, deleteInformation) {
         if (err) {
             return next(err);
         }

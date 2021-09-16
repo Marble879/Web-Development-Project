@@ -9,7 +9,7 @@ var userSchema = new Schema({
   bio: { type: String },
   event: { type: String },
   icon: { type: String, required: true },
-  collections: [{ type: Schema.Types.ObjectId, ref: "collection" }]
+  collections: [{ type: Schema.Types.ObjectId, ref: "collections" }]
 });
 
 userSchema.pre('remove', async function (next) {
