@@ -14,6 +14,7 @@ var Rating = require('../models/rating');
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
 var mongoose = require('mongoose');
+var multer = require('multer');
 
 
 router.use(express.json());
@@ -29,20 +30,27 @@ function queryByTag(tag, req, res, next) {
     });;
 }
 
-router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
+router.post('/api/posts', imgUpload.single('image') ,function (req, res, next) {
     //NOTE: When creating a post, the event variable has to be passed before the image!
     var post = new Post(req.body);
     post.post_id = mongoose.Types.ObjectId();
-    post.image = req.file.path;
+    try {
+        post.image = req.file.path;
+    } catch (err){
+        if (err instanceof TypeError){
+            err.status = 422;
+            err.message = 'Input error, Image was not found';
+            return next(err);
+        } 
+    }
     post.save(function (err, post) {
         if (err) {
             if ( err.name == 'ValidationError' ) {
                 err.message = 'ValidationError. Incorrect data input.';
                 err.status = 422;
-            }
+            } 
             return next(err); 
         }
-        console.log('post created');
         res.status(201).json(post);
     });
 });
