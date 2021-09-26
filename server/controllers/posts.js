@@ -31,12 +31,17 @@ function queryByTag(tag, req, res, next) {
 
 router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
     //NOTE: When creating a post, the event variable has to be passed before the image!
-    console.log(req.file);
     var post = new Post(req.body);
     post.post_id = mongoose.Types.ObjectId();
     post.image = req.file.path;
     post.save(function (err, post) {
-        if (err) { return next(err) }
+        if (err) {
+            if ( err.name == 'ValidationError' ) {
+                err.message = 'ValidationError. Incorrect data input.';
+                err.status = 422;
+            }
+            return next(err); 
+        }
         console.log('post created');
         res.status(201).json(post);
     });
@@ -62,7 +67,7 @@ router.get('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found" }); }
+        if (post == null) { return res.status(404).json({ message: "No Post with id: " + id + " found" }); } 
     }).populate('user_id').exec(function (err, post) {
         if (err) { return next(err); }
         console.log('Post with specified id retreived');
