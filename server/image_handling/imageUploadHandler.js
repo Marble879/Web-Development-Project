@@ -9,13 +9,18 @@ const thumbnailImageDirectory = './thumbnails/';
 var storage = multer.diskStorage({
     destination: function (req, file, cb) { // function defines where incoming image should be stored.
         if (req.body.event == 'post') {
-            cb(null, postImageDirectory)
+            cb(null, postImageDirectory);
         }
-        if (req.body.event == 'icon') {
-            cb(null, iconImageDirectory)
+        else if (req.body.event == 'icon') {
+            cb(null, iconImageDirectory);
         }
-        if (req.body.event == 'thumbnail') {
-            cb(null, thumbnailImageDirectory)
+        else if (req.body.event == 'thumbnail') {
+            cb(null, thumbnailImageDirectory);
+        }
+        else {
+            var err = new Error('Invalid event');
+            err.status = 422;
+            cb(err);
         }
     },
     filename: function (req, file, cb) {
@@ -28,8 +33,9 @@ var imageFilter = function (req, image, cb) {
         //accepts image
         cb(null, true);
     } else {
-        //rejects image
-        cb(new Error('ERROR: Image file type is not supported'), false); // Error message added here due to this being the fail/rejected case
+        var err = new Error('ERROR: Image file type is not supported');
+        err.status = 415;
+        cb(err, false); // Error message added here due to this being the fail/rejected case
     }
 };
 
@@ -37,8 +43,8 @@ var imgUpload = multer({
     storage: storage,
     fileFilter: imageFilter,
     limits: {
-        fileSize: 1024 * 1024 * 80 // accepts file sizes up to 80mb
+        fileSize: 1024 * 1024 * 25 // accepts file sizes up to 25mb
     }
-});
+}); 
 
 module.exports = imgUpload;
