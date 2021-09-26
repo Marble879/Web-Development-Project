@@ -2987,7 +2987,22 @@
 									"response": []
 								},
 								{
-									"name": "[ERRPOST] Delete all posts Copy",
+									"name": "[ERRPOST] Delete all posts for error case test purposes",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();",
+													"",
+													"pm.test('Status code is 200', function () {",
+													"    pm.response.to.have.status(200);",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
 									"request": {
 										"method": "DELETE",
 										"header": [],

@@ -22,9 +22,13 @@ router.use(express.json());
 function queryByTag(tag, req, res, next) {
     Post.find({ tags: { $all: tag } }, function (err, posts) {
         if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found" }); }
     }).populate('user_id').exec(function (err, posts) {
         if (err) { return next(err); }
+        if (posts.length == 0) { 
+            var err = new Error('No post with tag: ' + tag + ' found');
+            err.status = 404;
+            return next(err);
+        }
         console.log('Posts with specified tag retreived');
         res.status(200).json({ "posts": posts });
     });;
@@ -62,9 +66,13 @@ router.get('/api/posts', function (req, res, next) {
     } else {
         Post.find(function (err, posts) {
             if (err) { return next(err); }
-            if (posts.length == 0) { return res.status(404).json({ message: "Post not found" }); }
         }).populate('user_id').exec(function (err, posts) {
             if (err) { return next(err); }
+            if (posts.length == 0) { 
+                var err = new Error('No posts found');
+                err.status = 404;
+                return next(err);
+            }
             console.log('posts retreived');
             res.status(200).json({ "posts": posts });
         });
@@ -75,9 +83,19 @@ router.get('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "No Post with id: " + id + " found" }); } 
     }).populate('user_id').exec(function (err, post) {
-        if (err) { return next(err); }
+        if (err) { 
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err); 
+        }
+        if (post == null) { 
+            var err = new Error('No Post with id: ' + id + ' found');
+            err.status = 404;
+            return next(err); 
+        } 
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
