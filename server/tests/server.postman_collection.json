@@ -2306,8 +2306,8 @@
 										"exec": [
 											"var  jsonData = pm.response.json();",
 											"",
-											"pm.test('Status code is 422', function () {",
-											"    pm.response.to.have.status(422);",
+											"pm.test('Status code is 413', function () {",
+											"    pm.response.to.have.status(413);",
 											"});",
 											"",
 											""
