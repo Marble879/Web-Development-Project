@@ -7,6 +7,7 @@ var history = require('connect-history-api-fallback');
 var userController = require('./controllers/users');
 var ratingController = require('./controllers/ratings');
 var collectionController = require('./controllers/collections');
+var multer = require('multer');
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
@@ -75,6 +76,16 @@ app.use(function (err, req, res, next) {
         // Return sensitive stack trace only in dev mode
         err_res['error'] = err.stack;
     }
+    // Check for multer image handling errors
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE'){
+            err.status = 413; 
+        } 
+        if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+            err.status = 422;
+        }
+    }
+    console.log('error name: ' + err.name);
     res.status(err.status || 500);
     res.json(err_res);
 });
