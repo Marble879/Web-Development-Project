@@ -135,8 +135,18 @@ router.patch('/api/posts/:id', function (req, res, next) {
 router.delete('/api/posts/:id', async function (req, res, next) {
     var id = req.params.id;
     Post.findOneAndDelete({ _id: id }, async function (err, post) {
-        if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
+        if (err) {
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err);
+        }
+        if (post == null) { 
+            var err = new Error('Post not found');
+            err.status = 404;
+            return next(err); 
+        } 
         try {
             await imgDelete.deleteSingleImage(post.image);
             post.remove();
@@ -152,6 +162,11 @@ router.delete('/api/posts/:id', async function (req, res, next) {
 router.delete('/api/posts', async function (req, res, next) {
     Post.deleteMany({}, async function (err, deleteInformation) {
         if (err) { return next(err); }
+        if (deleteInformation.n == 0) { 
+            var err = new Error('No posts were found');
+            err.status = 404;
+            return next(err); 
+        } 
         try {
             await imgDelete.deleteAllImages('./uploads/');
             await Rating.deleteMany();

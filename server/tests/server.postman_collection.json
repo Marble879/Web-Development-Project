@@ -3080,14 +3080,13 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/api/posts/delete",
+											"raw": "{{host}}/api/posts",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"delete"
+												"posts"
 											]
 										}
 									},
@@ -3114,14 +3113,14 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/api/posts/delete",
+											"raw": "{{host}}/api/posts/abc",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
 												"posts",
-												"delete"
+												"abc"
 											]
 										}
 									},
@@ -3262,13 +3261,14 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/api/posts",
+											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts"
+												"posts",
+												"{{post_id_error_case}}"
 											]
 										}
 									},
