@@ -2359,7 +2359,7 @@
 										{
 											"key": "image",
 											"type": "file",
-											"src": "./tests/invalid_file_format_test.txt"
+											"src": "./tests/test_greater_than_30_image.jpg"
 										}
 									]
 								},
