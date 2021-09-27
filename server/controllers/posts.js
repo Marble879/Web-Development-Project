@@ -104,16 +104,33 @@ router.get('/api/posts/:id', function (req, res, next) {
 router.put('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
-        if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
+        if (err) { 
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err);
+        }
+        if (post == null) {
+            var err = new Error('Post not found');
+            err.status = 404;
+            return next(err)
+        }
         post.title = req.body.title;
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
         post.tags = req.body.tags;
-        post.user_id = req.body.user_id;
-        post.save();
-        res.status(200).json(post);
-        console.log('post saved');
+        post.save(function(err, post) {
+            if (err) {
+                if ( err.name == 'ValidationError' ) {
+                    err.message = 'ValidationError. Incorrect data input.';
+                    err.status = 422;
+                } 
+                return next(err); 
+            }
+            res.status(200).json(post);
+            console.log('post saved');
+        });
     });
 });
 
