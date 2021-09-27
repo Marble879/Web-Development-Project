@@ -2971,7 +2971,12 @@
 													"type": "file",
 													"src": "./tests/test_image.jpg"
 												}
-											]
+											],
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
 										},
 										"url": {
 											"raw": "{{host}}/api/posts",
