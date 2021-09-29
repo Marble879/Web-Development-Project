@@ -4,15 +4,16 @@
             <h1> Create a Post </h1>
             <b-row>
                 <b-col>
-                    <h1> {{ form.uploadedImage}} </h1>
-                    <img v-bind:src="form.uploadedImage">
+
+                    <b-img v-if="hasImage" v-bind:src="previewImage" fluid block rounded/>
+
                 </b-col>
                 <b-col>
                     <b-form>
                         <b-form-group id="input-group-image" label="Upload image:" label-for="input-image">
 
-                            <b-form-file id="input-image" label="Upload Image" v-model="form.uploadedImage"
-                            v-on:change="onImageSelected"
+                            <b-form-file id="input-image" label="Upload Image"
+                            v-model="form.uploadedImage"
                             required/>
 
                         </b-form-group>
@@ -29,7 +30,7 @@
 
                             <b-form-textarea
                             id="input-description"
-                            v-model="form.description"
+                            v-model.lazy="form.description"
                             type="text"
                             placeholder="Enter description"/>
 
@@ -65,6 +66,16 @@
 <script>
 // @ is an alias to /src
 // import { Api } from '@/Api'
+
+// NOTE: Image upload and preview was referenced from: https://github.com/bootstrap-vue/bootstrap-vue/issues/4382
+
+const base64Encode = data =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(data)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = error => reject(error)
+  })
 
 export default {
   name: 'create',
@@ -109,13 +120,33 @@ export default {
       show: true
     }
   },
+  computed: {
+    hasImage() {
+      return !!this.form.uploadedImage // !! used to return true or false correctly
+    }
+  },
+  watch: {
+    'form.uploadedImage': function (newValue, oldValue) {
+      console.log(this.form.uploadedImage)
+      if (newValue !== oldValue) {
+        console.log('here')
+        if (newValue) {
+          base64Encode(newValue).then(value => {
+            this.previewImage = value
+          })
+            .catch(() => {
+              this.previewImage = null
+            })
+        } else {
+          this.previewImage = null
+        }
+      }
+    }
+  },
   methods: {
     onSubmit(event) {
       event.preventDefault()
       alert('NEED TO SEND TO BACKEND' + JSON.stringify(this.form))
-    },
-    onImageSelected(event) {
-      console.log(this.form.uploadedImage)
     }
   }
 }
