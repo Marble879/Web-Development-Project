@@ -5,7 +5,7 @@
             <b-row>
                 <b-col>
 
-                    <b-img v-if="hasImage" v-bind:src="previewImage" fluid block rounded/>
+                    <b-img v-if="hasImage" v-bind:src="previewImage" center thumbnail fluid block rounded alt='Image preview'/>
 
                 </b-col>
                 <b-col>
