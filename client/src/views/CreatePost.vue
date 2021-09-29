@@ -30,7 +30,7 @@
 
                             <b-form-textarea
                             id="input-description"
-                            v-model.lazy="form.description"
+                            v-model="form.description"
                             type="text"
                             placeholder="Enter description"/>
 
@@ -54,7 +54,7 @@
 
                         </b-form-group>
 
-                        <b-button type="submit" variant="primary">Post</b-button>
+                        <b-button type="submit" variant="primary" v-on:click="onSubmit">Post</b-button>
                     </b-form>
                 </b-col>
             </b-row>
@@ -65,7 +65,7 @@
 
 <script>
 // @ is an alias to /src
-// import { Api } from '@/Api'
+import { Api } from '@/Api'
 
 // NOTE: Image upload and preview was referenced from: https://github.com/bootstrap-vue/bootstrap-vue/issues/4382
 
@@ -146,8 +146,25 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault()
-      alert('NEED TO SEND TO BACKEND' + JSON.stringify(this.form))
+      const fd = new FormData()
+      // fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
+      fd.append('title', this.form.title)
+      fd.append('description', this.form.description)
+      fd.append('tag', this.form.tag)
+      fd.append('event', 'post')
+      fd.append('image', this.form.uploadedImage)
+      Api.post('/posts', fd)
+        .then(response => {
+          console.log('success')
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
 }
+// DEPENDENT ON OTHER SCREENS:
+// Need to get user_id to store image
+// Need to get collection to put post in if it is chosen.
+// Need to put in default uploads collection.
 </script>
