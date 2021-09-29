@@ -9,7 +9,7 @@ var postSchema = new Schema({
     description: { type: String, default: function() {return ''} },
     numberOfFavorites: { type: Number, default: function() { return 0}, required: true },
     tags: { type: [String], required: true },
-    user_id: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+    user_id: { type: Schema.Types.ObjectId, ref: 'users' },
     event: { type: String, required: true },
     image: { type: String, required: true },
     ratings: [{ type: Schema.Types.ObjectId, ref: 'ratings' }]
