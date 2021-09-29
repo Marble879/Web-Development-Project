@@ -2,19 +2,19 @@
     <div>
         <b-container>
             <h1> Create a Post </h1>
-            <b-row>
+            <b-row v-on:change="resetErrorStatus">
                 <b-col>
 
                     <b-img v-if="hasImage" v-bind:src="previewImage" center thumbnail fluid block rounded alt='Image preview'/>
 
                 </b-col>
                 <b-col>
-                    <b-form>
+                    <b-form @submit="onSubmit">
                         <b-form-group id="input-group-image" label="Upload image:" label-for="input-image">
 
                             <b-form-file id="input-image" label="Upload Image"
                             v-model="form.uploadedImage"
-                            required/>
+                            required />
 
                         </b-form-group>
                         <b-form-group id="input-group-title" label="Insert title:" label-for="input-title">
@@ -54,7 +54,7 @@
 
                         </b-form-group>
 
-                        <b-button type="submit" variant="primary" v-on:click="onSubmit">Post</b-button>
+                        <b-button type="submit" variant="primary" v-bind:disabled="hasError">Post</b-button>
                     </b-form>
                 </b-col>
             </b-row>
@@ -117,7 +117,8 @@ export default {
         text: 'tag2'
       }],
       previewImage: null,
-      show: true
+      show: true,
+      hasError: false
     }
   },
   computed: {
@@ -129,7 +130,6 @@ export default {
     'form.uploadedImage': function (newValue, oldValue) {
       console.log(this.form.uploadedImage)
       if (newValue !== oldValue) {
-        console.log('here')
         if (newValue) {
           base64Encode(newValue).then(value => {
             this.previewImage = value
@@ -146,6 +146,17 @@ export default {
   methods: {
     onSubmit(event) {
       event.preventDefault()
+      const fd = this.createFormData()
+      this.postFormData(fd)
+    },
+    resetForm() {
+      this.form.uploadedImage = null
+      this.form.title = ''
+      this.form.description = ''
+      this.form.collection = null
+      this.form.tag = null
+    },
+    createFormData() {
       const fd = new FormData()
       // fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
       fd.append('title', this.form.title)
@@ -153,18 +164,22 @@ export default {
       fd.append('tag', this.form.tag)
       fd.append('event', 'post')
       fd.append('image', this.form.uploadedImage)
+      return fd
+    },
+    postFormData(fd) {
       Api.post('/posts', fd)
         .then(response => {
-          console.log('success')
+          alert('Successful submission!')
+          this.resetForm()
         })
         .catch(error => {
-          console.log(error)
+          alert(error.response.data.message)
+          this.hasError = true
         })
+    },
+    resetErrorStatus() {
+      this.hasError = false
     }
   }
 }
-// DEPENDENT ON OTHER SCREENS:
-// Need to get user_id to store image
-// Need to get collection to put post in if it is chosen.
-// Need to put in default uploads collection.
 </script>
