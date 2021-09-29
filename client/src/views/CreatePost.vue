@@ -6,6 +6,7 @@
                 <b-col>
 
                     <b-img v-if="hasImage" v-bind:src="previewImage" center thumbnail fluid block rounded alt='Image preview'/>
+                    <b-img v-else v-bind:src="require('../Images/DefaultPostImagePreview.png')" center thumbnail fluid block rounded height="500em" width="500em" alt='Image preview'/>
 
                 </b-col>
                 <b-col>
@@ -158,7 +159,7 @@ export default {
     },
     createFormData() {
       const fd = new FormData()
-      // fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
+      fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
       fd.append('title', this.form.title)
       fd.append('description', this.form.description)
       fd.append('tag', this.form.tag)
