@@ -47,6 +47,13 @@ router.post('/api/posts', imgUpload.single('image') ,function (req, res, next) {
             return next(err);
         } 
     }
+    // This check is necessary to ensure that there is a user_id when creating a post, since a post
+    // needs a user when creating it. If the user is deleted, the post will still remain (hence the manual check).
+    if (!req.body.user_id){
+        var err = new Error('ValidationError: Missing user_id when creating a post');
+        err.status = 422;
+        return next(err);
+    }
     post.save(function (err, post) {
         if (err) {
             if ( err.name == 'ValidationError' ) {
