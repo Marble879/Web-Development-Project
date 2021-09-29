@@ -1,8 +1,8 @@
 <template>
     <div>
         <b-container>
-            <h1> Create a Post </h1>
-            <b-row v-on:change="resetErrorStatus">
+          <h2> Post Creation Page</h2>
+            <b-row v-on:change="resetErrorStatus" class="vh-100 text-center" align-v="center" align-h="center">
                 <b-col>
 
                     <b-img v-if="hasImage" v-bind:src="previewImage" center thumbnail fluid block rounded alt='Image preview'/>
@@ -63,6 +63,8 @@
 
     </div>
 </template>
+
+<style></style>
 
 <script>
 // @ is an alias to /src
@@ -159,7 +161,7 @@ export default {
     },
     createFormData() {
       const fd = new FormData()
-      fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
+      // fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
       fd.append('title', this.form.title)
       fd.append('description', this.form.description)
       fd.append('tag', this.form.tag)
