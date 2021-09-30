@@ -14,6 +14,7 @@ var Rating = require('../models/rating');
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
 var mongoose = require('mongoose');
+var multer = require('multer');
 
 
 router.use(express.json());
@@ -21,23 +22,46 @@ router.use(express.json());
 function queryByTag(tag, req, res, next) {
     Post.find({ tags: { $all: tag } }, function (err, posts) {
         if (err) { return next(err); }
-        if (posts.length == 0) { return res.status(404).json({ message: "No post with tag: " + tag + " found" }); }
     }).populate('user_id').exec(function (err, posts) {
         if (err) { return next(err); }
+        if (posts.length == 0) { 
+            var err = new Error('No post with tag: ' + tag + ' found');
+            err.status = 404;
+            return next(err);
+        }
         console.log('Posts with specified tag retreived');
         res.status(200).json({ "posts": posts });
     });;
 }
 
-router.post('/api/posts', imgUpload.single('image'), function (req, res, next) {
+router.post('/api/posts', imgUpload.single('image') ,function (req, res, next) {
     //NOTE: When creating a post, the event variable has to be passed before the image!
-    console.log(req.file);
     var post = new Post(req.body);
     post.post_id = mongoose.Types.ObjectId();
-    post.image = req.file.path;
+    try {
+        post.image = req.file.path;
+    } catch (err){
+        if (err instanceof TypeError){
+            err.status = 422;
+            err.message = 'Input error, Image was not found';
+            return next(err);
+        } 
+    }
+    // This check is necessary to ensure that there is a user_id when creating a post, since a post
+    // needs a user when creating it. If the user is deleted, the post will still remain (hence the manual check).
+    if (!req.body.user_id){
+        var err = new Error('ValidationError: Missing user_id when creating a post');
+        err.status = 422;
+        return next(err);
+    }
     post.save(function (err, post) {
-        if (err) { return next(err) }
-        console.log('post created');
+        if (err) {
+            if ( err.name == 'ValidationError' ) {
+                err.message = 'ValidationError. Incorrect data input.';
+                err.status = 422;
+            } 
+            return next(err); 
+        }
         res.status(201).json(post);
     });
 });
@@ -49,9 +73,13 @@ router.get('/api/posts', function (req, res, next) {
     } else {
         Post.find(function (err, posts) {
             if (err) { return next(err); }
-            if (posts.length == 0) { return res.status(404).json({ message: "Post not found" }); }
         }).populate('user_id').exec(function (err, posts) {
             if (err) { return next(err); }
+            if (posts.length == 0) { 
+                var err = new Error('No posts found');
+                err.status = 404;
+                return next(err);
+            }
             console.log('posts retreived');
             res.status(200).json({ "posts": posts });
         });
@@ -62,9 +90,19 @@ router.get('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
         if (err) { return next(err); }
-        if (post == 0) { return res.status(404).json({ message: "No Post with id: " + id + " found" }); }
     }).populate('user_id').exec(function (err, post) {
-        if (err) { return next(err); }
+        if (err) { 
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err); 
+        }
+        if (post == null) { 
+            var err = new Error('No Post with id: ' + id + ' found');
+            err.status = 404;
+            return next(err); 
+        } 
         console.log('Post with specified id retreived');
         res.status(200).json(post);
     });
@@ -73,39 +111,84 @@ router.get('/api/posts/:id', function (req, res, next) {
 router.put('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
-        if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
+        if (err) { 
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err);
+        }
+        if (post == null) {
+            var err = new Error('Post not found');
+            err.status = 404;
+            return next(err)
+        }
         post.title = req.body.title;
         post.description = req.body.description;
         post.numberOfFavorites = req.body.numberOfFavorites;
         post.tags = req.body.tags;
-        post.user_id = req.body.user_id;
-        post.save();
-        res.status(200).json(post);
-        console.log('post saved');
+        post.save(function(err, post) {
+            if (err) {
+                if ( err.name == 'ValidationError' ) {
+                    err.message = 'ValidationError. Incorrect data input.';
+                    err.status = 422;
+                } 
+                return next(err); 
+            }
+            res.status(200).json(post);
+            console.log('post saved');
+        });
     });
 });
 
 router.patch('/api/posts/:id', function (req, res, next) {
     var id = req.params.id;
     Post.findById(id, function (err, post) {
-        if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
+        if (err) { 
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err); 
+        }
+        if (post == null) { 
+            var err = new Error('Post not found');
+            err.status = 404;
+            return next(err)
+        }
         post.title = (req.body.title || post.title);
         post.description = (req.body.description || post.description);
         post.numberOfFavorites = (req.body.numberOfFavorites || post.numberOfFavorites);
         post.tags = (req.body.tags || post.tags);
-        post.save();
-        res.status(200).json(post);
-        console.log('post saved');
+        post.save( function (err, post) {
+            if (err) {
+                if ( err.name == 'ValidationError' ) {
+                    err.message = 'ValidationError. Incorrect data input.';
+                    err.status = 422;
+                } 
+                return next(err); 
+            }
+            res.status(200).json(post);
+            console.log('post saved');
+        });
     });
 });
 
 router.delete('/api/posts/:id', async function (req, res, next) {
     var id = req.params.id;
     Post.findOneAndDelete({ _id: id }, async function (err, post) {
-        if (err) { return next(err); }
-        if (post == null) { return res.status(404).json({ message: "Post not found" }); }
+        if (err) {
+            if (err instanceof mongoose.CastError){
+                err.status = 400;
+                err.message = 'Invalid post ID';
+            }
+            return next(err);
+        }
+        if (post == null) { 
+            var err = new Error('Post not found');
+            err.status = 404;
+            return next(err); 
+        } 
         try {
             await imgDelete.deleteSingleImage(post.image);
             post.remove();
@@ -121,6 +204,11 @@ router.delete('/api/posts/:id', async function (req, res, next) {
 router.delete('/api/posts', async function (req, res, next) {
     Post.deleteMany({}, async function (err, deleteInformation) {
         if (err) { return next(err); }
+        if (deleteInformation.n == 0) { 
+            var err = new Error('No posts were found');
+            err.status = 404;
+            return next(err); 
+        } 
         try {
             await imgDelete.deleteAllImages('./uploads/');
             await Rating.deleteMany();
