@@ -36,14 +36,6 @@
                             placeholder="Enter description"/>
 
                         </b-form-group>
-                        <b-form-group id="select-collection" label="Select collection:" label-for="select-collection">
-
-                            <b-form-select
-                            id="select-collection"
-                            v-model="form.collection"
-                            :options="collectionOptions"/>
-
-                        </b-form-group>
                             <b-form-group id="select-tag" label="Select tag:" label-for="select-tag">
 
                             <b-form-select
@@ -88,25 +80,8 @@ export default {
         uploadedImage: null,
         title: '',
         description: '',
-        collection: null,
         tag: null
       },
-      collectionOptions: [{
-        value: null,
-        text: 'Please select a collection'
-      },
-      {
-        value: 'NOTE: WILL HAVE TO GET THESE COLLECTIONS FROM THE USER!!!',
-        text: 'NOTE: WILL HAVE TO GET THESE COLLECTIONS FROM THE USER!!!'
-      },
-      {
-        value: 'tempcoll1',
-        text: 'tempcoll1'
-      },
-      {
-        value: 'tempcoll2',
-        text: 'tempcoll2'
-      }],
       tagOptions: [{
         value: null,
         text: 'Please select a tag'
@@ -118,6 +93,14 @@ export default {
       {
         value: 'tag2',
         text: 'tag2'
+      },
+      {
+        value: 'tag3',
+        text: 'tag3'
+      },
+      {
+        value: 'tag4',
+        text: 'tag4'
       }],
       previewImage: null,
       show: true,
@@ -156,7 +139,6 @@ export default {
       this.form.uploadedImage = null
       this.form.title = ''
       this.form.description = ''
-      this.form.collection = null
       this.form.tag = null
     },
     createFormData() {
