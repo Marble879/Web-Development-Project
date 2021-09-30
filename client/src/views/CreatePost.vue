@@ -105,7 +105,9 @@ export default {
       previewImage: null,
       show: true,
       hasError: false,
-      userId: null
+      userId: null,
+      defaultCollection: null,
+      postId: null
     }
   },
   computed: {
@@ -115,7 +117,6 @@ export default {
   },
   watch: {
     'form.uploadedImage': function (newValue, oldValue) {
-      console.log(this.form.uploadedImage)
       if (newValue !== oldValue) {
         if (newValue) {
           base64Encode(newValue).then(value => {
@@ -136,7 +137,9 @@ export default {
       await this.getUserId()
       if (!this.hasError) {
         const fd = await this.createFormData()
-        this.postFormData(fd)
+        await this.postFormData(fd)
+        await this.getCollectionId()
+        await this.addToDefaultCollection()
       }
     },
     resetForm() {
@@ -147,7 +150,6 @@ export default {
     },
     async createFormData() {
       const fd = new FormData()
-      console.log(this.userId)
       fd.append('user_id', this.userId)
       fd.append('title', this.form.title)
       fd.append('description', this.form.description)
@@ -156,9 +158,11 @@ export default {
       fd.append('image', this.form.uploadedImage)
       return fd
     },
-    postFormData(fd) {
-      Api.post('/posts', fd)
+    async postFormData(fd) {
+      await Api.post('/posts', fd)
         .then(response => {
+          console.log()
+          this.postId = response.data._id
           alert('Successful submission!')
           this.resetForm()
         })
@@ -184,6 +188,31 @@ export default {
           if (error.response.status === 403) {
             alert('Error, not logged in!')
           }
+          this.hasError = true
+        })
+    },
+    async addToDefaultCollection() {
+      await Api.patch('/users/:id/collections/' + this.defaultCollection, {
+        post_id: this.postId
+      })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+          alert(error.response.data.message)
+          this.hasError = true
+        })
+    },
+    async getCollectionId() {
+      await Api.get('/users/' + this.userId)
+        .then(response => {
+          console.log(response.data.collections[0])
+          this.defaultCollection = response.data.collections[0]
+        })
+        .catch(error => {
+          console.log(error)
+          alert(error.response.data.message)
           this.hasError = true
         })
     }
