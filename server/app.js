@@ -4,10 +4,12 @@ var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
+var passport = require('passport');
 var userController = require('./controllers/users');
 var ratingController = require('./controllers/ratings');
 var collectionController = require('./controllers/collections');
 var multer = require('multer');
+var userAuthentication = require('./controllers/userAuth');
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
@@ -47,6 +49,10 @@ app.use(postController);
 app.use(ratingController);
 app.use(userController);
 app.use(collectionController);
+app.use(userAuthentication);
+
+//Passport middleware
+app.use(passport.initialize());
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "96c8673d-fd2d-4686-808e-d33f65a5e8ec",
+		"_postman_id": "24208cfe-f4fa-4cc4-84d3-cd6e7a8376bb",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -2811,12 +2811,7 @@
 													"type": "file",
 													"src": "./tests/test_image.jpg"
 												}
-											],
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
+											]
 										},
 										"url": {
 											"raw": "{{host}}/api/posts",
@@ -3333,7 +3328,7 @@
 											"query": [
 												{
 													"key": "",
-													"value": null,
+													"value": "",
 													"disabled": true
 												}
 											]
@@ -3846,7 +3841,7 @@
 											"query": [
 												{
 													"key": "",
-													"value": null,
+													"value": "",
 													"disabled": true
 												}
 											]
@@ -6578,6 +6573,91 @@
 							"path": [
 								"api",
 								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Auth tests",
+			"item": [
+				{
+					"name": "[USER AUTH] Register a user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"bio\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/users/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[USER AUTH] User Login (token)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/users/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[USER AUTH] Get user data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer REPLACE HERE WITH USER TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/users/data",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"data"
 							]
 						}
 					},
