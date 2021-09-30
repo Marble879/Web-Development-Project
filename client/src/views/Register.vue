@@ -98,12 +98,11 @@ export default {
         collections: this.collections
       })
         .then(() => {
-          console.log('Registration Successful')
           this.$router.push({ name: 'login' })
+          alert('Registration successful!')
         })
         .catch((error) => {
-          const message = error.response.data.message
-          console.log(message)
+          alert(error.response.data.message)
         })
     }
   }

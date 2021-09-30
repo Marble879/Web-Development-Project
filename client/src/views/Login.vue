@@ -51,12 +51,11 @@ export default {
       })
         .then((response) => {
           window.localStorage.setItem('auth', response.data.token)
-          console.log('Login Successful')
+          alert('Login Successful')
           this.$router.push({ name: 'home' })
         })
         .catch((error) => {
-          const message = error.response.data.message
-          console.log(message)
+          alert(error.response.data.message)
         })
     }
   }
