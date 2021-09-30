@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3f1ef3be-9c06-4a99-9a5b-3a7e9f213463",
+		"_postman_id": "57a724d7-db48-49a2-8e27-426a9cf97d9a",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1899,15 +1899,6 @@
 									"    pm.response.to.have.status(201);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
-									"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an thumbnail url', function () {\r",
-									"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
-									"});\r",
-									"\r",
 									"pm.test(\"Body has _id\", function () {\r",
 									"    pm.expect(jsonData._id).to.be.a('String');\r",
 									"});"
@@ -1930,24 +1921,22 @@
 								{
 									"key": "event",
 									"value": "thumbnail",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "thumbnail",
 									"type": "file",
-									"src": "./tests/test_thumnail.jpg"
+									"src": "./tests/test_thumnail.jpg",
+									"disabled": true
 								},
 								{
 									"key": "post_id",
 									"value": "{{post_id2}}",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{host}}/api/users/{{user_id}}/collections",
@@ -1977,15 +1966,6 @@
 									"\r",
 									"pm.test(\"Status code is 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
-									"    pm.expect(jsonData.title).to.eql(\"Dog Pictures\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an thumbnail url', function () {\r",
-									"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Body has _id\", function () {\r",
@@ -2022,12 +2002,7 @@
 									"value": "{{post_id2}}",
 									"type": "text"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{host}}/api/users/{{user_id}}/collections",
@@ -2068,19 +2043,6 @@
 									"pm.test('Second Collection in body has correct id', function () {\r",
 									"    pm.expect(jsonDataCollectionTwo._id).to.eql(getCollection_IdTwo);\r",
 									"});\r",
-									"\r",
-									"pm.test('Body has correct title and event', function () {\r",
-									"    pm.expect(jsonDataCollectionOne.title).to.eql(\"Landscape Pictures\");\r",
-									"    pm.expect(jsonDataCollectionOne.event).to.eql(\"thumbnail\");\r",
-									"    pm.expect(jsonDataCollectionTwo.title).to.eql(\"Dog Pictures\");\r",
-									"    pm.expect(jsonDataCollectionTwo.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an image url', function () {\r",
-									"    pm.expect(jsonDataCollectionOne.thumbnail).to.be.a('String');\r",
-									"    pm.expect(jsonDataCollectionTwo.thumbnail).to.be.a('String');\r",
-									"});\r",
-									"\r",
 									"\r",
 									"pm.test('Body has _id', function () {\r",
 									"    pm.expect(jsonDataCollectionOne._id).to.be.a('String');\r",
@@ -2131,15 +2093,7 @@
 									"pm.test('Body has correct _id ', function () {\r",
 									"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
 									"});\r",
-									"\r",
-									"pm.test('Body has correct title and event', function () {\r",
-									"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an thumbnail url', function () {\r",
-									"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
-									"});"
+									"\r"
 								],
 								"type": "text/javascript"
 							}
@@ -2186,15 +2140,7 @@
 									"pm.test('Body has correct _id', function () {\r",
 									"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
 									"});\r",
-									"\r",
-									"pm.test('Body has correct user, password, bio, and event', function () {\r",
-									"    pm.expect(jsonData.title).to.eql(\"Cat Photos\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an icon url', function () {\r",
-									"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
-									"});"
+									"\r"
 								],
 								"type": "text/javascript"
 							}
@@ -2250,15 +2196,7 @@
 									"pm.test('Body has correct _id', function () {\r",
 									"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
 									"});\r",
-									"\r",
-									"pm.test('Body has correct title and event', function () {\r",
-									"    pm.expect(jsonData.title).to.eql(\"Cosplay\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an thumbnail url', function () {\r",
-									"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
-									"});"
+									"\r"
 								],
 								"type": "text/javascript"
 							}
@@ -2298,32 +2236,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"exec": [
-									"var  jsonData = pm.response.json();\r",
-									"\r",
-									"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
-									"\r",
-									"pm.test('Status code is 200', function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has _id', function () {\r",
-									"    pm.expect(jsonData._id).to.be.a('String');\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has correct _id', function () {\r",
-									"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has correct title and event', function () {\r",
-									"    pm.expect(jsonData.title).to.eql(\"Cosplay\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"thumbnail\");\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has an thumbnail url', function () {\r",
-									"    pm.expect(jsonData.thumbnail).to.be.a('String');\r",
-									"});"
-								],
+								"exec": [],
 								"type": "text/javascript"
 							}
 						}
@@ -2367,7 +2280,6 @@
 									"pm.test(\"Body has correct username, password, bio and icon\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData._id).to.eql(getCollectionId);\r",
-									"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
 									"})\r",
 									"\r",
 									"pm.test(\"Body has _id\", function () {\r",
@@ -2400,12 +2312,7 @@
 									"type": "file",
 									"src": "./tests/test_thumnail.jpg"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{host}}/api/users/{{user_id}}/collections",
