@@ -84,9 +84,9 @@ app.use(function (err, req, res, next) {
     }
     // Check for multer image handling errors
     if (err instanceof multer.MulterError) {
-        if (err.code === 'LIMIT_FILE_SIZE'){
-            err.status = 413; 
-        } 
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            err.status = 413;
+        }
         if (err.code === 'LIMIT_UNEXPECTED_FILE') {
             err.status = 422;
         }
