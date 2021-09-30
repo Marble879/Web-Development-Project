@@ -1,6 +1,6 @@
 <template>
   <div class="vue-tempalte">
-    <form @submit.prevent="postCollections(), getCollections(), submitForm()">
+    <form @submit.prevent="submitForm()">
       <h3>Registration</h3>
 
       <div class="form-group">
@@ -60,41 +60,36 @@ export default {
     }
   },
   methods: {
-    postCollections() {
-      Api.post('/users/:id/collections', {
+    async postCollections() {
+      await Api.post('/users/:id/collections', {
         title: 'MyPhotos',
         thumbnail: ''
       })
         .then((response) => {
           console.log(response)
+          this.collections.push(response.data._id)
         })
         .catch((error) => {
           const message = error.response.data.message
           console.log(message)
         })
 
-      Api.post('/users/:id/collections', {
+      await Api.post('/users/:id/collections', {
         title: 'FavoritedImages',
         thumbnail: ''
       })
         .then((response) => {
           console.log(response)
+          this.collections.push(response.data._id)
         })
         .catch((error) => {
           const message = error.response.data.message
           console.log(message)
         })
     },
-    getCollections() {
-      Api.get('/users/:id/collections')
-        .then((response) => {
-          this.collections = response.data.collections
-          console.log(response.data.collections)
-        })
-        .catch(() => {})
-    },
 
-    submitForm() {
+    async submitForm() {
+      await this.postCollections()
       Api.post('/users/register', {
         username: this.username,
         password: this.password,

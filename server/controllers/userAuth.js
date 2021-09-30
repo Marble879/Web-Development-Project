@@ -13,10 +13,12 @@ router.post('/api/users/register', (req, res) => {
     var username = req.body.username;
     var bio = req.body.bio;
     var password = req.body.password;
+    var collections = req.body.collections
     var newUser = new User({
         username,
         bio,
         password,
+        collections
     });
     User.createUser(newUser, (error, user) => {
         if (error) {
