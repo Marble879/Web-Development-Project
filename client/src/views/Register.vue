@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     submitForm() {
-      Api.post('/users/register', {
+      Api.post('/usersAuth/register', {
         username: this.username,
         password: this.password,
         bio: this.bio,
