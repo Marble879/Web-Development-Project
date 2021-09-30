@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "3ec4b12d-83a9-4636-88cd-b16f7dde2909",
+		"_postman_id": "3f1ef3be-9c06-4a99-9a5b-3a7e9f213463",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -3188,6 +3188,91 @@
 							"path": [
 								"api",
 								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Auth tests",
+			"item": [
+				{
+					"name": "[USER AUTH] Register a user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"bio\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/users/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[USER AUTH] User Login (token)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/users/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[USER AUTH] Get user data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer REPLACE HERE WITH USER TOKEN",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}/users/data",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"data"
 							]
 						}
 					},

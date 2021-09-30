@@ -38,9 +38,9 @@ router.post('/api/users/login', (req, res) => {
                 res.status(404).json({ message: 'The user does not exist!' });
             } else {
                 User.comparePassword(password, user.password, (error, isMatch) => {
-                    if (error) throw error;
+                    if (error) console.log(error);
                     if (isMatch) {
-                        var payload = { id: user.id };
+                        var payload = { id: user };
                         var token = jwt.sign(payload, jwtOptions.secretOrKey);
                         res.json({ message: 'ok', token });
                     } else {
@@ -51,5 +51,34 @@ router.post('/api/users/login', (req, res) => {
         });
     }
 });
+
+const checkToken = (req, res, next) => {
+    const header = req.headers['authorization'];
+
+    if (typeof header !== 'undefined') {
+        const bearer = header.split(' ');
+        const token = bearer[1];
+
+        req.token = token;
+        next();
+    } else {
+        res.sendStatus(403);
+    }
+}
+
+router.get('/users/data', checkToken, (req, res) => {
+    jwt.verify(req.token, jwtOptions.secretOrKey, (err, authorizedData) => {
+        if (err) {
+            console.log('ERROR: Could not connect to the protect route');
+            res.sendStatus(403);
+        } else {
+            res.json({
+                message: 'Successful log in',
+                authorizedData
+            });
+            console.log('SUCCESS: Connected to the protected route');
+        }
+    })
+})
 
 module.exports = router;
