@@ -4,9 +4,11 @@ var morgan = require('morgan');
 var path = require('path');
 var cors = require('cors');
 var history = require('connect-history-api-fallback');
+var passport = require('passport');
 var userController = require('./controllers/users');
 var ratingController = require('./controllers/ratings');
 var collectionController = require('./controllers/collections');
+var userAuthentication = require('./controllers/userAuth');
 var multer = require('multer');
 
 // Variables
@@ -47,6 +49,10 @@ app.use(postController);
 app.use(ratingController);
 app.use(userController);
 app.use(collectionController);
+app.use(userAuthentication);
+
+//Passport middleware
+app.use(passport.initialize());
 
 // Catch all non-error handler for api (i.e., 404 Not Found)
 app.use('/api/*', function (req, res) {
@@ -78,9 +84,9 @@ app.use(function (err, req, res, next) {
     }
     // Check for multer image handling errors
     if (err instanceof multer.MulterError) {
-        if (err.code === 'LIMIT_FILE_SIZE'){
-            err.status = 413; 
-        } 
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            err.status = 413;
+        }
         if (err.code === 'LIMIT_UNEXPECTED_FILE') {
             err.status = 422;
         }

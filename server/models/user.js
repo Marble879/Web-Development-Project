@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Rating = require('./rating');
 var Schema = mongoose.Schema;
+var bcryptjs = require('bcryptjs');
 var Collection = require('./collection')
 var Post = require('./post');
 
@@ -9,7 +10,7 @@ var userSchema = new Schema({
   password: { type: String, required: true },
   bio: { type: String },
   event: { type: String },
-  icon: { type: String, required: true },
+  icon: { type: String },
   collections: [{ type: Schema.Types.ObjectId, ref: "collections" }]
 });
 
@@ -28,4 +29,28 @@ userSchema.pre('remove', async function (next) {
   }
 });
 
-module.exports = mongoose.model("users", userSchema);
+const users = mongoose.model("users", userSchema);
+module.exports = users;
+
+module.exports.createUser = (newUser, callback) => {
+  bcryptjs.genSalt(10, (err, salt) => {
+    bcryptjs.hash(newUser.password, salt, (error, hash) => {
+      // Here we store the hashed password
+      const newUserResource = newUser;
+      newUserResource.password = hash;
+      newUserResource.save(callback);
+    });
+  });
+};
+
+module.exports.getUserByUsername = (username, callback) => {
+  const query = { username };
+  users.findOne(query, callback);
+};
+
+module.exports.comparePassword = (candidatePassword, hash, callback) => {
+  bcryptjs.compare(candidatePassword, hash, (err, isMatch) => {
+    if (err) throw err;
+    callback(null, isMatch);
+  });
+};
