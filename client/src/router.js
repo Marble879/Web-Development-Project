@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import CreatePost from './views/CreatePost.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 
@@ -14,6 +15,11 @@ export default new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/posts/create',
+      name: 'create a post',
+      component: CreatePost
     },
     {
       path: '/login',

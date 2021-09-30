@@ -9,7 +9,7 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
 jwtOptions.secretOrKey = 'thisisthesecretkey';
 
 //Register a user
-router.post('/api/users/register', (req, res) => {
+router.post('/api/usersAuth/register', (req, res) => {
     var username = req.body.username;
     var bio = req.body.bio;
     var password = req.body.password;
@@ -31,7 +31,7 @@ router.post('/api/users/register', (req, res) => {
 });
 
 //User login
-router.post('/api/users/login', (req, res) => {
+router.post('/api/usersAuth/login', (req, res) => {
     if (req.body.username && req.body.password) {
         var username = req.body.username;
         var password = req.body.password;
@@ -68,7 +68,7 @@ const checkToken = (req, res, next) => {
     }
 }
 
-router.get('/users/data', checkToken, (req, res) => {
+router.get('/api/usersAuth/data', checkToken, (req, res) => {
     jwt.verify(req.token, jwtOptions.secretOrKey, (err, authorizedData) => {
         if (err) {
             console.log('ERROR: Could not connect to the protect route');

@@ -90,7 +90,7 @@ export default {
 
     async submitForm() {
       await this.postCollections()
-      Api.post('/users/register', {
+      Api.post('/usersAuth/register', {
         username: this.username,
         password: this.password,
         bio: this.bio,

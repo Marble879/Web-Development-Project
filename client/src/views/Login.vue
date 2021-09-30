@@ -45,7 +45,7 @@ export default {
   }),
   methods: {
     submitForm() {
-      Api.post('/users/login', {
+      Api.post('/usersAuth/login', {
         username: this.username,
         password: this.password
       })

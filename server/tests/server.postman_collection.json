@@ -2811,12 +2811,7 @@
 													"type": "file",
 													"src": "./tests/test_image.jpg"
 												}
-											],
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
+											]
 										},
 										"url": {
 											"raw": "{{host}}/api/posts",
@@ -3333,7 +3328,7 @@
 											"query": [
 												{
 													"key": "",
-													"value": null,
+													"value": "",
 													"disabled": true
 												}
 											]
@@ -3846,7 +3841,7 @@
 											"query": [
 												{
 													"key": "",
-													"value": null,
+													"value": "",
 													"disabled": true
 												}
 											]
@@ -5612,7 +5607,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Cosplay\",\r\n    \"post_id\": [\"61438796e49b6c6fb0fc2329\", \"614387a0e49b6c6fb0fc232c\"]\r\n}",
+							"raw": "{\r\n    \"title\": \"Cosplay\",\r\n    \"post_id\": [\"614387a0e49b6c6fb0fc232c\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

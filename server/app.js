@@ -8,8 +8,8 @@ var passport = require('passport');
 var userController = require('./controllers/users');
 var ratingController = require('./controllers/ratings');
 var collectionController = require('./controllers/collections');
-var userAuthentication = require('./controllers/userAuth');
 var multer = require('multer');
+var userAuthentication = require('./controllers/userAuth');
 
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
