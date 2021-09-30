@@ -104,7 +104,8 @@ export default {
       }],
       previewImage: null,
       show: true,
-      hasError: false
+      hasError: false,
+      userId: null
     }
   },
   computed: {
@@ -130,9 +131,10 @@ export default {
     }
   },
   methods: {
-    onSubmit(event) {
+    async onSubmit(event) {
       event.preventDefault()
-      const fd = this.createFormData()
+      this.getUserId()
+      const fd = await this.createFormData()
       this.postFormData(fd)
     },
     resetForm() {
@@ -141,9 +143,11 @@ export default {
       this.form.description = ''
       this.form.tag = null
     },
-    createFormData() {
+    async createFormData() {
       const fd = new FormData()
-      // fd.append('user_id', '6154972ae17ab3d3ea3eb4aa') // This line is for testing purposes to ensure that posting posts actually works. The user_id will need to be retreived dynamically from user currently logged in.
+      await this.getUserId()
+      console.log(this.userId)
+      fd.append('user_id', this.userId)
       fd.append('title', this.form.title)
       fd.append('description', this.form.description)
       fd.append('tag', this.form.tag)
@@ -164,6 +168,23 @@ export default {
     },
     resetErrorStatus() {
       this.hasError = false
+    },
+    async getUserId() {
+      const token = window.localStorage.getItem('auth')
+      await Api.get('/usersAuth/data', {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+        .then(response => {
+          console.log(response.data.authorizedData.id._id)
+          this.userId = response.data.authorizedData.id._id
+        })
+        .catch(error => {
+          console.log(error)
+          alert('this error')
+          this.hasError = true
+        })
     }
   }
 }
