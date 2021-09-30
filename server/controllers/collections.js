@@ -6,10 +6,10 @@ var Collection = require('../models/collection');
 
 router.use(express.json());
 
-router.post('/api/users/:id/collections', imgUpload.single('thumbnail'), function (req, res, next) {
+router.post('/api/users/:id/collections', function (req, res, next) {
     console.log(req.file);
     var collection = new Collection(req.body);
-    collection.thumbnail = req.file.path;
+    //collection.thumbnail = req.file.path;
     collection.save(function (err, collection) {
         if (err) {
             return next(err);

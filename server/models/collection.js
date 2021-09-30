@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 var collectionSchema = new Schema({
     title: { type: String },
     event: { type: String },
-    thumbnail: { type: String, required: true },
+    thumbnail: { type: String },
     post_id: [{ type: Schema.Types.ObjectId, ref: 'posts' }]
 });
 

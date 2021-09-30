@@ -1,6 +1,6 @@
 <template>
   <div class="vue-tempalte">
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm()">
       <h3>Registration</h3>
 
       <div class="form-group">
@@ -55,16 +55,47 @@ export default {
       username: '',
       password: '',
       bio: '',
-      icon: ''
+      icon: '',
+      collections: []
     }
   },
   methods: {
-    submitForm() {
+    async postCollections() {
+      await Api.post('/users/:id/collections', {
+        title: 'MyPhotos',
+        thumbnail: ''
+      })
+        .then((response) => {
+          console.log(response)
+          this.collections.push(response.data._id)
+        })
+        .catch((error) => {
+          const message = error.response.data.message
+          console.log(message)
+        })
+
+      await Api.post('/users/:id/collections', {
+        title: 'FavoritedImages',
+        thumbnail: ''
+      })
+        .then((response) => {
+          console.log(response)
+          this.collections.push(response.data._id)
+        })
+        .catch((error) => {
+          const message = error.response.data.message
+          console.log(message)
+        })
+    },
+
+    async submitForm() {
+      await this.postCollections()
       Api.post('/usersAuth/register', {
         username: this.username,
         password: this.password,
         bio: this.bio,
-        icon: this.icon
+        icon: this.icon,
+        collections: this.collections
       })
         .then(() => {
           console.log('Registration Successful')
