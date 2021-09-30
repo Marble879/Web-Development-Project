@@ -133,9 +133,11 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault()
-      this.getUserId()
-      const fd = await this.createFormData()
-      this.postFormData(fd)
+      await this.getUserId()
+      if (!this.hasError) {
+        const fd = await this.createFormData()
+        this.postFormData(fd)
+      }
     },
     resetForm() {
       this.form.uploadedImage = null
@@ -145,7 +147,6 @@ export default {
     },
     async createFormData() {
       const fd = new FormData()
-      await this.getUserId()
       console.log(this.userId)
       fd.append('user_id', this.userId)
       fd.append('title', this.form.title)
@@ -177,12 +178,12 @@ export default {
         }
       })
         .then(response => {
-          console.log(response.data.authorizedData.id._id)
           this.userId = response.data.authorizedData.id._id
         })
         .catch(error => {
-          console.log(error)
-          alert('this error')
+          if (error.response.status === 403) {
+            alert('Error, not logged in!')
+          }
           this.hasError = true
         })
     }
