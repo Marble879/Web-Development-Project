@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "24208cfe-f4fa-4cc4-84d3-cd6e7a8376bb",
+		"_postman_id": "436ed52b-f17b-4a4a-81c9-98e797f2465f",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -5659,7 +5659,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Cosplay\",\r\n    \"post_id\": [\"61438796e49b6c6fb0fc2329\", \"614387a0e49b6c6fb0fc232c\"]\r\n}",
+							"raw": "{\r\n    \"title\": \"Cosplay\",\r\n    \"post_id\": [\"614387a0e49b6c6fb0fc232c\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
