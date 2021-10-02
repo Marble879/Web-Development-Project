@@ -1,11 +1,24 @@
 <template>
   <div>
     <b-container fluid>
-      <b-row class="justify-content-md-center mt-4">
-        <b-col col md="6">
+      <b-row>
+        <b-col class="col-md-4 mt-4">
+          <b-img
+            v-bind:src="require('../Images/Artsy-text-top.png')"
+            center
+            thumbnail
+            fluid
+            block
+            rounded
+            height="500em"
+            width="500em"
+            alt="logo"
+          />
+        </b-col>
+        <b-col class="col-md-8 px-3 mt-4">
           <b-card
             header="Create your account"
-            header-bg-variant="primary"
+            header-bg-variant="dark"
             header-text-variant="white"
           >
             <b-card-text>
@@ -29,15 +42,15 @@
                 <b-form-group>
                   <b-button
                     type="submit"
-                    variant="outline-primary"
+                    variant="danger"
                     :disabled="acceptableSubmission"
-                    >Get started, it's free!</b-button
+                    >Get started!</b-button
                   >
                 </b-form-group>
                 <b-form-group>
                   <b-form-text class="text-left"
-                    >Already registered:
-                    <b-link to="login"> Sign in</b-link>
+                    >Already signed up?
+                    <b-link to="login"> Log in</b-link>
                   </b-form-text>
                 </b-form-group>
               </b-form>
