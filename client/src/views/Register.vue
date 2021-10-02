@@ -22,28 +22,60 @@
             header-text-variant="white"
           >
             <b-card-text>
-              <b-form @submit.prevent="submitForm">
-                <b-form-group description="Create username" label="Username">
-                  <b-form-input v-model="username" required></b-form-input>
-                </b-form-group>
-                <b-form-group description="Create password" label="Password">
+              <b-form @submit="onSubmit">
+                <b-form-group
+                  id="input-group-username"
+                  description="Create username"
+                  label="Username"
+                  label-for="input-username"
+                >
                   <b-form-input
-                    v-model="password"
+                    id="input-username"
+                    v-model="form.username"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-password"
+                  description="Create password"
+                  label="Password"
+                  label-for="input-password"
+                >
+                  <b-form-input
+                    id="input-password"
+                    v-model="form.password"
                     type="password"
                     required
                   ></b-form-input>
                 </b-form-group>
                 <b-form-group
+                  id="input-group-bio"
                   description="Describe a bit about yourself (Optional)"
                   label="About you"
+                  label-form="input-bio"
                 >
-                  <b-form-input v-model="bio"></b-form-input>
+                  <b-form-input
+                    id="input-bio"
+                    v-model="form.bio"
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  id="input-group-icon"
+                  label="Upload icon"
+                  label-for="input-icon"
+                >
+                  <b-form-file
+                    id="input-icon"
+                    label="Upload icon"
+                    v-model="form.uploadedIcon"
+                    required
+                  />
                 </b-form-group>
                 <b-form-group>
                   <b-button
                     type="submit"
                     variant="danger"
-                    :disabled="acceptableSubmission"
+                    v-bind:disabled="acceptableSubmission"
                     >Get started!</b-button
                   >
                 </b-form-group>
@@ -69,19 +101,50 @@ export default {
   name: 'register',
   data() {
     return {
-      username: '',
-      password: '',
-      bio: '',
-      icon: '',
+      form: {
+        username: '',
+        password: '',
+        bio: '',
+        uploadedIcon: null
+      },
       collections: []
     }
   },
   methods: {
-    async postCollections() {
-      await Api.post('/users/:id/collections', {
-        title: 'MyPhotos',
-        thumbnail: ''
-      })
+    async onSubmit(event) {
+      event.preventDefault()
+      const collectionFD1 = await this.createFirstCollectionFormData()
+      const collectionFD2 = await this.createSecondCollectionFormData()
+      await this.postCollectionsFormData(collectionFD1, collectionFD2)
+      const userFD = await this.createUserFormData()
+      await this.submitForm(userFD)
+    },
+    async createFirstCollectionFormData() {
+      const collectionFD1 = new FormData()
+      collectionFD1.append('title', 'MyPhotos')
+      collectionFD1.append('event', 'thumbnail')
+      return collectionFD1
+    },
+    async createSecondCollectionFormData() {
+      const collectionFD2 = new FormData()
+      collectionFD2.append('title', 'FavoritedImages')
+      collectionFD2.append('event', 'thumbnail')
+      return collectionFD2
+    },
+    async createUserFormData() {
+      const userFD = new FormData()
+      userFD.append('username', this.form.username)
+      userFD.append('password', this.form.password)
+      userFD.append('bio', this.form.bio)
+      userFD.append('event', 'icon')
+      userFD.append('icon', this.form.uploadedIcon)
+      for (let i = 0; i < this.collections.length; i++) {
+        userFD.append('collections', this.collections[i])
+      }
+      return userFD
+    },
+    async postCollectionsFormData(collectionFD1, collectionFD2) {
+      await Api.post('/users/:id/collections', collectionFD1)
         .then((response) => {
           console.log(response)
           this.collections.push(response.data._id)
@@ -91,10 +154,7 @@ export default {
           console.log(message)
         })
 
-      await Api.post('/users/:id/collections', {
-        title: 'FavoritedImages',
-        thumbnail: ''
-      })
+      await Api.post('/users/:id/collections', collectionFD2)
         .then((response) => {
           console.log(response)
           this.collections.push(response.data._id)
@@ -105,15 +165,9 @@ export default {
         })
     },
 
-    async submitForm() {
-      await this.postCollections()
-      Api.post('/usersAuth/register', {
-        username: this.username,
-        password: this.password,
-        bio: this.bio,
-        icon: this.icon,
-        collections: this.collections
-      })
+    async submitForm(userFD) {
+      await this.postCollectionsFormData()
+      Api.post('/usersAuth/register', userFD)
         .then(() => {
           this.$router.push({ name: 'login' })
           alert('Registration successful!')
@@ -125,7 +179,11 @@ export default {
   },
   computed: {
     acceptableSubmission() {
-      return !(this.username.length > 0 && this.password.length > 0)
+      return !(
+        this.form.username.length > 0 &&
+        this.form.password.length > 0 &&
+        !!this.form.uploadedIcon
+      )
     }
   }
 }
