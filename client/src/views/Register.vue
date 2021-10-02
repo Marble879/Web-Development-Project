@@ -1,47 +1,51 @@
 <template>
-  <div class="vue-tempalte">
-    <form @submit.prevent="submitForm()">
-      <h3>Registration</h3>
-
-      <div class="form-group">
-        <label>Username</label>
-        <input
-          type="text"
-          class="form-control form-control-lg"
-          v-model="username"
-          placeholder="Username"
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input
-          type="password"
-          class="form-control form-control-lg"
-          v-model="password"
-          placeholder="Password"
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Bio</label>
-        <input
-          type="text"
-          class="form-control form-control-lg"
-          v-model="bio"
-          placeholder="Describe a bit about yourself (Optional)"
-        />
-      </div>
-
-      <button type="submit" class="btn btn-dark btn-lg btn-block">
-        Sign Up
-      </button>
-
-      <p class="forgot-password text-right">
-        Already registered
-        <router-link :to="{ name: 'login' }">sign in?</router-link>
-      </p>
-    </form>
+  <div>
+    <b-container fluid>
+      <b-row class="justify-content-md-center mt-4">
+        <b-col col md="6">
+          <b-card
+            header="Create your account"
+            header-bg-variant="primary"
+            header-text-variant="white"
+          >
+            <b-card-text>
+              <b-form @submit.prevent="submitForm">
+                <b-form-group description="Create username" label="Username">
+                  <b-form-input v-model="username" required></b-form-input>
+                </b-form-group>
+                <b-form-group description="Create password" label="Password">
+                  <b-form-input
+                    v-model="password"
+                    type="password"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  description="Describe a bit about yourself (Optional)"
+                  label="About you"
+                >
+                  <b-form-input v-model="bio"></b-form-input>
+                </b-form-group>
+                <b-form-group>
+                  <b-button
+                    type="submit"
+                    variant="outline-primary"
+                    :disabled="acceptableSubmission"
+                    >Get started, it's free!</b-button
+                  >
+                </b-form-group>
+                <b-form-group>
+                  <b-form-text class="text-left"
+                    >Already registered:
+                    <b-link to="login"> Sign in</b-link>
+                  </b-form-text>
+                </b-form-group>
+              </b-form>
+            </b-card-text>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -104,6 +108,11 @@ export default {
         .catch((error) => {
           alert(error.response.data.message)
         })
+    }
+  },
+  computed: {
+    acceptableSubmission() {
+      return !(this.username.length > 0 && this.password.length > 0)
     }
   }
 }
