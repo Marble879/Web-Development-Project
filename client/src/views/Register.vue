@@ -122,13 +122,11 @@ export default {
     async createFirstCollectionFormData() {
       const collectionFD1 = new FormData()
       collectionFD1.append('title', 'MyPhotos')
-      collectionFD1.append('event', 'thumbnail')
       return collectionFD1
     },
     async createSecondCollectionFormData() {
       const collectionFD2 = new FormData()
       collectionFD2.append('title', 'FavoritedImages')
-      collectionFD2.append('event', 'thumbnail')
       return collectionFD2
     },
     async createUserFormData() {
@@ -144,7 +142,7 @@ export default {
       return userFD
     },
     async postCollectionsFormData(collectionFD1, collectionFD2) {
-      await Api.post('/users/:id/collections', collectionFD1)
+      await Api.post('/collections', collectionFD1)
         .then((response) => {
           console.log(response)
           this.collections.push(response.data._id)
@@ -154,7 +152,7 @@ export default {
           console.log(message)
         })
 
-      await Api.post('/users/:id/collections', collectionFD2)
+      await Api.post('/collections', collectionFD2)
         .then((response) => {
           console.log(response)
           this.collections.push(response.data._id)
