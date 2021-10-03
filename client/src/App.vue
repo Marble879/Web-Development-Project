@@ -6,7 +6,7 @@
       <router-link to="/login">Login</router-link> |
       <router-link to="/posts/create">Create a post</router-link> |
       <!-- Temporary way to get into the collections view page until the user page is complete -->
-      <router-link to="/user/:Uid/collection/:Cid">Inside a collection</router-link>
+      <router-link to="/users/:Uid/collection/:Cid">Inside a collection</router-link>
     </div>
     <!-- Render the content of the current page view -->
     <router-view />
