@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import CreatePost from './views/CreatePost.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
+import InsideCollection from './views/InsideCollection.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: Register
+    },
+    {
+      path: '/users/:Uid/collection/:Cid',
+      name: 'inside a collection',
+      component: InsideCollection
     }
   ]
 })
