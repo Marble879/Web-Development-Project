@@ -54,10 +54,11 @@
                   label="About you"
                   label-form="input-bio"
                 >
-                  <b-form-input
+                  <b-form-textarea
                     id="input-bio"
                     v-model="form.bio"
-                  ></b-form-input>
+                    type="text"
+                  ></b-form-textarea>
                 </b-form-group>
                 <b-form-group
                   id="input-group-icon"
