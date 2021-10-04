@@ -1,8 +1,14 @@
 <template>
     <b-container>
-        <b-container>
+          <b-container class="h1 mb-3">
           <h1>Collection name</h1>
-        </b-container>
+              <b-button title="Delete Collection" variant="outline-secondary" class="mr-3">
+                <b-icon-trash variant="danger"></b-icon-trash>
+              </b-button>
+              <b-button title="Edit Collection Name" variant="outline-secondary" class="mr-3">
+                <b-icon-pencil-square></b-icon-pencil-square>
+              </b-button>
+          </b-container>
 
         <b-row>
           <b-col v-for="post in posts" v-bind:key="post._id" lg="4" class="mb-3">
