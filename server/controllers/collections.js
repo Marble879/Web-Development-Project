@@ -3,6 +3,7 @@ var router = express.Router();
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
 var Collection = require('../models/collection');
+var User = require('../models/user')
 
 router.use(express.json());
 
@@ -17,7 +18,7 @@ router.post('/api/collections', imgUpload.none(), function (req, res, next) {
     });
 });
 
-router.get("/api/collections", function (req, res, next) {
+router.get("/api/users/:userID/collections", function (req, res, next) {
     Collection.find(function (err, collection) {
         if (err) {
             return next(err);
@@ -32,17 +33,24 @@ router.get("/api/collections", function (req, res, next) {
     });
 });
 
-router.get("/api/collections/:id", function (req, res, next) {
-    var id = req.params.id;
-    Collection.findById(id, function (err, collection) {
-        if (err) {
-            return next(err);
+router.get("/api/users/:userID/collections/:collectionID", function (req, res, next) {
+    var userID = req.params.userID;
+    var collectionID = req.params.collectionID;
+    User.findById(userID, function (err, user) {
+        if (err) { return next(err) }
+        if (user === null) {
+            return res.status(404).json({ message: "User not found" });
         }
-        if (collection == null) {
-            return res.status(404).json({ "message": "collection not found" });
-        }
-        console.log('collection with specified id retreived');
-        res.status(200).json(collection);
+        Collection.findById(collectionID, function (err, collection) {
+            if (err) {
+                return next(err);
+            }
+            if (collection == null) {
+                return res.status(404).json({ "message": "collection not found" });
+            }
+            console.log('collection with specified id retreived');
+            res.status(200).json(collection);
+        });
     });
 });
 
