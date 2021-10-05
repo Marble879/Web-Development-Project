@@ -13,7 +13,7 @@
         <b-row>
           <b-col v-for="post in posts" v-bind:key="post._id" lg="4" class="mb-3">
             <b-card v-bind:title="post.title"
-            v-bind:img-src="post.image"
+            v-bind:img-src="getImageUrl(post.image)"
             img-alt="Image"
             img-top>
             <b-button href="/" variant="primary">Go to post</b-button>
@@ -31,11 +31,12 @@ export default {
   data() {
     return {
       posts: [],
-      currentCollection: null
+      currentCollection: null,
+      host: Api.defaults.baseURL.replace('/api', '')
     }
   },
   async mounted() {
-    await this.setCurrentCollection()
+    await this.getPosts()
   },
   methods: {
     async setCurrentCollection() {
@@ -45,13 +46,39 @@ export default {
       await Api.get('/users/' + userId + '/collections/' + collectionid)
         .then(response => {
           console.log(response)
-          this.currentCollection = response.data.collections
+          this.currentCollection = response
         })
         .catch(error => {
         // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
           this.posts = []
           console.log(error)
         })
+    },
+    async getPostIds() {
+      const postIds = this.currentCollection.data.post_id
+      console.log(postIds)
+      return postIds
+    },
+    async getPosts() {
+      await this.setCurrentCollection()
+      const postIds = await this.getPostIds()
+      postIds.forEach(async (post) => {
+        await Api.get('/posts/' + post)
+          .then(response => {
+            console.log(response.data)
+            this.posts.push(response.data)
+          })
+          .catch(error => {
+            // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+            this.posts = []
+            console.log(error)
+          })
+      })
+    },
+    getImageUrl(postImage) {
+      console.log(postImage)
+      console.log(`${this.host}/${postImage}`)
+      return `${this.host}/${postImage}`
     }
   }
 
