@@ -30,24 +30,31 @@ export default {
   name: 'InsideCollection',
   data() {
     return {
-      posts: []
+      posts: [],
+      currentCollection: null
     }
   },
   async mounted() {
-    console.log('Page loading confirm')
-    const userId = this.$route.params.Uid
-    const collectionid = this.$route.params.Cid
-    await Api.get('/users/' + userId + '/collections/' + collectionid)
-      .then(response => {
-        console.log(response)
-        this.posts = response.data.collections
-      })
-      .catch(error => {
+    await this.setCurrentCollection()
+  },
+  methods: {
+    async setCurrentCollection() {
+      console.log('Page loading confirm')
+      const userId = this.$route.params.Uid
+      const collectionid = this.$route.params.Cid
+      await Api.get('/users/' + userId + '/collections/' + collectionid)
+        .then(response => {
+          console.log(response)
+          this.currentCollection = response.data.collections
+        })
+        .catch(error => {
         // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
-        this.posts = []
-        console.log(error)
-      })
+          this.posts = []
+          console.log(error)
+        })
+    }
   }
+
 }
 
 </script>
