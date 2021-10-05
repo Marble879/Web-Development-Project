@@ -24,59 +24,29 @@
 </template>
 
 <script>
+import { Api } from '@/Api'
 
 export default {
   name: 'InsideCollection',
   data() {
     return {
-      posts: [
-        {
-          _id: '613885d342fb9851638791b5',
-          title: 'testT1',
-          image: 'http://localhost:3000/uploads/1633296835563.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296835563.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296835563.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296857055.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296857055.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296857055.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296835563.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296835563.jpg'
-        },
-        {
-          _id: '6138862842fb9851638791b7',
-          title: 'testT2',
-          image: 'http://localhost:3000/uploads/1633296835563.jpg'
-        }
-      ]
+      posts: []
     }
+  },
+  async mounted() {
+    console.log('Page loading confirm')
+    const userId = this.$route.params.Uid
+    const collectionid = this.$route.params.Cid
+    await Api.get('/users/' + userId + '/collections/' + collectionid)
+      .then(response => {
+        console.log(response)
+        this.posts = response.data.collections
+      })
+      .catch(error => {
+        // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+        this.posts = []
+        console.log(error)
+      })
   }
 }
 
