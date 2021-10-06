@@ -12,12 +12,15 @@
 
         <b-row>
           <b-col v-for="post in posts" v-bind:key="post._id" lg="4" class="mb-3">
+            <b-card-group deck>
             <b-card v-bind:title="post.title"
             v-bind:img-src="getImageUrl(post.image)"
             img-alt="Image"
-            img-top>
+            img-top
+            >
             <b-button href="/" variant="primary">Go to post</b-button>
             </b-card>
+            </b-card-group>
           </b-col>
         </b-row>
     </b-container>
