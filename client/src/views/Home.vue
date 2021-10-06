@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <b-jumbotron
-      header="DIT341 Frontend"
-      lead="Welcome to your DIT341 Frontend Vue.js App"
-    >
-      <b-button class="btn_message" variant="primary" v-on:click="getMessage()"
-        >Get Message from Server</b-button
+  <b-container fluid="md">
+    <b-row>
+      <b-col
+        class="col-lg-4 col-md-12 mb-4 mb-lg-0"
+        v-for="post in posts"
+        v-bind:key="post._id"
+        v-bind:img-src="post.image"
+        img-alt="Image"
       >
-      <p>
-        Message from the server:<br />
-        {{ message }}
-      </p>
-    </b-jumbotron>
-  </div>
+        <b-img
+          class="w-100 shadow-1-strong rounded mb-4"
+          v-bind:src="'http://localhost:3000/' + post.image"
+        ></b-img>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -21,27 +23,22 @@ import { Api } from '@/Api'
 
 export default {
   name: 'home',
+  props: ['post'],
   data() {
     return {
-      message: 'none'
+      posts: []
     }
   },
-  methods: {
-    getMessage() {
-      Api.get('/')
-        .then((response) => {
-          this.message = response.data.message
-        })
-        .catch((error) => {
-          this.message = error
-        })
-    }
+  mounted() {
+    Api.get('/posts')
+      .then((response) => {
+        this.posts = response.data.posts
+        console.log(response)
+      })
+      .catch((error) => {
+        alert(error.response.data.message)
+        console.log(error)
+      })
   }
 }
 </script>
-
-<style>
-.btn_message {
-  margin-bottom: 1em;
-}
-</style>
