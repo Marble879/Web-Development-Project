@@ -87,20 +87,20 @@ export default {
         text: 'Please select a tag'
       },
       {
-        value: 'tag1',
-        text: 'tag1'
+        value: 'cat',
+        text: 'cat'
       },
       {
-        value: 'tag2',
-        text: 'tag2'
+        value: 'dog',
+        text: 'dog'
       },
       {
-        value: 'tag3',
-        text: 'tag3'
+        value: 'landscape',
+        text: 'landscape'
       },
       {
-        value: 'tag4',
-        text: 'tag4'
+        value: 'drawings/paintings',
+        text: 'drawings/paintings'
       }],
       previewImage: null,
       show: true,
@@ -153,7 +153,7 @@ export default {
       fd.append('user_id', this.userId)
       fd.append('title', this.form.title)
       fd.append('description', this.form.description)
-      fd.append('tag', this.form.tag)
+      fd.append('tags', this.form.tag)
       fd.append('event', 'post')
       fd.append('image', this.form.uploadedImage)
       return fd
