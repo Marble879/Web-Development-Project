@@ -1,7 +1,7 @@
 <template>
     <b-container>
           <b-container class="h1 mb-3">
-          <h1> {{title}} </h1>
+          <h1>{{ title }}</h1>
               <b-dropdown variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
                 <template #button-content>
                   <b-icon-pencil-square></b-icon-pencil-square>
@@ -104,9 +104,20 @@ export default {
         this.isDefault = true
       }
     },
-    updateTitle() {
-      // todo: create axios postrequest to backend
-      console.log('Update title todo: ' + this.newTitle)
+    async updateTitle() {
+      const userId = this.$route.params.Uid
+      const collectionId = this.$route.params.Cid
+      await Api.patch('/users/' + userId + '/collections/' + collectionId, {
+        title: this.newTitle
+      })
+        .then(response => {
+          this.title = this.newTitle
+          console.log(response)
+        })
+        .catch(error => {
+          // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+          console.log(error)
+        })
     }
   }
 
