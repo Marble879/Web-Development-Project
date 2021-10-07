@@ -20,7 +20,7 @@
                     <b-dropdown-item-button v-on:click="updateTitle" variant="primary">Update</b-dropdown-item-button>
                 </b-dropdown-form>
               </b-dropdown>
-              <b-button type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
+              <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
               </b-button>
           </b-container>
@@ -117,6 +117,20 @@ export default {
         .catch(error => {
           // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
           console.log(error)
+        })
+    },
+    async deleteCollection() {
+      const userId = this.$route.params.Uid
+      const collectionId = this.$route.params.Cid
+      await Api.delete('/users/' + userId + '/collections/' + collectionId)
+        .then(response => {
+          console.log(response)
+          alert('Deleted collection, redirecting to the homepage.')
+          this.$router.push({ name: 'home' })
+        })
+        .catch(error => {
+          console.log(error)
+          // TODO error handling
         })
     }
   }
