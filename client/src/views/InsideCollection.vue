@@ -2,10 +2,10 @@
     <b-container>
           <b-container class="h1 mb-3">
           <h1>Collection name</h1>
-              <b-button title="Delete Collection" variant="outline-secondary" class="mr-3">
+              <b-button title="Delete Collection" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
               </b-button>
-              <b-button title="Edit Collection Name" variant="outline-secondary" class="mr-3">
+              <b-button title="Edit Collection Name" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
                 <b-icon-pencil-square></b-icon-pencil-square>
               </b-button>
           </b-container>
@@ -30,6 +30,7 @@ export default {
     return {
       posts: [],
       currentCollection: null,
+      isDefault: false,
       host: Api.defaults.baseURL.replace('/api', '')
     }
   },
@@ -45,6 +46,7 @@ export default {
         .then(response => {
           console.log(response)
           this.currentCollection = response
+          this.isDefaultCollection()
         })
         .catch(error => {
         // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
@@ -77,6 +79,13 @@ export default {
       console.log(postImage)
       console.log(`${this.host}/${postImage}`)
       return `${this.host}/${postImage}`
+    },
+    isDefaultCollection() {
+      const collectionTitle = this.currentCollection.data.title
+      console.log('here: ' + collectionTitle)
+      if (collectionTitle === 'MyPhotos' || collectionTitle === 'FavoritedImages') {
+        this.isDefault = true
+      }
     }
   }
 
