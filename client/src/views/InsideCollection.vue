@@ -1,12 +1,27 @@
 <template>
     <b-container>
           <b-container class="h1 mb-3">
-          <h1>Collection name</h1>
-              <b-button title="Delete Collection" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
+          <h1> {{title}} </h1>
+              <b-dropdown variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
+                <template #button-content>
+                  <b-icon-pencil-square></b-icon-pencil-square>
+                </template>
+                <b-dropdown-form>
+                   <b-form-group id="input-group-title" label="Insert title:" label-for="input-title">
+
+                            <b-form-input
+                            id="input-title"
+                            v-model="newTitle"
+                            placeholder="Enter new title"
+                            required/>
+
+                    </b-form-group>
+
+                    <b-dropdown-item-button v-on:click="updateTitle" variant="primary">Update</b-dropdown-item-button>
+                </b-dropdown-form>
+              </b-dropdown>
+              <b-button type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
-              </b-button>
-              <b-button title="Edit Collection Name" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
-                <b-icon-pencil-square></b-icon-pencil-square>
               </b-button>
           </b-container>
 
@@ -31,7 +46,9 @@ export default {
       posts: [],
       currentCollection: null,
       isDefault: false,
-      host: Api.defaults.baseURL.replace('/api', '')
+      host: Api.defaults.baseURL.replace('/api', ''),
+      title: null,
+      newTitle: null
     }
   },
   async mounted() {
@@ -46,6 +63,7 @@ export default {
         .then(response => {
           console.log(response)
           this.currentCollection = response
+          this.title = this.currentCollection.data.title
           this.isDefaultCollection()
         })
         .catch(error => {
@@ -81,11 +99,14 @@ export default {
       return `${this.host}/${postImage}`
     },
     isDefaultCollection() {
-      const collectionTitle = this.currentCollection.data.title
-      console.log('here: ' + collectionTitle)
-      if (collectionTitle === 'MyPhotos' || collectionTitle === 'FavoritedImages') {
+      console.log('here: ' + this.title)
+      if (this.title === 'MyPhotos' || this.title === 'FavoritedImages') {
         this.isDefault = true
       }
+    },
+    updateTitle() {
+      // todo: create axios postrequest to backend
+      console.log('Update title todo: ' + this.newTitle)
     }
   }
 
