@@ -2,7 +2,7 @@
     <b-container>
           <b-container class="h1 mb-3">
           <h1>{{ title }}</h1>
-              <b-dropdown variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
+              <b-dropdown variant="outline-secondary" v-bind:disabled="noModifyPermission" class="mr-3">
                 <template #button-content>
                   <b-icon-pencil-square></b-icon-pencil-square>
                 </template>
@@ -20,7 +20,7 @@
                     <b-dropdown-item-button v-on:click="updateTitle" variant="primary">Update</b-dropdown-item-button>
                 </b-dropdown-form>
               </b-dropdown>
-              <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="isDefault" class="mr-3">
+              <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="noModifyPermission" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
               </b-button>
           </b-container>
@@ -45,7 +45,7 @@ export default {
     return {
       posts: [],
       currentCollection: null,
-      isDefault: false,
+      noModifyPermission: false,
       host: Api.defaults.baseURL.replace('/api', ''),
       title: null,
       newTitle: null
@@ -53,6 +53,7 @@ export default {
   },
   async mounted() {
     await this.getPosts()
+    await this.checkAccess()
   },
   methods: {
     async setCurrentCollection() {
@@ -101,7 +102,7 @@ export default {
     isDefaultCollection() {
       console.log('here: ' + this.title)
       if (this.title === 'MyPhotos' || this.title === 'FavoritedImages') {
-        this.isDefault = true
+        this.noModifyPermission = true
       }
     },
     async updateTitle() {
@@ -131,6 +132,28 @@ export default {
         .catch(error => {
           console.log(error)
           // TODO error handling
+        })
+    },
+    // confirms whether the current logged in user has access to modify the collection
+    async checkAccess() {
+      const userId = this.$route.params.Uid
+      const token = window.localStorage.getItem('auth')
+      await Api.get('/usersAuth/data', {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+        .then(response => {
+          if (!(userId === response.data.authorizedData.id._id)) { this.noModifyPermission = true } else {
+            console.log('has perms')
+          }
+        })
+        .catch(error => {
+          if (error.response.status === 403) {
+            alert('Error, not logged in!')
+          }
+          console.log(error)
+          // TODO add error handling
         })
     }
   }
