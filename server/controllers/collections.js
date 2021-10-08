@@ -74,8 +74,10 @@ router.patch("/api/users/:id/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": "user not found" });
         }
         collection.title = (req.body.title || collection.title);
-        var postId = (req.body.post_id || collection.post_id)
-        collection.post_id.push(postId)
+        var postId = (req.body.post_id || null)
+        if (postId != null){
+            collection.post_id.push(postId)
+        }
         collection.save();
         res.status(200).json(collection);
         console.log("collection updated");
@@ -93,7 +95,7 @@ router.delete("/api/users/:id/collections/:id", async function (req, res, next) 
         }
         try {
             collection.remove();
-            await imgDelete.deleteSingleImage(collection.thumbnail);
+            // await imgDelete.deleteSingleImage(collection.thumbnail);
             res.status(200).json(collection);
             console.log('specific collection deleted');
         } catch (err) {
