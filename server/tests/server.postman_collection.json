@@ -5784,21 +5784,90 @@
 					"response": []
 				},
 				{
-					"name": "[COLLECTION] Get all collections",
+					"name": "[USER] Add collection to user",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"\r",
+									"var getUser_Id = pm.variables.get(\"user_id\");\r",
+									"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
+									"var getCollection_IdTwo = pm.variables.get(\"collection_id2\");\r",
+									"\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has _id', function () {\r",
+									"    pm.expect(jsonData._id).to.be.a('String');\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct _id', function () {\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct collections, username, password, bio and event', function () {\r",
+									"    pm.expect(jsonData.collections).to.eql([getCollection_Id, getCollection_IdTwo]);\r",
+									"    pm.expect(jsonData.username).to.eql('Fred');\r",
+									"    pm.expect(jsonData.password).to.eql('freddie');\r",
+									"    pm.expect(jsonData.bio).to.eql('Hi my name is Fred');\r",
+									"    pm.expect(jsonData.event).to.eql('icon');\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has an icon url', function () {\r",
+									"    pm.expect(jsonData.icon).to.be.a('String');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"collections\": \"{{collection_id2}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/users/{{user_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[COLLECTION] Get all user collections",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
 									"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
 									"var jsonDataCollectionTwo = pm.response.json().collections[1];\r",
 									"\r",
 									"var getCollection_IdOne = pm.variables.get('collection_id');\r",
 									"var getCollection_IdTwo = pm.variables.get('collection_id2');\r",
 									"\r",
-									"var getForeignkeyOne = pm.environment.get('post_id');\r",
-									"var getForeignkeyTwo = pm.environment.get('post_id2');\r",
+									"var getUser_Id = pm.environment.get('user_id');\r",
 									"\r",
+									"var getPost_id = pm.environment.get('post_id');\r",
+									"var getPost_idTwo = pm.environment.get('post_id2');\r",
 									"\r",
 									"pm.test('Status code is 200', function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -5813,38 +5882,27 @@
 									"    pm.expect(jsonDataCollectionTwo._id).to.eql(getCollection_IdTwo);\r",
 									"});\r",
 									"\r",
-									"pm.test('Body has correct title and foreign key', function () {\r",
+									"pm.test('Body has correct collections and user information', function () {\r",
 									"    pm.expect(jsonDataCollectionOne.title).to.eql('Landscape Pictures');\r",
+									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([getPost_id]);\r",
 									"    pm.expect(jsonDataCollectionTwo.title).to.eql('Dog Pictures');\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].tags).to.eql(['testtag']);\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0]._id).to.eql(getForeignkeyOne);\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].title).to.eql('test_title');\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].description).to.eql('eg_description');\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].numberOfFavorites).to.eql(3);\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].event).to.eql('post');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].tags).to.eql(['testtagcopy']);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0]._id).to.eql(getForeignkeyTwo);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].title).to.eql('test_titlecopy');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].description).to.eql('eg_descriptioncopy');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].numberOfFavorites).to.eql(3);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].event).to.eql('post');\r",
+									"    pm.expect(jsonDataCollectionTwo.post_id).to.eql([getPost_idTwo]);\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+									"    pm.expect(jsonData.username).to.eql('Fred');\r",
+									"    pm.expect(jsonData.password).to.eql('freddie');\r",
+									"    pm.expect(jsonData.bio).to.eql('Hi my name is Fred');\r",
+									"    pm.expect(jsonData.event).to.eql('icon');\r",
 									"});\r",
 									"\r",
-									"pm.test('Foreign key body has an image url', function () {\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].image).to.be.a('String');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].image).to.be.a('String');\r",
+									"pm.test('Body has an icon url', function () {\r",
+									"    pm.expect(jsonData.icon).to.be.a('String');\r",
 									"});\r",
 									"\r",
 									"\r",
 									"pm.test('Body has _id', function () {\r",
 									"    pm.expect(jsonDataCollectionOne._id).to.be.a('String');\r",
 									"    pm.expect(jsonDataCollectionTwo._id).to.be.a('String');\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has a post_id', function () {\r",
-									"    pm.expect(jsonDataCollectionOne.post_id[0].post_id).to.be.a('String');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].post_id).to.be.a('String');\r",
-									"})"
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -5862,6 +5920,72 @@
 								"api",
 								"users",
 								"{{user_id}}",
+								"collections"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[COLLECTION] Get all user2 collections",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"var jsonDataCollectionTwo = pm.response.json().collections[0];\r",
+									"\r",
+									"var getCollection_IdTwo = pm.variables.get('collection_id2');\r",
+									"\r",
+									"var getUser_IdTwo = pm.environment.get('user_id2');\r",
+									"\r",
+									"var getPost_id = pm.environment.get('post_id');\r",
+									"var getPost_idTwo = pm.environment.get('post_id2');\r",
+									"\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Second Collection in body has correct id', function () {\r",
+									"    pm.expect(jsonDataCollectionTwo._id).to.eql(getCollection_IdTwo);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct collections and user information', function () {\r",
+									"    pm.expect(jsonDataCollectionTwo.title).to.eql('Dog Pictures');\r",
+									"    pm.expect(jsonDataCollectionTwo.post_id).to.eql([getPost_idTwo]);\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_IdTwo);\r",
+									"    pm.expect(jsonData.username).to.eql('Carl');\r",
+									"    pm.expect(jsonData.password).to.eql('whippedcream');\r",
+									"    pm.expect(jsonData.bio).to.eql('I like long walks on the leash');\r",
+									"    pm.expect(jsonData.event).to.eql('icon');\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has an icon url', function () {\r",
+									"    pm.expect(jsonData.icon).to.be.a('String');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test('Body has _id', function () {\r",
+									"    pm.expect(jsonDataCollectionTwo._id).to.be.a('String');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/users/{{user_id2}}/collections",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id2}}",
 								"collections"
 							]
 						}
@@ -5936,14 +6060,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"var  jsonData = pm.response.json();\r",
 									"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
 									"var jsonDataCollectionTwo = pm.response.json().collections[1];\r",
 									"\r",
 									"var getCollection_IdOne = pm.variables.get('collection_id');\r",
 									"var getCollection_IdTwo = pm.variables.get('collection_id2');\r",
 									"\r",
-									"var getForeignkeyTwo = pm.environment.get('post_id2');\r",
-									"\r",
+									"var getUser_Id = pm.environment.get('user_id');\r",
+									"var getPost_idTwo = pm.environment.get('post_id2');\r",
 									"\r",
 									"pm.test('Status code is 200', function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -5958,31 +6083,27 @@
 									"    pm.expect(jsonDataCollectionTwo._id).to.eql(getCollection_IdTwo);\r",
 									"});\r",
 									"\r",
-									"pm.test('Body has correct title and foreign key', function () {\r",
+									"pm.test('Body has correct collections and user information', function () {\r",
 									"    pm.expect(jsonDataCollectionOne.title).to.eql('Landscape Pictures');\r",
-									"    pm.expect(jsonDataCollectionTwo.title).to.eql('Dog Pictures');\r",
 									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([]);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].tags).to.eql(['testtagcopy']);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0]._id).to.eql(getForeignkeyTwo);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].title).to.eql('test_titlecopy');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].description).to.eql('eg_descriptioncopy');\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].numberOfFavorites).to.eql(3);\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].event).to.eql('post');\r",
+									"    pm.expect(jsonDataCollectionTwo.title).to.eql('Dog Pictures');\r",
+									"    pm.expect(jsonDataCollectionTwo.post_id).to.eql([getPost_idTwo]);\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+									"    pm.expect(jsonData.username).to.eql('Fred');\r",
+									"    pm.expect(jsonData.password).to.eql('freddie');\r",
+									"    pm.expect(jsonData.bio).to.eql('Hi my name is Fred');\r",
+									"    pm.expect(jsonData.event).to.eql('icon');\r",
 									"});\r",
 									"\r",
-									"pm.test('Foreign key body has an image url', function () {\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].image).to.be.a('String');\r",
+									"pm.test('Body has an icon url', function () {\r",
+									"    pm.expect(jsonData.icon).to.be.a('String');\r",
 									"});\r",
 									"\r",
 									"\r",
 									"pm.test('Body has _id', function () {\r",
 									"    pm.expect(jsonDataCollectionOne._id).to.be.a('String');\r",
 									"    pm.expect(jsonDataCollectionTwo._id).to.be.a('String');\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has a post_id', function () {\r",
-									"    pm.expect(jsonDataCollectionTwo.post_id[0].post_id).to.be.a('String');\r",
-									"})"
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -6007,15 +6128,17 @@
 					"response": []
 				},
 				{
-					"name": "[COLLECTION] Get collection with specific id",
+					"name": "[COLLECTION] Get user1 collection with specific id",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"var  jsonData = pm.response.json();\r",
+									"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
 									"\r",
 									"var getCollection_Id = pm.variables.get(\"collection_id\");\r",
+									"var getUser_Id = pm.variables.get(\"user_id\");\r",
 									"\r",
 									"pm.test('Status code is 200', function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -6025,13 +6148,17 @@
 									"    pm.expect(jsonData._id).to.be.a('String');\r",
 									"});\r",
 									"\r",
-									"pm.test('Body has correct _id ', function () {\r",
-									"    pm.expect(jsonData._id).to.eql(getCollection_Id);\r",
+									"pm.test('Body has correct user_id', function () {\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct collection_id ', function () {\r",
+									"    pm.expect(jsonDataCollectionOne._id).to.eql(getCollection_Id);\r",
 									"});\r",
 									"\r",
 									"pm.test('Body has correct title and post_id', function () {\r",
-									"    pm.expect(jsonData.title).to.eql('Landscape Pictures');\r",
-									"    pm.expect(jsonData.post_id).to.eql([]);\r",
+									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([]);\r",
+									"    pm.expect(jsonDataCollectionOne.title).to.eql('Landscape Pictures');\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -6058,17 +6185,18 @@
 					"response": []
 				},
 				{
-					"name": "[COLLECTION] Get collection with specific id2",
+					"name": "[COLLECTION] Get user1 collection with specific id2",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"var  jsonData = pm.response.json();\r",
+									"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
 									"\r",
-									"var getCollection_Id2 = pm.variables.get(\"collection_id2\");\r",
-									"\r",
-									"var getForeignkeyTwo = pm.environment.get('post_id2');\r",
+									"var getCollection_Id = pm.variables.get(\"collection_id2\");\r",
+									"var getUser_Id = pm.variables.get(\"user_id\");\r",
+									"var getPost_Id = pm.variables.get(\"post_id2\");\r",
 									"\r",
 									"pm.test('Status code is 200', function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -6078,13 +6206,17 @@
 									"    pm.expect(jsonData._id).to.be.a('String');\r",
 									"});\r",
 									"\r",
-									"pm.test('Body has correct _id ', function () {\r",
-									"    pm.expect(jsonData._id).to.eql(getCollection_Id2);\r",
+									"pm.test('Body has correct user_id', function () {\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct collection_id ', function () {\r",
+									"    pm.expect(jsonDataCollectionOne._id).to.eql(getCollection_Id);\r",
 									"});\r",
 									"\r",
 									"pm.test('Body has correct title and post_id', function () {\r",
-									"    pm.expect(jsonData.title).to.eql('Dog Pictures');\r",
-									"    pm.expect(jsonData.post_id).to.eql([getForeignkeyTwo]);\r",
+									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([getPost_Id]);\r",
+									"    pm.expect(jsonDataCollectionOne.title).to.eql('Dog Pictures');\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -6103,6 +6235,64 @@
 								"api",
 								"users",
 								"{{user_id}}",
+								"collections",
+								"{{collection_id2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[COLLECTION] Get user2 collection with specific id2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
+									"\r",
+									"var getCollection_Id = pm.variables.get(\"collection_id2\");\r",
+									"var getUser_Id = pm.variables.get(\"user_id2\");\r",
+									"var getPost_Id = pm.variables.get(\"post_id2\");\r",
+									"\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has _id', function () {\r",
+									"    pm.expect(jsonData._id).to.be.a('String');\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct user_id', function () {\r",
+									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct collection_id ', function () {\r",
+									"    pm.expect(jsonDataCollectionOne._id).to.eql(getCollection_Id);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct title and post_id', function () {\r",
+									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([getPost_Id]);\r",
+									"    pm.expect(jsonDataCollectionOne.title).to.eql('Dog Pictures');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/users/{{user_id2}}/collections/{{collection_id2}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"{{user_id2}}",
 								"collections",
 								"{{collection_id2}}"
 							]
@@ -6195,7 +6385,8 @@
 									"\r",
 									"var getCollection_Id = pm.variables.get(\"collection_id2\");\r",
 									"\r",
-									"var getForeignkey = pm.environment.get('post_id2');\r",
+									"var getForeignkey = pm.environment.get('post_id');\r",
+									"var getForeignkeyTwo = pm.environment.get('post_id2');\r",
 									"\r",
 									"pm.test('Status code is 200', function () {\r",
 									"    pm.response.to.have.status(200);\r",
@@ -6210,8 +6401,8 @@
 									"});\r",
 									"\r",
 									"pm.test('Body has correct title and post_id', function () {\r",
-									"    pm.expect(jsonData.title).to.eql('Dog Pictures');\r",
-									"    pm.expect(jsonData.post_id).to.eql([getForeignkey, getForeignkey]);\r",
+									"    pm.expect(jsonData.title).to.eql('Cosplay');\r",
+									"    pm.expect(jsonData.post_id).to.eql([getForeignkeyTwo, getForeignkey]);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -6222,19 +6413,13 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "title ",
-									"value": "Cosplay",
-									"type": "text"
-								},
-								{
-									"key": "post_id",
-									"value": "{{post_id2}}",
-									"type": "text"
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Cosplay\",\r\n    \"post_id\": \"{{post_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
 								}
-							]
+							}
 						},
 						"url": {
 							"raw": "{{host}}/api/collections/{{collection_id2}}",
