@@ -108,17 +108,26 @@ export default {
         bio: '',
         uploadedIcon: null
       },
-      collections: []
+      user_id: null
     }
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault()
+      const userFD = await this.createUserFormData()
+      await this.submitForm(userFD)
       const collectionFD1 = await this.createFirstCollectionFormData()
       const collectionFD2 = await this.createSecondCollectionFormData()
       await this.postCollectionsFormData(collectionFD1, collectionFD2)
-      const userFD = await this.createUserFormData()
-      await this.submitForm(userFD)
+    },
+    async createUserFormData() {
+      const userFD = new FormData()
+      userFD.append('username', this.form.username)
+      userFD.append('password', this.form.password)
+      userFD.append('bio', this.form.bio)
+      userFD.append('event', 'icon')
+      userFD.append('icon', this.form.uploadedIcon)
+      return userFD
     },
     async createFirstCollectionFormData() {
       const collectionFD1 = new FormData()
@@ -130,49 +139,39 @@ export default {
       collectionFD2.append('title', 'FavoritedImages')
       return collectionFD2
     },
-    async createUserFormData() {
-      const userFD = new FormData()
-      userFD.append('username', this.form.username)
-      userFD.append('password', this.form.password)
-      userFD.append('bio', this.form.bio)
-      userFD.append('event', 'icon')
-      userFD.append('icon', this.form.uploadedIcon)
-      for (let i = 0; i < this.collections.length; i++) {
-        userFD.append('collections', this.collections[i])
-      }
-      return userFD
-    },
-    async postCollectionsFormData(collectionFD1, collectionFD2) {
-      await Api.post('/collections', collectionFD1)
-        .then((response) => {
-          console.log(response)
-          this.collections.push(response.data._id)
-        })
-        .catch((error) => {
-          const message = error.response.data.message
-          console.log(message)
-        })
-
-      await Api.post('/collections', collectionFD2)
-        .then((response) => {
-          console.log(response)
-          this.collections.push(response.data._id)
-        })
-        .catch((error) => {
-          const message = error.response.data.message
-          console.log(message)
-        })
-    },
 
     async submitForm(userFD) {
-      await this.postCollectionsFormData()
-      Api.post('/usersAuth/register', userFD)
-        .then(() => {
+      await Api.post('/usersAuth/register', userFD)
+        .then((response) => {
+          this.user_id = response.data._id
+          console.log(response)
           this.$router.push({ name: 'login' })
           alert('Registration successful!')
         })
         .catch((error) => {
-          alert(error.response.data.message)
+          const message = error.response.data.message
+          console.log(message)
+        })
+    },
+
+    async postCollectionsFormData(collectionFD1, collectionFD2) {
+      await this.submitForm()
+      Api.post('/users/' + this.user_id + '/collections', collectionFD1)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          const message = error.response.data.message
+          console.log(message)
+        })
+
+      Api.post('/users/' + this.user_id + '/collections', collectionFD2)
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {
+          const message = error.response.data.message
+          console.log(message)
         })
     }
   },
