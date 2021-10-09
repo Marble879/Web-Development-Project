@@ -135,10 +135,10 @@ export default {
     async onSubmit(event) {
       event.preventDefault()
       await this.getUserId()
+      await this.getCollectionId()
       if (!this.hasError) {
         const fd = await this.createFormData()
         await this.postFormData(fd)
-        await this.getCollectionId()
         await this.addToDefaultCollection()
       }
     },
@@ -187,6 +187,8 @@ export default {
         .catch(error => {
           if (error.response.status === 403) {
             alert('Error, not logged in!')
+          } else {
+            alert(error.response.data.message)
           }
           this.hasError = true
         })
