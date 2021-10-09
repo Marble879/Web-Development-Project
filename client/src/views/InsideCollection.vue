@@ -62,8 +62,8 @@ export default {
   },
   async mounted() {
     await this.getPosts()
-    await this.checkAccess()
     await this.checkPostModifyPermission()
+    await this.checkAccess()
   },
   methods: {
     async setCurrentCollection() {
@@ -126,7 +126,7 @@ export default {
           console.log(response)
         })
         .catch(error => {
-          // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+          // TODO: ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
           console.log(error)
         })
     },
@@ -145,7 +145,7 @@ export default {
           // TODO: error handling
         })
     },
-    // confirms whether the current logged in user has access to modify the collection
+    // confirms whether the current logged in user has access to modify the collection and posts
     async checkAccess() {
       const userId = this.$route.params.Uid
       const token = window.localStorage.getItem('auth')
@@ -155,12 +155,17 @@ export default {
         }
       })
         .then(response => {
-          if (!(userId === response.data.authorizedData.id._id)) { this.noCollectionModifyPermission = true } else {
+          if (!(userId === response.data.authorizedData.id._id)) {
+            this.noCollectionModifyPermission = true
+            this.noPostModifyPermission = true
+          } else {
             console.log('has perms')
           }
         })
         .catch(error => {
           if (error.response.status === 403) {
+            this.noCollectionModifyPermission = true
+            this.noPostModifyPermission = true
             alert('Error, not logged in!')
           }
           console.log(error)
