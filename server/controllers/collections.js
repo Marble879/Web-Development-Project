@@ -7,15 +7,27 @@ var User = require('../models/user')
 
 router.use(express.json());
 
-router.post('/api/collections', imgUpload.none(), function (req, res, next) {
+router.post('/api/users/:userID/collections', imgUpload.none(), function (req, res, next) {
     var collection = new Collection(req.body);
-    collection.save(function (err, collection) {
+    User.findById(req.params.userID, function (err, user) {
         if (err) {
             return next(err);
         }
-        console.log('collection created');
-        res.status(201).json(collection);
-    });
+        if (user === null) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+        collection.save(function (err, collection) {
+            if (err) {
+                return next(err);
+            }
+            user.collections.push(collection._id);
+            user.save();
+            console.log('Collection created');
+            return res.status(201).json(collection);
+        })
+    })
 });
 
 router.get("/api/users/:userID/collections", function (req, res, next) {

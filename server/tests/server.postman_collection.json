@@ -5285,6 +5285,166 @@
 			"name": "Collection tests",
 			"item": [
 				{
+					"name": "[USER] Create a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"var userId = jsonData._id;\r",
+									"pm.environment.set(\"user_id\", userId);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+									"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+									"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+									"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+									"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has an icon url', function () {\r",
+									"    pm.expect(jsonData.icon).to.be.a('String');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body has _id\", function () {\r",
+									"    pm.expect(jsonData._id).to.be.a('String');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Fred",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "freddie",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "Hi my name is Fred",
+									"type": "text"
+								},
+								{
+									"key": "event",
+									"value": "icon",
+									"type": "text"
+								},
+								{
+									"key": "icon",
+									"type": "file",
+									"src": "./tests/test_icon.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[USER] Create second user to show in next test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"var userId = jsonData._id;\r",
+									"pm.environment.set(\"user_id2\", userId);\r",
+									"\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+									"    pm.expect(jsonData.username).to.eql(\"Carl\");\r",
+									"    pm.expect(jsonData.password).to.eql(\"whippedcream\");\r",
+									"    pm.expect(jsonData.bio).to.eql(\"I like long walks on the leash\");\r",
+									"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+									"})\r",
+									"\r",
+									"pm.test('Body has an icon url', function () {\r",
+									"    pm.expect(jsonData.icon).to.be.a('String');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body has _id\", function () {\r",
+									"    pm.expect(jsonData._id).to.be.a('String');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "Carl",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "whippedcream",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "I like long walks on the leash",
+									"type": "text"
+								},
+								{
+									"key": "event",
+									"value": "icon",
+									"type": "text"
+								},
+								{
+									"key": "icon",
+									"type": "file",
+									"src": "./tests/test_icon.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{host}}/api/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[POST] Create a post",
 					"event": [
 						{
@@ -5537,15 +5697,22 @@
 									"value": "{{post_id}}",
 									"type": "text"
 								}
-							]
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{host}}/api/collections",
+							"raw": "{{host}}/api/users/{{user_id}}/collections",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
+								"users",
+								"{{user_id}}",
 								"collections"
 							]
 						}
@@ -5601,12 +5768,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/api/collections",
+							"raw": "{{host}}/api/users/{{user_id2}}/collections",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
+								"users",
+								"{{user_id2}}",
 								"collections"
 							]
 						}
@@ -5614,126 +5783,79 @@
 					"response": []
 				},
 				{
-					"name": "[USER] Create a user",
+					"name": "[USER] Get all users to show that user collections are set",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"var  jsonData = pm.response.json();\r",
-									"var userId = jsonData._id;\r",
-									"pm.environment.set(\"user_id\", userId);\r",
+									"var jsonData = pm.response.json();\r",
+									"var jsonDataCollectionOne = pm.response.json().users[0].collections[0];\r",
+									"var jsonDataCollectionTwo  = pm.response.json().users[1].collections[0];\r",
 									"\r",
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
+									"var getUserIdOne = pm.environment.get('user_id');\r",
+									"var getUserIdTwo = pm.environment.get('user_id2');\r",
+									"var getPostIdOne = pm.environment.get('post_id');\r",
+									"var getPostIdTwo = pm.environment.get('post_id2');\r",
+									"var getCollectionIdOne = pm.environment.get('collection_id');\r",
+									"var getCollectionIdTwo = pm.environment.get('collection_id2');\r",
+									"\r",
+									"\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
-									"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
-									"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
-									"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+									"pm.test('First user in body has correct id', function () {\r",
+									"    pm.expect(jsonData.users[0]._id).to.eql(getUserIdOne);\r",
+									"});\r",
+									"\r",
+									"pm.test('Second user in body has correct id', function () {\r",
+									"    pm.expect(jsonData.users[1]._id).to.eql(getUserIdTwo);\r",
+									"});\r",
+									"\r",
+									"pm.test('First collection in body has correct id', function () {\r",
+									"    pm.expect(jsonDataCollectionOne._id).to.eql(getCollectionIdOne);\r",
+									"});\r",
+									"\r",
+									"pm.test('Second collection in body has correct id', function () {\r",
+									"    pm.expect(jsonDataCollectionTwo._id).to.eql(getCollectionIdTwo);\r",
+									"});\r",
+									"\r",
+									"pm.test('Body has correct post_id, title, and user information', function () {\r",
+									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([getPostIdOne]);\r",
+									"    pm.expect(jsonDataCollectionOne.title).to.eql('Landscape Pictures');\r",
+									"    pm.expect(jsonData.users[0].username).to.eql('Fred');\r",
+									"    pm.expect(jsonData.users[0].password).to.eql('freddie');\r",
+									"    pm.expect(jsonData.users[0].bio).to.eql('Hi my name is Fred');\r",
+									"    pm.expect(jsonData.users[0].event).to.eql('icon');\r",
+									"    pm.expect(jsonDataCollectionTwo.post_id).to.eql([getPostIdTwo]);\r",
+									"    pm.expect(jsonDataCollectionTwo.title).to.eql('Dog Pictures');\r",
+									"    pm.expect(jsonData.users[1].username).to.eql('Carl');\r",
+									"    pm.expect(jsonData.users[1].password).to.eql('whippedcream');\r",
+									"    pm.expect(jsonData.users[1].bio).to.eql('I like long walks on the leash');\r",
+									"    pm.expect(jsonData.users[1].event).to.eql('icon');\r",
 									"});\r",
 									"\r",
 									"pm.test('Body has an icon url', function () {\r",
-									"    pm.expect(jsonData.icon).to.be.a('String');\r",
+									"    pm.expect(jsonData.users[0].icon).to.be.a('String');\r",
+									"    pm.expect(jsonData.users[1].icon).to.be.a('String');\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Body has _id\", function () {\r",
-									"    pm.expect(jsonData._id).to.be.a('String');\r",
+									"\r",
+									"pm.test('Body has _id', function () {\r",
+									"    pm.expect(jsonData.users[0]._id).to.be.a('String');\r",
+									"    pm.expect(jsonData.users[1]._id).to.be.a('String');\r",
 									"});"
 								],
 								"type": "text/javascript"
 							}
 						}
 					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "username",
-									"value": "Fred",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "freddie",
-									"type": "text"
-								},
-								{
-									"key": "bio",
-									"value": "Hi my name is Fred",
-									"type": "text"
-								},
-								{
-									"key": "event",
-									"value": "icon",
-									"type": "text"
-								},
-								{
-									"key": "icon",
-									"type": "file",
-									"src": "./tests/test_icon.jpg"
-								},
-								{
-									"key": "collections",
-									"value": "{{collection_id}}",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{host}}/api/users",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"users"
-							]
-						}
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
 					},
-					"response": []
-				},
-				{
-					"name": "[USER] Create second user to show in next test",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var  jsonData = pm.response.json();\r",
-									"var userId = jsonData._id;\r",
-									"pm.environment.set(\"user_id2\", userId);\r",
-									"\r",
-									"pm.test(\"Status code is 201\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
-									"    pm.expect(jsonData.username).to.eql(\"Carl\");\r",
-									"    pm.expect(jsonData.password).to.eql(\"whippedcream\");\r",
-									"    pm.expect(jsonData.bio).to.eql(\"I like long walks on the leash\");\r",
-									"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
-									"})\r",
-									"\r",
-									"pm.test('Body has an icon url', function () {\r",
-									"    pm.expect(jsonData.icon).to.be.a('String');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Body has _id\", function () {\r",
-									"    pm.expect(jsonData._id).to.be.a('String');\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "formdata",
@@ -5762,11 +5884,6 @@
 									"key": "icon",
 									"type": "file",
 									"src": "./tests/test_icon.jpg"
-								},
-								{
-									"key": "collections",
-									"value": "{{collection_id2}}",
-									"type": "text"
 								}
 							]
 						},
@@ -6538,12 +6655,14 @@
 							]
 						},
 						"url": {
-							"raw": "{{host}}/api/collections",
+							"raw": "{{host}}/api/users/{{user_id}}/collections",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
+								"users",
+								"{{user_id}}",
 								"collections"
 							]
 						}
