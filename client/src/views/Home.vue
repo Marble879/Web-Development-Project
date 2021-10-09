@@ -28,20 +28,26 @@
         >
       </b-col>
     </b-row>
-    <b-row>
-      <b-col
-        class="col-lg-4 col-md-12 mb-4 mb-lg-0"
+
+    <b-card-group columns>
+      <b-card
         v-for="post in posts"
         v-bind:key="post._id"
-        v-bind:img-src="post.image"
+        v-bind:img-src="getImageUrl(post.image)"
         img-alt="Image"
+        img-top
       >
-        <b-img
-          class="w-100 shadow-1-strong rounded mb-4"
-          v-bind:src="'http://localhost:3000/' + post.image"
-        ></b-img>
-      </b-col>
-    </b-row>
+        <b-button
+          variant="light"
+          v-on:click="addPostToFavorites(post._id)"
+          type="submit"
+          title="Add to favorites"
+          class="text-center"
+        >
+          <b-icon-heart-fill variant="danger"></b-icon-heart-fill>
+        </b-button>
+      </b-card>
+    </b-card-group>
   </b-container>
 </template>
 
@@ -55,21 +61,29 @@ export default {
   data() {
     return {
       posts: [],
-      selectedTag: ''
+      selectedTag: '',
+      host: Api.defaults.baseURL.replace('/api', ''),
+      userId: null,
+      collectionId: null
     }
   },
-  mounted() {
-    Api.get('/posts')
-      .then((response) => {
-        this.posts = response.data.posts
-        console.log(response)
-      })
-      .catch((error) => {
-        alert(error.response.data.message)
-        console.log(error)
-      })
+  async mounted() {
+    await this.retrieveAllPosts()
+    await this.getUserId()
+    await this.getFavoritesCollectionId()
   },
   methods: {
+    async retrieveAllPosts() {
+      Api.get('/posts')
+        .then((response) => {
+          this.posts = response.data.posts
+          console.log(response)
+        })
+        .catch((error) => {
+          alert(error.response.data.message)
+          console.log(error)
+        })
+    },
     async sortByTag() {
       this.posts = []
       await Api.get('/posts?tag=' + this.selectedTag)
@@ -90,6 +104,56 @@ export default {
         })
         .catch((error) => {
           console.log(error)
+        })
+    },
+    getImageUrl(postImage) {
+      console.log(postImage)
+      console.log(`${this.host}/${postImage}`)
+      return `${this.host}/${postImage}`
+    },
+    async getUserId() {
+      const token = window.localStorage.getItem('auth')
+      await Api.get('/usersAuth/data', {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+        .then((response) => {
+          this.userId = response.data.authorizedData.id._id
+        })
+        .catch((error) => {
+          if (error.response.status === 403) {
+            alert('Error, not logged in!')
+          } else {
+            alert(error.response.data.message)
+          }
+        })
+    },
+    async getFavoritesCollectionId() {
+      await this.getUserId()
+      Api.get('/users/' + this.userId + '/collections')
+        .then((response) => {
+          console.log(response)
+          this.collectionId = response.data.collections[1]._id
+          console.log(this.collectionId)
+        })
+        .catch((error) => {
+          alert(error.response.data.message)
+          console.log(error)
+        })
+    },
+    async addPostToFavorites(postId) {
+      await this.getFavoritesCollectionId()
+      Api.patch('/collections/' + this.collectionId, {
+        post_id: `${postId}`
+      })
+        .then((response) => {
+          console.log(response)
+          alert('Post added to favorites')
+        })
+        .catch((error) => {
+          console.log(error)
+          alert(error.response.data.message)
         })
     }
   }
