@@ -6302,64 +6302,6 @@
 					"response": []
 				},
 				{
-					"name": "[COLLECTION] Get user1 collection with specific id2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var  jsonData = pm.response.json();\r",
-									"var jsonDataCollectionOne = pm.response.json().collections[0];\r",
-									"\r",
-									"var getCollection_Id = pm.variables.get(\"collection_id2\");\r",
-									"var getUser_Id = pm.variables.get(\"user_id\");\r",
-									"var getPost_Id = pm.variables.get(\"post_id2\");\r",
-									"\r",
-									"pm.test('Status code is 200', function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has _id', function () {\r",
-									"    pm.expect(jsonData._id).to.be.a('String');\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has correct user_id', function () {\r",
-									"    pm.expect(jsonData._id).to.eql(getUser_Id);\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has correct collection_id ', function () {\r",
-									"    pm.expect(jsonDataCollectionOne._id).to.eql(getCollection_Id);\r",
-									"});\r",
-									"\r",
-									"pm.test('Body has correct title and post_id', function () {\r",
-									"    pm.expect(jsonDataCollectionOne.post_id).to.eql([getPost_Id]);\r",
-									"    pm.expect(jsonDataCollectionOne.title).to.eql('Dog Pictures');\r",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/api/users/{{user_id}}/collections/{{collection_id2}}",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"api",
-								"users",
-								"{{user_id}}",
-								"collections",
-								"{{collection_id2}}"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "[COLLECTION] Get user2 collection with specific id2",
 					"event": [
 						{
