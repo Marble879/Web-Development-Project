@@ -78,7 +78,7 @@ export default {
           this.isDefaultCollection()
         })
         .catch(error => {
-        // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+          alert(error.response.data.message)
           this.posts = []
           console.log(error)
         })
@@ -91,6 +91,9 @@ export default {
     async getPosts() {
       await this.setCurrentCollection()
       const postIds = await this.getPostIds()
+      if (postIds.length === 0) {
+        alert('No posts in collection!')
+      }
       postIds.forEach(async (post) => {
         await Api.get('/posts/' + post)
           .then(response => {
@@ -98,7 +101,7 @@ export default {
             this.posts.push(response.data)
           })
           .catch(error => {
-            // todo ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+            alert(error.response.data.message)
             this.posts = []
             console.log(error)
           })
@@ -126,7 +129,7 @@ export default {
           console.log(response)
         })
         .catch(error => {
-          // TODO: ERROR HANDLING/DISPLAY ERROR LIKE CREATEPOST SCREEN
+          alert(error.response.data.message)
           console.log(error)
         })
     },
@@ -141,8 +144,8 @@ export default {
           this.$router.push({ name: 'home' })
         })
         .catch(error => {
+          alert(error.response.data.message)
           console.log(error)
-          // TODO: error handling
         })
     },
     // confirms whether the current logged in user has access to modify the collection and posts
@@ -166,10 +169,10 @@ export default {
           if (error.response.status === 403) {
             this.noCollectionModifyPermission = true
             this.noPostModifyPermission = true
-            alert('Error, not logged in!')
+          } else {
+            alert(error.response.data.message)
           }
           console.log(error)
-          // TODO: add error handling
         })
     },
     async checkPostModifyPermission() {
@@ -188,7 +191,7 @@ export default {
         })
         .catch(error => {
           console.log(error)
-          // TODO: error handling
+          alert(error.response.data.message)
         })
     }
   }
