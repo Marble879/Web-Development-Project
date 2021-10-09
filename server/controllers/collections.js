@@ -95,7 +95,7 @@ router.delete("/api/users/:id/collections/:id", async function (req, res, next) 
         }
         try {
             collection.remove();
-            // await imgDelete.deleteSingleImage(collection.thumbnail);
+            await imgDelete.deleteSingleImage(collection.thumbnail);
             res.status(200).json(collection);
             console.log('specific collection deleted');
         } catch (err) {

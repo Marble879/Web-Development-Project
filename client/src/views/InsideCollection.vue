@@ -2,7 +2,7 @@
     <b-container>
           <b-container class="h1 mb-3">
           <h1>{{ title }}</h1>
-              <b-dropdown variant="outline-secondary" v-bind:disabled="noModifyPermission" class="mr-3">
+              <b-dropdown variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <template #button-content>
                   <b-icon-pencil-square></b-icon-pencil-square>
                 </template>
@@ -20,7 +20,7 @@
                     <b-dropdown-item-button v-on:click="updateTitle" variant="primary">Update</b-dropdown-item-button>
                 </b-dropdown-form>
               </b-dropdown>
-              <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="noModifyPermission" class="mr-3">
+              <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
               </b-button>
           </b-container>
@@ -30,7 +30,15 @@
               v-bind:img-src="getImageUrl(post.image)"
               img-alt="Image"
               img-top>
-                <b-button href="/" variant="primary">Go to post</b-button>
+                <b-button
+                v-on:click="deletePost(post._id)"
+                type="submit"
+                title="Delete Post"
+                variant="outline-secondary"
+                v-bind:disabled="noPostModifyPermission"
+                class="text-center">
+                  <b-icon-trash variant="danger"></b-icon-trash>
+              </b-button>
               </b-card>
             </b-card-group>
     </b-container>
@@ -45,15 +53,17 @@ export default {
     return {
       posts: [],
       currentCollection: null,
-      noModifyPermission: false,
+      noCollectionModifyPermission: false,
       host: Api.defaults.baseURL.replace('/api', ''),
       title: null,
-      newTitle: null
+      newTitle: null,
+      noPostModifyPermission: false
     }
   },
   async mounted() {
     await this.getPosts()
     await this.checkAccess()
+    await this.checkPostModifyPermission()
   },
   methods: {
     async setCurrentCollection() {
@@ -102,7 +112,7 @@ export default {
     isDefaultCollection() {
       console.log('here: ' + this.title)
       if (this.title === 'MyPhotos' || this.title === 'FavoritedImages') {
-        this.noModifyPermission = true
+        this.noCollectionModifyPermission = true
       }
     },
     async updateTitle() {
@@ -120,6 +130,7 @@ export default {
           console.log(error)
         })
     },
+    // Once merge other branch, change route to delete a collection with specific id
     async deleteCollection() {
       const userId = this.$route.params.Uid
       const collectionId = this.$route.params.Cid
@@ -131,7 +142,7 @@ export default {
         })
         .catch(error => {
           console.log(error)
-          // TODO error handling
+          // TODO: error handling
         })
     },
     // confirms whether the current logged in user has access to modify the collection
@@ -144,7 +155,7 @@ export default {
         }
       })
         .then(response => {
-          if (!(userId === response.data.authorizedData.id._id)) { this.noModifyPermission = true } else {
+          if (!(userId === response.data.authorizedData.id._id)) { this.noCollectionModifyPermission = true } else {
             console.log('has perms')
           }
         })
@@ -153,7 +164,26 @@ export default {
             alert('Error, not logged in!')
           }
           console.log(error)
-          // TODO add error handling
+          // TODO: add error handling
+        })
+    },
+    async checkPostModifyPermission() {
+      if (this.title === 'MyPhotos') {
+        this.noPostModifyPermission = false
+      } else {
+        this.noPostModifyPermission = true
+      }
+    },
+    async deletePost(postId) {
+      await Api.delete(`/posts/${postId}`)
+        .then(response => {
+          const index = this.posts.findIndex(post => { return post._id === postId })
+          this.posts.splice(index, 1)
+          alert('Deleted post')
+        })
+        .catch(error => {
+          console.log(error)
+          // TODO: error handling
         })
     }
   }
