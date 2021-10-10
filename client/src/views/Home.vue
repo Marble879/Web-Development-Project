@@ -3,28 +3,41 @@
     <h4 class="m-3 text-dark font-weight-bold">Filter</h4>
     <b-row>
       <b-col>
-        <b-button class="btn-style mb-4 ml-3" v-on:click="getAllImages()"
+        <b-button
+          class="btn-style mb-4 ml-3"
+          title="No filter"
+          v-on:click="getAllImages()"
           >None</b-button
         >
         <b-button
           class="btn-style btn-dog mb-4 ml-3"
+          title="Filter by dogs"
           v-on:click=";(selectedTag = 'dog'), sortByTag()"
           >Dog</b-button
         >
         <b-button
           class="btn-style btn-cat mb-4 ml-3"
+          title="Filter by cats"
           v-on:click=";(selectedTag = 'cat'), sortByTag()"
           >Cat</b-button
         >
         <b-button
           class="btn-style btn-landscape mb-4 ml-3"
+          title="Filter by landscapes"
           v-on:click=";(selectedTag = 'landscape'), sortByTag()"
           >Landscape</b-button
         >
         <b-button
           class="btn-style btn-painting mb-4 ml-3"
+          title="Filter by paintings"
           v-on:click=";(selectedTag = 'drawings/paintings'), sortByTag()"
           >Painting</b-button
+        >
+        <b-button
+          class="btn-style btn-trash mb-4 ml-3"
+          title="Delete all posts"
+          v-on:click="deleteAllPosts()"
+          >Delete All</b-button
         >
       </b-col>
     </b-row>
@@ -33,6 +46,7 @@
       <b-card
         v-for="post in posts"
         v-bind:key="post._id"
+        v-bind:title="post.title"
         v-bind:img-src="getImageUrl(post.image)"
         img-alt="Image"
         img-top
@@ -155,6 +169,18 @@ export default {
           console.log(error)
           alert(error.response.data.message)
         })
+    },
+    async deleteAllPosts() {
+      await Api.delete('/posts')
+        .then((response) => {
+          console.log(response)
+          this.posts = []
+          alert('All posts deleted')
+        })
+        .catch((error) => {
+          console.log(error)
+          alert(error.response.data.message)
+        })
     }
   }
 }
@@ -183,5 +209,8 @@ export default {
 
 .btn-painting {
   background-image: url('../Images/painting.png');
+}
+.btn-trash {
+  background-image: url('../Images/trash.png');
 }
 </style>
