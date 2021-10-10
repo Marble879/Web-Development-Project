@@ -82,6 +82,7 @@ export default {
     }
   },
   async mounted() {
+    await this.checkBackendStatus()
     await this.retrieveAllPosts()
     await this.getUserId()
     await this.getFavoritesCollectionId()
@@ -149,7 +150,6 @@ export default {
         .then((response) => {
           console.log(response)
           this.collectionId = response.data.collections[1]._id
-          console.log(this.collectionId)
         })
         .catch((error) => {
           alert(error.response.data.message)
@@ -180,6 +180,15 @@ export default {
         .catch((error) => {
           console.log(error)
           alert(error.response.data.message)
+        })
+    },
+    async checkBackendStatus() {
+      Api.get('/')
+        .then((response) => {
+          console.log('Backend is avaliable')
+        })
+        .catch((error) => {
+          alert(error)
         })
     }
   }
