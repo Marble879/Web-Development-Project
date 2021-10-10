@@ -134,12 +134,15 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault()
-      await this.getUserId()
-      await this.getCollectionId()
+      await this.checkBackendStatus()
       if (!this.hasError) {
-        const fd = await this.createFormData()
-        await this.postFormData(fd)
-        await this.addToDefaultCollection()
+        await this.getUserId()
+        await this.getCollectionId()
+        if (!this.hasError) {
+          const fd = await this.createFormData()
+          await this.postFormData(fd)
+          if (!this.hasError) { await this.addToDefaultCollection() }
+        }
       }
     },
     resetForm() {
@@ -215,6 +218,16 @@ export default {
         .catch(error => {
           console.log(error)
           alert(error.response.data.message)
+          this.hasError = true
+        })
+    },
+    async checkBackendStatus() {
+      await Api.get('/')
+        .then((response) => {
+          console.log('Backend is available')
+        })
+        .catch((error) => {
+          alert(error)
           this.hasError = true
         })
     }
