@@ -71,7 +71,7 @@ router.patch("/api/users/:id/collections/:id", function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "user not found" });
+            return res.status(404).json({ "message": "ERROR: collection not found" });
         }
         collection.title = (req.body.title || collection.title);
         var postId = (req.body.post_id || null)
