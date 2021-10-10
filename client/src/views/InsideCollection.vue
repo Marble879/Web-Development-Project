@@ -1,6 +1,6 @@
 <template>
-    <b-container>
-          <b-container class="h1 mb-3">
+    <b-container fluid="md">
+          <b-container class="h1 mb-3" >
           <h1>{{ title }}</h1>
               <b-dropdown variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <template #button-content>
@@ -43,6 +43,20 @@
             </b-card-group>
     </b-container>
 </template>
+
+<style scoped>
+  @media screen and (max-width: 768px) {
+    .card-columns {
+      column-count: 2
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    .card-columns {
+      column-count: 1
+    }
+  }
+</style>
 
 <script>
 import { Api } from '@/Api'
