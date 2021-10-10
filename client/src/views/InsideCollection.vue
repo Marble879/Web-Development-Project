@@ -50,6 +50,10 @@
     .card-columns {
       column-count: 2
     }
+
+    .jumbotron h1 {
+      font-size: 3rem
+    }
   }
 
   @media screen and (max-width: 576px) {
