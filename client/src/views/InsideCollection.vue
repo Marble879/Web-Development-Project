@@ -61,6 +61,7 @@ export default {
     }
   },
   async mounted() {
+    await this.checkBackendStatus()
     await this.getPosts()
     await this.checkPostModifyPermission()
     await this.checkAccess()
@@ -183,6 +184,7 @@ export default {
       }
     },
     async deletePost(postId) {
+      await this.checkBackendStatus()
       await Api.delete(`/posts/${postId}`)
         .then(response => {
           const index = this.posts.findIndex(post => { return post._id === postId })
@@ -192,6 +194,17 @@ export default {
         .catch(error => {
           console.log(error)
           alert(error.response.data.message)
+        })
+    },
+    async checkBackendStatus() {
+      await Api.get('/')
+        .then((response) => {
+          console.log('Backend is available')
+        })
+        .catch((error) => {
+          alert(error)
+          this.noCollectionModifyPermission = true
+          this.noPostModifyPermission = true
         })
     }
   }
