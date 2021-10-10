@@ -108,17 +108,22 @@ export default {
         bio: '',
         uploadedIcon: null
       },
-      user_id: null
+      user_id: null,
+      hasError: false
     }
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault()
-      const userFD = await this.createUserFormData()
-      await this.submitForm(userFD)
-      const collectionFD1 = await this.createFirstCollectionFormData()
-      const collectionFD2 = await this.createSecondCollectionFormData()
-      await this.postCollectionsFormData(collectionFD1, collectionFD2)
+      await this.checkBackendStatus()
+      if (!this.hasError) {
+        const userFD = await this.createUserFormData()
+        await this.submitForm(userFD)
+        const collectionFD1 = await this.createFirstCollectionFormData()
+        const collectionFD2 = await this.createSecondCollectionFormData()
+        await this.postCollectionsFormData(collectionFD1, collectionFD2)
+      }
+      await this.resetErrorStatus()
     },
     async createUserFormData() {
       const userFD = new FormData()
@@ -173,6 +178,19 @@ export default {
           const message = error.response.data.message
           console.log(message)
         })
+    },
+    async checkBackendStatus() {
+      await Api.get('/')
+        .then((response) => {
+          console.log('Backend is avaliable')
+        })
+        .catch((error) => {
+          alert(error)
+          this.hasError = true
+        })
+    },
+    async resetErrorStatus() {
+      this.hasError = false
     }
   },
   computed: {

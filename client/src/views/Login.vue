@@ -22,7 +22,7 @@
             header-text-variant="white"
           >
             <b-card-text>
-              <b-form @submit.prevent="submitForm">
+              <b-form @submit="onSubmit">
                 <b-form-group
                   description="Enter your username"
                   label="Username"
@@ -68,11 +68,20 @@ import { Api } from '@/Api'
 export default {
   data: () => ({
     username: '',
-    password: ''
+    password: '',
+    hasError: false
   }),
   methods: {
-    submitForm() {
-      Api.post('/usersAuth/login', {
+    async onSubmit(event) {
+      event.preventDefault()
+      await this.checkBackendStatus()
+      if (!this.hasError) {
+        await this.submitForm()
+      }
+      await this.resetErrorStatus()
+    },
+    async submitForm() {
+      await Api.post('/usersAuth/login', {
         username: this.username,
         password: this.password
       })
@@ -84,6 +93,19 @@ export default {
         .catch((error) => {
           alert(error.response.data.message)
         })
+    },
+    async checkBackendStatus() {
+      await Api.get('/')
+        .then((response) => {
+          console.log('Backend is avaliable')
+        })
+        .catch((error) => {
+          alert(error)
+          this.hasError = true
+        })
+    },
+    async resetErrorStatus() {
+      this.hasError = false
     }
   },
   computed: {
