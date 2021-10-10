@@ -1,15 +1,15 @@
 <template>
     <div>
-        <b-container>
+        <b-container fluid>
           <h2> Post Creation Page</h2>
             <b-row v-on:change="resetErrorStatus" class="vh-100 text-center" align-v="center" align-h="center">
-                <b-col>
+                <b-col cols="12" sm="12" md="5">
 
                     <b-img v-if="hasImage" v-bind:src="previewImage" center thumbnail fluid block rounded alt='Image preview'/>
                     <b-img v-else v-bind:src="require('../Images/DefaultPostImagePreview.png')" center thumbnail fluid block rounded height="500em" width="500em" alt='Image preview'/>
 
                 </b-col>
-                <b-col>
+                <b-col cols="12" sm="12" md="7">
                     <b-form @submit="onSubmit">
                         <b-form-group id="input-group-image" label="Upload image:" label-for="input-image">
 
