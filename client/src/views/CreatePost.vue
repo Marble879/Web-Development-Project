@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-container fluid>
+        <b-container fluid="md">
           <h2> Post Creation Page</h2>
             <b-row v-on:change="resetErrorStatus" class="vh-100 text-center" align-v="center" align-h="center">
                 <b-col cols="12" sm="12" md="5">
