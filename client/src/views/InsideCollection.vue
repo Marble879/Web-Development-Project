@@ -1,7 +1,7 @@
 <template>
     <b-container fluid="md">
           <b-container class="h1 mb-3" >
-          <h1>{{ title }}</h1>
+          <b-jumbotron fluid v-bind:header="title">
               <b-dropdown variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <template #button-content>
                   <b-icon-pencil-square></b-icon-pencil-square>
@@ -23,6 +23,7 @@
               <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
               </b-button>
+            </b-jumbotron>
           </b-container>
 
             <b-card-group columns>
