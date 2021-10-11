@@ -2,7 +2,7 @@
   <div>
     <b-container fluid>
       <b-row>
-        <b-col class="col-md-4 mt-4">
+        <b-col class="col-md-4 mt-4 login-img">
           <b-img
             v-bind:src="require('../Images/Artsy.png')"
             center
@@ -10,8 +10,6 @@
             fluid
             block
             rounded
-            height="500em"
-            width="500em"
             alt="logo"
           />
         </b-col>
@@ -115,3 +113,11 @@ export default {
   }
 }
 </script>
+
+<style>
+@media screen and (max-width: 768px) {
+  .login-img {
+    display: none;
+  }
+}
+</style>
