@@ -22,13 +22,15 @@
           >Cat</b-button
         >
         <b-button
-          class="btn-style btn-landscape mb-4 ml-3"
+          class="btn-style mb-4 ml-3"
+          id="landscape"
           title="Filter by landscapes"
           v-on:click=";(selectedTag = 'landscape'), sortByTag()"
           >Landscape</b-button
         >
         <b-button
-          class="btn-style btn-painting mb-4 ml-3"
+          class="btn-style mb-4 ml-3"
+          id="painting"
           title="Filter by paintings"
           v-on:click=";(selectedTag = 'drawings/paintings'), sortByTag()"
           >Painting</b-button
@@ -204,6 +206,21 @@ export default {
   outline: none;
 }
 
+@media screen and (max-width: 991px) and (min-width: 576px) {
+  div.col {
+    column-count: 3;
+  }
+  h4.m-3.text-dark.font-weight-bold {
+    font-size: 1.3rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  h4.m-3.text-dark.font-weight-bold {
+    font-size: 1.15rem;
+  }
+}
+
 .btn-dog {
   background-image: url('../Images/dog.png');
 }
@@ -212,14 +229,24 @@ export default {
   background-image: url('../Images/cat.png');
 }
 
-.btn-landscape {
+#landscape {
   background-image: url('../Images/landscape.png');
 }
 
-.btn-painting {
+#painting {
   background-image: url('../Images/painting.png');
 }
+
 .btn-trash {
   background-image: url('../Images/trash.png');
+}
+
+div.card {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI';
+}
+
+div.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 2px 10px 4px #e4e7ec;
 }
 </style>
