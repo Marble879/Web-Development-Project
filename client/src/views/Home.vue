@@ -1,8 +1,8 @@
 <template>
   <b-container fluid="md">
-    <h4 class="m-3 text-dark font-weight-bold">Filter</h4>
+    <h4 class="m-3 text-dark font-weight-bold filter">Filter</h4>
     <b-row>
-      <b-col>
+      <b-col class="home-column">
         <b-button
           class="btn-style mb-4 ml-3"
           title="No filter"
@@ -52,6 +52,7 @@
         v-bind:img-src="getImageUrl(post.image)"
         img-alt="Image"
         img-top
+        class="hover font-home"
       >
         <b-button
           variant="light"
@@ -207,16 +208,16 @@ export default {
 }
 
 @media screen and (max-width: 991px) and (min-width: 576px) {
-  div.col {
+  .home-column {
     column-count: 3;
   }
-  h4.m-3.text-dark.font-weight-bold {
+  .filter {
     font-size: 1.3rem;
   }
 }
 
 @media screen and (max-width: 576px) {
-  h4.m-3.text-dark.font-weight-bold {
+  .filter {
     font-size: 1.15rem;
   }
 }
@@ -241,11 +242,11 @@ export default {
   background-image: url('../Images/trash.png');
 }
 
-div.card {
+.font-home {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI';
 }
 
-div.card:hover {
+.hover:hover {
   transform: scale(1.02);
   box-shadow: 0px 2px 10px 4px #e4e7ec;
 }
