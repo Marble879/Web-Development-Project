@@ -56,6 +56,18 @@
     }
   }
 
+  button {
+    background-color: rgb(238, 189, 144);
+  }
+
+  .card-body {
+    background-color: rgb(198, 183, 214);
+  }
+
+  .jumbotron {
+    background-color: rgb(221, 220, 220);
+  }
+
   @media screen and (max-width: 576px) {
     .card-columns {
       column-count: 1
