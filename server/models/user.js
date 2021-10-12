@@ -9,8 +9,8 @@ var userSchema = new Schema({
   username: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   bio: { type: String },
-  event: { type: String },
-  icon: { type: String },
+  event: { type: String, required: true },
+  icon: { type: String, required: true },
   collections: [{ type: Schema.Types.ObjectId, ref: "collections" }]
 });
 
