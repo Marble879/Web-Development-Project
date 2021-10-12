@@ -56,7 +56,16 @@
     </div>
 </template>
 
-<style></style>
+<style scoped>
+
+form {
+  border-width: 0.25rem;
+  border: solid;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+</style>
 
 <script>
 // @ is an alias to /src
