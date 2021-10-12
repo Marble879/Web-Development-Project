@@ -2,7 +2,7 @@
     <div>
         <b-container fluid="md">
           <b-jumbotron fluid header="Create a Post"></b-jumbotron>
-            <b-row v-on:change="resetErrorStatus" class="vh-100 text-center" align-v="center" align-h="center">
+            <b-row v-on:change="resetErrorStatus" class="vh-50 text-center" align-v="center" align-h="center">
                 <b-col cols="12" sm="12" md="5">
 
                     <b-img v-if="hasImage" v-bind:src="previewImage" center thumbnail fluid block rounded alt='Image preview'/>
@@ -10,7 +10,7 @@
 
                 </b-col>
                 <b-col cols="12" sm="12" md="7">
-                    <b-form @submit="onSubmit">
+                    <b-form @submit="onSubmit" class="vh-3">
                         <b-form-group id="input-group-image" label="Upload image:" label-for="input-image">
 
                             <b-form-file id="input-image" label="Upload Image"
