@@ -118,12 +118,6 @@ export default {
   font-size: 1.1rem;
 }
 
-.card-img-top {
-  width: 100%;
-  height: 15vw;
-  object-fit: cover;
-}
-
 @media screen and (max-width: 768px) {
   .change-header {
     font-size: 1.2rem;
