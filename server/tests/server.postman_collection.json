@@ -2147,6 +2147,115 @@
 									"response": []
 								},
 								{
+									"name": "[ERRPATCH] Create a user for fail case purpose 2",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"var userId = jsonData._id;\r",
+													"pm.environment.set(\"user_id_error_case2\", userId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "username",
+													"value": "Bob",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "freddie",
+													"type": "text"
+												},
+												{
+													"key": "bio",
+													"value": "Hi my name is Fred",
+													"type": "text"
+												},
+												{
+													"key": "event",
+													"value": "icon",
+													"type": "text"
+												},
+												{
+													"key": "icon",
+													"type": "file",
+													"src": "./tests/test_icon.jpg"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/api/users",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPATCH] Patch username with duplicate username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 409', function () {\r",
+													"    pm.response.to.have.status(409);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"Fred\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id_error_case2}}",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id_error_case2}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "[ERRPATCH] Patch username with unexpected datatype",
 									"event": [
 										{
@@ -2298,6 +2407,154 @@
 										"body": {
 											"mode": "raw",
 											"raw": "{\r\n    \"collections\": [\"test\"]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id_error_case}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPATCH] Create a collection for error case",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"var collectionId = jsonData._id;\r",
+													"pm.environment.set(\"collection_id_error_case\", collectionId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Body has _id\", function () {\r",
+													"    pm.expect(jsonData._id).to.be.a('String');\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "title",
+													"value": "Landscape Pictures",
+													"type": "text"
+												},
+												{
+													"key": "event",
+													"value": "thumbnail",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "thumbnail",
+													"type": "file",
+													"src": "./tests/test_thumnail.jpg",
+													"disabled": true
+												},
+												{
+													"key": "post_id",
+													"value": "{{post_id2}}",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id}}",
+												"collections"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPATCH] Delete all collections Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 200', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id}}",
+												"collections"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPATCH] Patch collection with non existant collection",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 404', function () {\r",
+													"    pm.response.to.have.status(404);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"collections\": \"{{collection_id_error_case}}\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
