@@ -9,9 +9,24 @@ router.use(express.json());
 router.post("/api/users", imgUpload.single('icon'), function (req, res, next) {
   //NOTE: When creating a user, the event variable has to be passed before the image!
   var user = new User(req.body);
-  user.icon = req.file.path;
+  try {
+    user.icon = req.file.path;
+  } catch (err) {
+    if (err instanceof TypeError) {
+      err.status = 422;
+      err.message = 'Input error, Icon was not found';
+      return next(err);
+    }
+  }
   user.save(function (err, user) {
     if (err) {
+      if ( err.name == 'ValidationError') {
+        err.message = 'ValidationError. Incorrect data input.';
+        err.status = 422;
+      } else if (err.code === 11000) {
+        err.status = 409;
+        err.message = 'Username already exists!'
+      }
       return next(err);
     }
     console.log('user created');
