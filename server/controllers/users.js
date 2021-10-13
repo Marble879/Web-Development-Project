@@ -115,14 +115,20 @@ router.delete("/api/users/:id", async function (req, res, next) {
   var id = req.params.id;
   User.findOneAndDelete({ _id: id }, async function (err, user) {
     if (err) {
+      if (err instanceof mongoose.CastError) {
+        err.status = 400;
+        err.message = 'Invalid post ID';
+      }
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ "message": "User not found" });
+      var err = new Error('User not found');
+      err.status = 404;
+      return next(err);
     }
     try {
-      user.remove();
       await imgDelete.deleteSingleImage(user.icon);
+      user.remove();
       res.status(200).json(user);
       console.log('User with specific ID removed');
     } catch (err) {
@@ -136,6 +142,11 @@ router.delete("/api/users", async function (req, res, next) {
   User.deleteMany({}, async function (err, deleteInformation) {
     if (err) {
       return next(err);
+    }
+    if (deleteInformation.n == 0) {
+      var err = new Error('No users were found');
+      err.status = 404;
+      return next(err); 
     }
     try {
       await imgDelete.deleteAllImages('./icons/')
