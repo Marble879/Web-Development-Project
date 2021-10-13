@@ -2067,7 +2067,7 @@
 									"response": []
 								},
 								{
-									"name": "[ERRPATCH] Create a user for fail case purpose",
+									"name": "[ERRPATCH] Create a user for fail case purpose Copy",
 									"event": [
 										{
 											"listen": "test",
@@ -2657,16 +2657,16 @@
 							"name": "Put request error cases",
 							"item": [
 								{
-									"name": "[ERRPUT] Put a post with an ID that is not of type objectID",
+									"name": "[ERRPUT] Put a User with an ID that is not of type objectID",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 400', function () {",
-													"    pm.response.to.have.status(400);",
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 400', function () {\r",
+													"    pm.response.to.have.status(400);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -2678,7 +2678,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\" : \"test title\",\n    \"description\" : \"test description\",\n    \"numberOfFavorites\" : 2,\n    \"tags\" : \"testtag\"\n}",
+											"raw": "{\r\n    \"username\": \"bob\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2686,13 +2686,13 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/ThisShouldNotWork",
+											"raw": "{{host}}/api/users/ThisShouldNotWork",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
+												"users",
 												"ThisShouldNotWork"
 											]
 										}
@@ -2700,29 +2700,24 @@
 									"response": []
 								},
 								{
-									"name": "[ERRPPUT] Create a post for fail case purpose",
+									"name": "[ERRPUT] Create a user for fail case purpose 1",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"var postId = jsonData._id;",
-													"",
-													"pm.environment.set(\"post_id_error_case\", postId);",
-													"",
-													"pm.test('Status code is 201', function () {",
-													"    pm.response.to.have.status(201);",
-													"});",
-													""
+													"var  jsonData = pm.response.json();\r",
+													"var userId = jsonData._id;\r",
+													"pm.environment.set(\"user_id_error_case\", userId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});"
 												],
 												"type": "text/javascript"
 											}
 										}
 									],
-									"protocolProfileBehavior": {
-										"disabledSystemHeaders": {}
-									},
 									"request": {
 										"method": "POST",
 										"header": [],
@@ -2730,67 +2725,122 @@
 											"mode": "formdata",
 											"formdata": [
 												{
-													"key": "title",
-													"value": "test_title",
+													"key": "username",
+													"value": "Fred",
 													"type": "text"
 												},
 												{
-													"key": "description",
-													"value": "eg_description",
+													"key": "password",
+													"value": "freddie",
 													"type": "text"
 												},
 												{
-													"key": "numberOfFavorites",
-													"value": "3",
-													"type": "text"
-												},
-												{
-													"key": "tags",
-													"value": "testtag",
-													"contentType": "",
-													"type": "text"
-												},
-												{
-													"key": "user_id",
-													"value": "{{user_id}}",
+													"key": "bio",
+													"value": "Hi my name is Fred",
 													"type": "text"
 												},
 												{
 													"key": "event",
-													"value": "post",
+													"value": "icon",
 													"type": "text"
 												},
 												{
-													"key": "image",
+													"key": "icon",
 													"type": "file",
-													"src": "./tests/test_image.jpg"
+													"src": "./tests/test_icon.jpg"
 												}
 											]
 										},
 										"url": {
-											"raw": "{{host}}/api/posts",
+											"raw": "{{host}}/api/users",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts"
+												"users"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post with empty body",
+									"name": "[ERRPUT] Create a user for fail case purpose 2",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
+													"var  jsonData = pm.response.json();\r",
+													"var userId = jsonData._id;\r",
+													"pm.environment.set(\"user_id_error_case2\", userId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "username",
+													"value": "Bob",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "freddie",
+													"type": "text"
+												},
+												{
+													"key": "bio",
+													"value": "Hi my name is Fred",
+													"type": "text"
+												},
+												{
+													"key": "event",
+													"value": "icon",
+													"type": "text"
+												},
+												{
+													"key": "icon",
+													"type": "file",
+													"src": "./tests/test_icon.jpg"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{host}}/api/users",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPUT] Put a duplicate username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 409', function () {\r",
+													"    pm.response.to.have.status(409);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -2802,7 +2852,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\n}",
+											"raw": "{\r\n    \"username\": \"Fred\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2810,30 +2860,73 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case2}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case2}}"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post with no body",
+									"name": "[ERRPUT] Put a User with empty body",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id_error_case}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPUT] Put a User with no body",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -2853,30 +2946,30 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case}}"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post with a missing attribute",
+									"name": "[ERRPUT] Put a username with an unexpected datatype",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -2888,7 +2981,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\" : \"test title\",\n    \"description\" : \"test description\",\n    \"numberOfFavorites\" : 2\n}",
+											"raw": "{\r\n    \"username\": [\"jack\"],\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2896,30 +2989,30 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case}}"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post title with an unexpected datatype",
+									"name": "[ERRPUT] Put a password with an unexpected datatype",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -2931,7 +3024,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\": [\"test\"],\n    \"description\" : \"test description\",\n    \"numberOfFavorites\" : 2,\n    \"tags\" : \"testtag\"\n}",
+											"raw": "{\r\n    \"username\": \"jack\",\r\n    \"password\": [\"123\"],\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2939,30 +3032,30 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case}}"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post description with an unexpected datatype",
+									"name": "[ERRPUT] Put a bio with an unexpected datatype",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -2974,7 +3067,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\" : \"test title\",\n    \"description\": [\"test\"],\n    \"numberOfFavorites\" : 2,\n    \"tags\" : \"testtag\"\n}",
+											"raw": "{\r\n    \"username\": \"jack\",\r\n    \"password\": \"123\",\r\n    \"bio\": [\"bob cares about you\"],\r\n    \"event\": \"icon\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2982,37 +3075,178 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPUT] Put an event  with an unexpected datatype",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"username\": \"jack\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": [\"icon\"]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
+											"host": [
+												"{{host}}"
 											],
-											"query": [
+											"path": [
+												"api",
+												"users",
+												"{{user_id_error_case}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPUT] Create a collection for error case",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"var collectionId = jsonData._id;\r",
+													"pm.environment.set(\"collection_id_error_case\", collectionId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Body has _id\", function () {\r",
+													"    pm.expect(jsonData._id).to.be.a('String');\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
 												{
-													"key": "",
-													"value": "",
+													"key": "title",
+													"value": "Landscape Pictures",
+													"type": "text"
+												},
+												{
+													"key": "event",
+													"value": "thumbnail",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "thumbnail",
+													"type": "file",
+													"src": "./tests/test_thumnail.jpg",
+													"disabled": true
+												},
+												{
+													"key": "post_id",
+													"value": "{{post_id2}}",
+													"type": "text",
 													"disabled": true
 												}
 											]
+										},
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id}}",
+												"collections"
+											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post numberOfFavorites with an unexpected datatype",
+									"name": "[ERRPUT] Delete all collections Copy 2",
 									"event": [
 										{
 											"listen": "test",
 											"script": {
 												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 200', function () {\r",
+													"    pm.response.to.have.status(200);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"{{user_id}}",
+												"collections"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "[ERRPUT] Put a non existant collection",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var  jsonData = pm.response.json();\r",
+													"\r",
+													"pm.test('Status code is 422', function () {\r",
+													"    pm.response.to.have.status(422);\r",
 													"});"
 												],
 												"type": "text/javascript"
@@ -3024,7 +3258,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\" : \"test title\",\n    \"description\" : \"test description\",\n    \"numberOfFavorites\": \"hi\",\n    \"tags\" : \"testtag\"\n}",
+											"raw": "{\r\n    \"username\": \"jack\",\r\n    \"password\": \"123\",\r\n    \"bio\": \"bob cares about you\",\r\n    \"event\": \"icon\",\r\n    \"collections\": \"{{collection_id_error_case}}\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3032,64 +3266,21 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case}}"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post tag with an unexpected datatype",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"var  jsonData = pm.response.json();",
-													"",
-													"pm.test('Status code is 422', function () {",
-													"    pm.response.to.have.status(422);",
-													"});"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"title\" : \"test title\",\n    \"description\" : \"test description\",\n    \"numberOfFavorites\" : 2,\n    \"tags\": [[\"test array\"]]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
-											"host": [
-												"{{host}}"
-											],
-											"path": [
-												"api",
-												"posts",
-												"{{post_id_error_case}}"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "[ERRPUT] Delete all posts for error case test purposes",
+									"name": "[ERRPUT] Delete all users for error case test purposes",
 									"event": [
 										{
 											"listen": "test",
@@ -3109,20 +3300,20 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/api/posts",
+											"raw": "{{host}}/api/users",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts"
+												"users"
 											]
 										}
 									},
 									"response": []
 								},
 								{
-									"name": "[ERRPUT] Put a post that does not exist",
+									"name": "[ERRPUT] Put a user that does not exist",
 									"event": [
 										{
 											"listen": "test",
@@ -3143,7 +3334,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"title\" : \"test title\",\n    \"description\" : \"test description\",\n    \"numberOfFavorites\" : 2,\n    \"tags\" : \"testtag\"\n}",
+											"raw": "{\n    \"username\": \"jack\",\n    \"password\": \"123\",\n    \"bio\": \"bob cares about you\",\n    \"event\": \"icon\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -3151,14 +3342,14 @@
 											}
 										},
 										"url": {
-											"raw": "{{host}}/api/posts/{{post_id_error_case}}",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"posts",
-												"{{post_id_error_case}}"
+												"users",
+												"{{user_id_error_case}}"
 											]
 										}
 									},
