@@ -80,18 +80,50 @@ router.put("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
   User.findById(req.params.id, function (err, user) {
     if (err) {
+      if (err instanceof mongoose.CastError) {
+        err.status = 400;
+        err.message = 'Invalid user ID';
+      }
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ "message": "User not found" });
+      var err = new Error('User not found');
+      err.status = 404;
+      return next(err);
     }
     user.username = req.body.username;
     user.password = req.body.password;
     user.bio = req.body.bio;
+    user.event = req.body.event
     user.collections = req.body.collections;
-    user.save();
-    res.status(200).json(user);
-    console.log('user saved');
+    user.save( async function (err, user) {
+      if (err) {
+        if ( err.name == 'ValidationError' ) {
+            err.message = 'ValidationError. Incorrect data input.';
+            err.status = 422;
+        } else if (err.code === 11000) {
+          err.status = 409;
+          err.message = 'Username already exists!'
+        }
+        return next(err); 
+      }
+      if ( user.collections == req.body.collections && !(!(user.collections)) ) {
+        var error = null;
+        for (var i = 0; i < user.collections.length; i++) {
+          await Collection.findById(user.collections[i], async function (err, collection) {
+            if (collection == null) {
+              error = new Error('Collection not found!');
+              error.status = 404;
+            }
+          });
+        }
+        if (error != null) {
+          return next(error)
+        }
+      }
+      res.status(200).json(user);
+      console.log('user saved');
+    });
   });
 });
 
