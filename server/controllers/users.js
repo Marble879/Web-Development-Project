@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../models/user');
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
+var mongoose = require('mongoose')
 
 router.use(express.json());
 
@@ -44,6 +45,11 @@ router.get("/api/users", function (req, res, next) {
     if (err) {
       return next(err);
     }
+    if (user.length == 0) {
+      var err = new Error('No users found');
+      err.status = 404;
+      return next(err);
+    }
     console.log(`User Collections`);
     res.status(200).json({ "users": user });
   });
@@ -53,10 +59,16 @@ router.get("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
   User.findById(req.params.id, function (err, user) {
     if (err) {
+      if (err instanceof mongoose.CastError) {
+        err.status = 400;
+        err.message = 'Invalid user ID';
+      }
       return next(err);
     }
     if (user == null) {
-      return res.status(404).json({ "message": "User not found" });
+      var err = new Error(`No user with id: ${id} found`);
+      err.status = 404;
+      return next(err);
     }
     console.log('user with specified id retreived');
     res.status(200).json(user);
