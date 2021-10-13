@@ -10293,22 +10293,38 @@
 				},
 				{
 					"name": "[USER AUTH] Get user data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer REPLACE HERE WITH USER TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{host}}/users/data",
+							"raw": "{{host}}/api/usersAuth/data",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"users",
+								"api",
+								"usersAuth",
 								"data"
 							]
 						}
