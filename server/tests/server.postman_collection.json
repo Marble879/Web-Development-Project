@@ -1552,8 +1552,8 @@
 												"exec": [
 													"var  jsonData = pm.response.json();",
 													"",
-													"pm.test('Status code is 200', function () {",
-													"    pm.response.to.have.status(200);",
+													"pm.test('Status code is 404', function () {",
+													"    pm.response.to.have.status(404);",
 													"});"
 												],
 												"type": "text/javascript"
@@ -3245,8 +3245,8 @@
 												"exec": [
 													"var  jsonData = pm.response.json();\r",
 													"\r",
-													"pm.test('Status code is 422', function () {\r",
-													"    pm.response.to.have.status(422);\r",
+													"pm.test('Status code is 404', function () {\r",
+													"    pm.response.to.have.status(404);\r",
 													"});"
 												],
 												"type": "text/javascript"
