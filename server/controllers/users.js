@@ -147,12 +147,19 @@ router.patch("/api/users/:id", function (req, res, next) {
     user.bio = (req.body.bio || user.bio);
     var collectionID = (req.body.collections || null);
     if (collectionID != null) {
-      user.collections.push(collectionID);
+      try {
+        user.collections.push(collectionID);
+      } catch (err) {
+        if (err instanceof mongoose.CastError){
+          err.status = 422;
+          err.message = 'ValidationError. Incorrect data input.';
+          return next(err);
+        } 
+      }
     }
-    user.collections = (req.body.collections || user.collections);
     user.save(async function(err, user) {
       if (err) {
-        if ( err.name == 'ValidationError' ) {
+        if ( err.name == 'ValidationError') {
             err.message = 'ValidationError. Incorrect data input.';
             err.status = 422;
         } else if (err.code === 11000) {
@@ -161,16 +168,14 @@ router.patch("/api/users/:id", function (req, res, next) {
         }
         return next(err); 
       }
-      if ( user.collections == req.body.collections ) {
+      if ( (collectionID != null) ) {
         var error = null;
-        for (var i = 0; i < user.collections.length; i++) {
-          await Collection.findById(user.collections[i], async function (err, collection) {
-            if (collection == null) {
-              error = new Error('Collection not found!');
-              error.status = 404;
-            }
-          });
-        }
+        await Collection.findById(collectionID, async function (err, collection) {
+          if (collection == null) {
+            error = new Error('Collection not found!');
+            error.status = 404;
+          }
+        });
         if (error != null) {
           return next(error)
         }
