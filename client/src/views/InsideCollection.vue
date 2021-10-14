@@ -104,9 +104,9 @@ export default {
       const collectionid = this.$route.params.Cid
       await Api.get('/users/' + userId + '/collections/' + collectionid)
         .then(response => {
-          console.log(response)
-          this.currentCollection = response
-          this.title = this.currentCollection.data.title
+          console.log(response.data.collections[0])
+          this.currentCollection = response.data.collections[0]
+          this.title = this.currentCollection.title
           this.isDefaultCollection()
         })
         .catch(error => {
@@ -116,7 +116,7 @@ export default {
         })
     },
     async getPostIds() {
-      const postIds = this.currentCollection.data.post_id
+      const postIds = this.currentCollection.post_id
       console.log(postIds)
       return postIds
     },
@@ -151,9 +151,8 @@ export default {
       }
     },
     async updateTitle() {
-      const userId = this.$route.params.Uid
       const collectionId = this.$route.params.Cid
-      await Api.patch('/users/' + userId + '/collections/' + collectionId, {
+      await Api.patch('/collections/' + collectionId, {
         title: this.newTitle
       })
         .then(response => {
@@ -167,9 +166,8 @@ export default {
     },
     // Once merge other branch, change route to delete a collection with specific id
     async deleteCollection() {
-      const userId = this.$route.params.Uid
       const collectionId = this.$route.params.Cid
-      await Api.delete('/users/' + userId + '/collections/' + collectionId)
+      await Api.delete('/collections/' + collectionId)
         .then(response => {
           console.log(response)
           alert('Deleted collection, redirecting to the homepage.')
