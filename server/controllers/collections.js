@@ -147,9 +147,9 @@ router.patch("/api/collections/:id", function (req, res, next) {
             return next(err);
         }
         collection.title = (req.body.title || collection.title);
-        var postId = (req.body.post_id || null);
+        var postId = (req.body.post_id || null)
         if (postId != null) {
-            collection.post_id.push(postId);
+            collection.post_id.push(postId)
         }
         collection.save(function (err, collection) {
             if (err) {

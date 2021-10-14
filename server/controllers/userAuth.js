@@ -14,6 +14,7 @@ router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res, next
     var username = req.body.username;
     var bio = req.body.bio;
     var password = req.body.password;
+    var event = req.body.event;
     try {
         var icon = req.file.path;
     } catch (err) {
@@ -28,6 +29,7 @@ router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res, next
         username,
         bio,
         password,
+        event,
         icon,
         collections
     });
