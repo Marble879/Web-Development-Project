@@ -1,7 +1,7 @@
 <template>
-    <b-container>
-          <b-container class="h1 mb-3">
-          <h1>{{ title }}</h1>
+    <b-container fluid="md">
+          <b-container class="h1 mb-3" >
+          <b-jumbotron fluid v-bind:header="title">
               <b-dropdown variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <template #button-content>
                   <b-icon-pencil-square></b-icon-pencil-square>
@@ -23,6 +23,7 @@
               <b-button v-on:click="deleteCollection" type="submit" title="Delete Collection" variant="outline-secondary" v-bind:disabled="noCollectionModifyPermission" class="mr-3">
                 <b-icon-trash variant="danger"></b-icon-trash>
               </b-button>
+            </b-jumbotron>
           </b-container>
 
             <b-card-group columns>
@@ -43,6 +44,36 @@
             </b-card-group>
     </b-container>
 </template>
+
+<style scoped>
+  @media screen and (max-width: 768px) {
+    .card-columns {
+      column-count: 2
+    }
+
+    .jumbotron h1 {
+      font-size: 2rem
+    }
+  }
+
+  button {
+    background-color: rgb(238, 189, 144);
+  }
+
+  .card-body {
+    background-color: rgb(198, 183, 214);
+  }
+
+  .jumbotron {
+    background-color: rgb(221, 220, 220);
+  }
+
+  @media screen and (max-width: 576px) {
+    .card-columns {
+      column-count: 1
+    }
+  }
+</style>
 
 <script>
 import { Api } from '@/Api'
