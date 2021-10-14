@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6c79f973-f506-44b7-a907-0a1fa40e882b",
+		"_postman_id": "4ba56c9c-18ab-4dab-8023-375924b639b3",
 		"name": "server",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -2129,7 +2129,7 @@
 												{
 													"key": "icon",
 													"type": "file",
-													"src": "./tests/test_icon.jpg"
+													"src": "./tests/test_image.jpg"
 												}
 											]
 										},
@@ -2482,14 +2482,14 @@
 											]
 										},
 										"url": {
-											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}/collections",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
 												"users",
-												"{{user_id}}",
+												"{{user_id_error_case}}",
 												"collections"
 											]
 										}
@@ -2518,14 +2518,12 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"raw": "{{host}}/api/collections",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"users",
-												"{{user_id}}",
 												"collections"
 											]
 										}
@@ -2747,7 +2745,7 @@
 												{
 													"key": "icon",
 													"type": "file",
-													"src": "./tests/test_icon.jpg"
+													"src": "./tests/test_image.jpg"
 												}
 											]
 										},
@@ -3186,14 +3184,14 @@
 											]
 										},
 										"url": {
-											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"raw": "{{host}}/api/users/{{user_id_error_case}}/collections",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
 												"users",
-												"{{user_id}}",
+												"{{user_id_error_case}}",
 												"collections"
 											]
 										}
@@ -3222,14 +3220,12 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "{{host}}/api/users/{{user_id}}/collections",
+											"raw": "{{host}}/api/collections",
 											"host": [
 												"{{host}}"
 											],
 											"path": [
 												"api",
-												"users",
-												"{{user_id}}",
 												"collections"
 											]
 										}
