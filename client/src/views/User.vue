@@ -32,16 +32,15 @@
             img-alt="Collection icon"
             img-top
           >
-          <b-button
-                v-on:click="enterCollection(collection._id)"
-                type="submit"
-                title="Delete Post"
-                variant="primary"
-                v-bind:disabled="noPostModifyPermission"
-                class="text-center">
-                  Enter
-              </b-button>
-
+            <b-button
+              v-on:click="enterCollection(collection._id)"
+              type="submit"
+              title="Enter collection"
+              variant="primary"
+              class="text-center"
+            >
+              Enter
+            </b-button>
           </b-card>
         </b-card-group>
       </b-col>
@@ -113,7 +112,10 @@ export default {
         })
     },
     enterCollection(CiD) {
-      this.$router.push({ name: 'inside a collection', params: { Uid: this.userId, Cid: CiD } })
+      this.$router.push({
+        name: 'inside a collection',
+        params: { Uid: this.userId, Cid: CiD }
+      })
     }
   }
 }
