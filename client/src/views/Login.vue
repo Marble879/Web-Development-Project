@@ -1,37 +1,64 @@
 <template>
-  <div class="vue-tempalte">
-    <form @submit.prevent="submitForm">
-      <h3>Log in</h3>
-
-      <div class="form-group">
-        <label>Username</label>
-        <input
-          type="text"
-          class="form-control form-control-lg"
-          v-model="username"
-          placeholder="Username"
-        />
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input
-          type="password"
-          class="form-control form-control-lg"
-          v-model="password"
-          placeholder="Password"
-        />
-      </div>
-
-      <button type="submit" class="btn btn-dark btn-lg btn-block">
-        Sign Up
-      </button>
-
-      <p class="forgot-password text-right">
-        Register new account
-        <router-link :to="{ name: 'login' }">here!</router-link>
-      </p>
-    </form>
+  <div>
+    <b-container fluid>
+      <b-row>
+        <b-col class="col-md-4 mt-4">
+          <b-img
+            v-bind:src="require('../Images/Artsy.png')"
+            center
+            thumbnail
+            fluid
+            block
+            rounded
+            height="500em"
+            width="500em"
+            alt="logo"
+          />
+        </b-col>
+        <b-col class="col-md-8 px-3 mt-4">
+          <b-card
+            header="Log in to account"
+            header-bg-variant="dark"
+            header-text-variant="white"
+          >
+            <b-card-text>
+              <b-form @submit.prevent="submitForm">
+                <b-form-group
+                  description="Enter your username"
+                  label="Username"
+                >
+                  <b-form-input v-model="username" required></b-form-input>
+                </b-form-group>
+                <b-form-group
+                  description="Enter your password"
+                  label="Password"
+                >
+                  <b-form-input
+                    v-model="password"
+                    type="password"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+                <b-form-group>
+                  <b-button
+                    type="submit"
+                    variant="danger"
+                    :disabled="acceptableSubmission"
+                    >Log in</b-button
+                  >
+                </b-form-group>
+                <b-form-group>
+                  <b-form-text class="text-left"
+                    >New to Artsy?
+                    <b-link to="register"> Sign Up</b-link>
+                  </b-form-text>
+                </b-form-group>
+              </b-form>
+            </b-card-text>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -57,6 +84,11 @@ export default {
         .catch((error) => {
           alert(error.response.data.message)
         })
+    }
+  },
+  computed: {
+    acceptableSubmission() {
+      return !(this.username.length > 0 && this.password.length > 0)
     }
   }
 }

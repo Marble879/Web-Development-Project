@@ -192,7 +192,7 @@ export default {
         })
     },
     async addToDefaultCollection() {
-      await Api.patch('/users/:id/collections/' + this.defaultCollection, {
+      await Api.patch('/collections/' + this.defaultCollection, {
         post_id: this.postId
       })
         .then(response => {

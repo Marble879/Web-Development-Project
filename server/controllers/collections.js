@@ -3,13 +3,12 @@ var router = express.Router();
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
 var Collection = require('../models/collection');
+var User = require('../models/user')
 
 router.use(express.json());
 
-router.post('/api/users/:id/collections', function (req, res, next) {
-    console.log(req.file);
+router.post('/api/collections', imgUpload.none(), function (req, res, next) {
     var collection = new Collection(req.body);
-    //collection.thumbnail = req.file.path;
     collection.save(function (err, collection) {
         if (err) {
             return next(err);
@@ -19,7 +18,7 @@ router.post('/api/users/:id/collections', function (req, res, next) {
     });
 });
 
-router.get("/api/users/:id/collections", function (req, res, next) {
+router.get("/api/users/:userID/collections", function (req, res, next) {
     Collection.find(function (err, collection) {
         if (err) {
             return next(err);
@@ -34,21 +33,28 @@ router.get("/api/users/:id/collections", function (req, res, next) {
     });
 });
 
-router.get("/api/users/:id/collections/:id", function (req, res, next) {
-    var id = req.params.id;
-    Collection.findById(id, function (err, collection) {
-        if (err) {
-            return next(err);
+router.get("/api/users/:userID/collections/:collectionID", function (req, res, next) {
+    var userID = req.params.userID;
+    var collectionID = req.params.collectionID;
+    User.findById(userID, function (err, user) {
+        if (err) { return next(err) }
+        if (user === null) {
+            return res.status(404).json({ message: "User not found" });
         }
-        if (collection == null) {
-            return res.status(404).json({ "message": "collection not found" });
-        }
-        console.log('collection with specified id retreived');
-        res.status(200).json(collection);
+        Collection.findById(collectionID, function (err, collection) {
+            if (err) {
+                return next(err);
+            }
+            if (collection == null) {
+                return res.status(404).json({ "message": "collection not found" });
+            }
+            console.log('collection with specified id retreived');
+            res.status(200).json(collection);
+        });
     });
 });
 
-router.put("/api/users/:id/collections/:id", function (req, res, next) {
+router.put("/api/collections/:id", imgUpload.single('thumbnail'), function (req, res, next) {
     var id = req.params.id;
     Collection.findById(id, function (err, collection) {
         if (err) {
@@ -58,13 +64,15 @@ router.put("/api/users/:id/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": " collection not found" });
         }
         collection.title = req.body.title;
+        collection.event = req.body.event;
+        collection.thumbnail = req.file.path;
         collection.save();
         res.status(200).json(collection);
         console.log("collection saved");
     });
 });
 
-router.patch("/api/users/:id/collections/:id", function (req, res, next) {
+router.patch("/api/collections/:id", function (req, res, next) {
     var id = req.params.id;
     Collection.findById(id, function (err, collection) {
         if (err) {
@@ -82,7 +90,7 @@ router.patch("/api/users/:id/collections/:id", function (req, res, next) {
     });
 });
 
-router.delete("/api/users/:id/collections/:id", async function (req, res, next) {
+router.delete("/api/collections/:id", async function (req, res, next) {
     var id = req.params.id;
     Collection.findOneAndDelete({ _id: id }, async function (err, collection) {
         if (err) {
@@ -103,7 +111,7 @@ router.delete("/api/users/:id/collections/:id", async function (req, res, next) 
 });
 
 //DELETE ALL COLLECTIONS FOR TESTING PURPOSES
-router.delete("/api/users/:id/collections", async function (req, res, next) {
+router.delete("/api/collections", async function (req, res, next) {
     Collection.deleteMany({}, async function (err, deleteInformation) {
         if (err) {
             return next(err);
