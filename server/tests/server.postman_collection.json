@@ -5285,6 +5285,2728 @@
 			"name": "Collection tests",
 			"item": [
 				{
+					"name": "Post request error cases",
+					"item": [
+						{
+							"name": "[ERRPOST] Create a user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var userId = jsonData._id;\r",
+											"pm.environment.set(\"user_id\", userId);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+											"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+											"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+											"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+											"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+											"});\r",
+											"\r",
+											"pm.test('Body has an icon url', function () {\r",
+											"    pm.expect(jsonData.icon).to.be.a('String');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "Fred",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "freddie",
+											"type": "text"
+										},
+										{
+											"key": "bio",
+											"value": "Hi my name is Fred",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": "./tests/test_icon.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] No title in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Title empty in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Title is file type in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"type": "file",
+											"src": "./tests/server.postman_collection.json"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Delete all users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"var numberOfMatchedDocuments = jsonData.n;\r",
+											"var isDeleteSuccesful = jsonData.ok;\r",
+											"var deletedCount = jsonData.deletedCount;\r",
+											"\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Has deleted sucesfully', function() {\r",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of documents deleted', function() {\r",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of deletes have occured', function() {\r",
+											"    pm.expect(deletedCount).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Invalid user ID in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/fake_id/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"fake_id",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] No user ID match in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Create a user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var userId = jsonData._id;\r",
+											"pm.environment.set(\"user_id\", userId);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+											"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+											"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+											"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+											"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+											"});\r",
+											"\r",
+											"pm.test('Body has an icon url', function () {\r",
+											"    pm.expect(jsonData.icon).to.be.a('String');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "Fred",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "freddie",
+											"type": "text"
+										},
+										{
+											"key": "bio",
+											"value": "Hi my name is Fred",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": "./tests/test_icon.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Create a post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();",
+											"var postId = jsonData._id;",
+											"var postTag = jsonData.tags;",
+											"var userForeignKey = pm.environment.get('user_id');",
+											"",
+											"pm.environment.set(\"post_id\", postId);",
+											"pm.environment.set(\"post_tag\", postTag);",
+											"",
+											"pm.test('Status code is 201', function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.test('Body has correct title, description, number of favourits, tags, event and foreign key', function () {",
+											"    pm.expect(jsonData.title).to.eql('test_title');",
+											"    pm.expect(jsonData.description).to.eql('eg_description');",
+											"    pm.expect(jsonData.numberOfFavorites).to.eql(3);",
+											"    pm.expect(jsonData.tags).to.eql(['testtag']);",
+											"    pm.expect(jsonData.event).to.eql('post');",
+											"    pm.expect(jsonData.user_id).to.eql(userForeignKey);",
+											"});",
+											"",
+											"pm.test('Body has an image url', function () {",
+											"    pm.expect(jsonData.image).to.be.a('String');",
+											"});",
+											"",
+											"pm.test('Body has _id', function () {",
+											"    pm.expect(jsonData._id).to.be.a('String');",
+											"});",
+											"",
+											"pm.test('Body has a post_id', function() {",
+											"    pm.expect(jsonData.post_id).to.be.a('String');",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "test_title",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "eg_description",
+											"type": "text"
+										},
+										{
+											"key": "numberOfFavorites",
+											"value": "3",
+											"type": "text"
+										},
+										{
+											"key": "tags",
+											"value": "testtag",
+											"contentType": "",
+											"type": "text"
+										},
+										{
+											"key": "user_id",
+											"value": "{{user_id}}",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "post",
+											"type": "text"
+										},
+										{
+											"key": "image",
+											"type": "file",
+											"src": "./tests/test_image.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/posts",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Event is of file type in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"type": "file",
+											"src": "./tests/server.postman_collection.json"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Thumbnail is of file type in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/server.postman_collection.json"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Post_id is empty in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Post_id is of file type in request post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"type": "file",
+											"src": "./tests/server.postman_collection.json"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Delete all users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"var numberOfMatchedDocuments = jsonData.n;\r",
+											"var isDeleteSuccesful = jsonData.ok;\r",
+											"var deletedCount = jsonData.deletedCount;\r",
+											"\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Has deleted sucesfully', function() {\r",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of documents deleted', function() {\r",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of deletes have occured', function() {\r",
+											"    pm.expect(deletedCount).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPOST] Delete all posts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();",
+											"",
+											"var numberOfMatchedDocuments = jsonData.n;",
+											"var isDeleteSuccesful = jsonData.ok;",
+											"var deletedCount = jsonData.deletedCount;",
+											"",
+											"",
+											"pm.test('Status code is 200', function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test('Has deleted sucesfully', function() {",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);",
+											"});",
+											"",
+											"pm.test('Correct number of documents deleted', function() {",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);",
+											"});",
+											"",
+											"pm.test('Correct number of deletes have occured', function() {",
+											"    pm.expect(deletedCount).to.eql(1);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/posts/",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get request error cases",
+					"item": [
+						{
+							"name": "[ERRGET] Get all collections when user id is invalid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/api/users/fake_id/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"fake_id",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Get all collections when no user match with passed id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Get all user specific collections when user id is invalid",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users/fake_id/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"fake_id",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Get all user specific collections when no user match with passed id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Get user2 specific collection when no user match with passed id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id2}}/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id2}}",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Create a user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var userId = jsonData._id;\r",
+											"pm.environment.set(\"user_id\", userId);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+											"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+											"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+											"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+											"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+											"});\r",
+											"\r",
+											"pm.test('Body has an icon url', function () {\r",
+											"    pm.expect(jsonData.icon).to.be.a('String');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "Fred",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "freddie",
+											"type": "text"
+										},
+										{
+											"key": "bio",
+											"value": "Hi my name is Fred",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": "./tests/test_icon.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Get all collections when there are no collections",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRGET] Delete all users",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"var numberOfMatchedDocuments = jsonData.n;\r",
+											"var isDeleteSuccesful = jsonData.ok;\r",
+											"var deletedCount = jsonData.deletedCount;\r",
+											"\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Has deleted sucesfully', function() {\r",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of documents deleted', function() {\r",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of deletes have occured', function() {\r",
+											"    pm.expect(deletedCount).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete request error cases",
+					"item": [
+						{
+							"name": "[ERRDELETE] Delete all collections when none exist",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();",
+											"",
+											"pm.test('Status code is 404', function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRDELETE] Delete specific collection when id is not type ObjectID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/collections/fake_id",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"fake_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRDELETE] Create a user for fail case purpose",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var userId = jsonData._id;\r",
+											"pm.environment.set(\"user_id\", userId);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+											"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+											"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+											"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+											"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+											"});\r",
+											"\r",
+											"pm.test('Body has an icon url', function () {\r",
+											"    pm.expect(jsonData.icon).to.be.a('String');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "Fred",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "freddie",
+											"type": "text"
+										},
+										{
+											"key": "bio",
+											"value": "Hi my name is Fred",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": "./tests/test_icon.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRDELETE] Create a collection for fail case purpose",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var collectionId = jsonData._id;\r",
+											"pm.environment.set(\"collection_id\", collectionId);\r",
+											"\r",
+											"var postForeignkey = pm.environment.get('post_id');\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has title and post_id\", function () {\r",
+											"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRDELETE] Delete all collections for error case test purposes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRDELETE] Delete specific collection when id does not exist",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRDELETE] Delete all users for error case test purposes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"var numberOfMatchedDocuments = jsonData.n;\r",
+											"var isDeleteSuccesful = jsonData.ok;\r",
+											"var deletedCount = jsonData.deletedCount;\r",
+											"\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Has deleted sucesfully', function() {\r",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of documents deleted', function() {\r",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of deletes have occured', function() {\r",
+											"    pm.expect(deletedCount).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Patch request error cases",
+					"item": [
+						{
+							"name": "[ERRPATCH] Patch a collection with a ID that is not of type ObjectID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Cosplay\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/fake_id",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"fake_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPATCH] Create a user for fail case purpose",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var userId = jsonData._id;\r",
+											"pm.environment.set(\"user_id\", userId);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+											"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+											"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+											"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+											"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+											"});\r",
+											"\r",
+											"pm.test('Body has an icon url', function () {\r",
+											"    pm.expect(jsonData.icon).to.be.a('String');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "Fred",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "freddie",
+											"type": "text"
+										},
+										{
+											"key": "bio",
+											"value": "Hi my name is Fred",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": "./tests/test_icon.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPATCH] Create a collection for fail case purpose",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var collectionId = jsonData._id;\r",
+											"pm.environment.set(\"collection_id\", collectionId);\r",
+											"\r",
+											"var postForeignkey = pm.environment.get('post_id');\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has title and post_id\", function () {\r",
+											"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPATCH] Patch a collection title with an unexpected datatype",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": [\"Cosplay\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPATCH] Delete all users for error case test purposes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"var numberOfMatchedDocuments = jsonData.n;\r",
+											"var isDeleteSuccesful = jsonData.ok;\r",
+											"var deletedCount = jsonData.deletedCount;\r",
+											"\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Has deleted sucesfully', function() {\r",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of documents deleted', function() {\r",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of deletes have occured', function() {\r",
+											"    pm.expect(deletedCount).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPATCH] Delete all collections for error case test purposes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPATCH] Patch a collection title with collection id being unmatched",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"test\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Put request error cases",
+					"item": [
+						{
+							"name": "[ERRPUT] Put a collection where the id is not of ObjectID type",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 400', function () {\r",
+											"    pm.response.to.have.status(400);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_thumnail.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/fake_id",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"fake_id"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Create a user for fail case purpose",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var userId = jsonData._id;\r",
+											"pm.environment.set(\"user_id\", userId);\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has correct username, password, bio and event\", function () {\r",
+											"    pm.expect(jsonData.username).to.eql(\"Fred\");\r",
+											"    pm.expect(jsonData.password).to.eql(\"freddie\");\r",
+											"    pm.expect(jsonData.bio).to.eql(\"Hi my name is Fred\");\r",
+											"    pm.expect(jsonData.event).to.eql(\"icon\");\r",
+											"});\r",
+											"\r",
+											"pm.test('Body has an icon url', function () {\r",
+											"    pm.expect(jsonData.icon).to.be.a('String');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "Fred",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "freddie",
+											"type": "text"
+										},
+										{
+											"key": "bio",
+											"value": "Hi my name is Fred",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "icon",
+											"type": "text"
+										},
+										{
+											"key": "icon",
+											"type": "file",
+											"src": "./tests/test_icon.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Create a collection for fail case purpose",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"var collectionId = jsonData._id;\r",
+											"pm.environment.set(\"collection_id\", collectionId);\r",
+											"\r",
+											"var postForeignkey = pm.environment.get('post_id');\r",
+											"\r",
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has title and post_id\", function () {\r",
+											"    pm.expect(jsonData.title).to.eql(\"Landscape Pictures\");\r",
+											"    pm.expect(jsonData.post_id).to.eql([postForeignkey]);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Body has _id\", function () {\r",
+											"    pm.expect(jsonData._id).to.be.a('String');\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Landscape Pictures",
+											"type": "text"
+										},
+										{
+											"key": "post_id",
+											"value": "{{post_id}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/users/{{user_id}}/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"{{user_id}}",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but an attribute is missing",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_thumnail.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but title has an file type",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"type": "file",
+											"src": "./tests/server.postman_collection.json"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_thumnail.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but event has an file type",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_thumnail.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but thumbnail was not included",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_thumnail.jpg",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but thumbnail was empty",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but thumbnail is a string",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 422', function () {\r",
+											"    pm.response.to.have.status(422);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"value": "test",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but thumbnail is a invalid file format",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 415', function () {\r",
+											"    pm.response.to.have.status(415);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/invalid_file_format_test.txt"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection but thumbnail is unacceptable size",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 413', function () {\r",
+											"    pm.response.to.have.status(413);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_greater_than_30_image.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Delete all users for error case test purposes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"var numberOfMatchedDocuments = jsonData.n;\r",
+											"var isDeleteSuccesful = jsonData.ok;\r",
+											"var deletedCount = jsonData.deletedCount;\r",
+											"\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test('Has deleted sucesfully', function() {\r",
+											"    pm.expect(isDeleteSuccesful).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of documents deleted', function() {\r",
+											"    pm.expect(numberOfMatchedDocuments).to.eql(1);\r",
+											"});\r",
+											"\r",
+											"pm.test('Correct number of deletes have occured', function() {\r",
+											"    pm.expect(deletedCount).to.eql(1);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/users",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Delete all collections for error case test purposes",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 200', function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/api/collections",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[ERRPUT] Put a collection where the id does not match",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var  jsonData = pm.response.json();\r",
+											"\r",
+											"pm.test('Status code is 404', function () {\r",
+											"    pm.response.to.have.status(404);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Cat Photos",
+											"type": "text"
+										},
+										{
+											"key": "event",
+											"value": "thumbnail",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": "./tests/test_thumnail.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}/api/collections/{{collection_id}}",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"api",
+										"collections",
+										"{{collection_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "[USER] Create a user",
 					"event": [
 						{
@@ -5697,12 +8419,7 @@
 									"value": "{{post_id}}",
 									"type": "text"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{host}}/api/users/{{user_id}}/collections",
@@ -5859,33 +8576,7 @@
 						"header": [],
 						"body": {
 							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "username",
-									"value": "Carl",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "whippedcream",
-									"type": "text"
-								},
-								{
-									"key": "bio",
-									"value": "I like long walks on the leash",
-									"type": "text"
-								},
-								{
-									"key": "event",
-									"value": "icon",
-									"type": "text"
-								},
-								{
-									"key": "icon",
-									"type": "file",
-									"src": "./tests/test_icon.jpg"
-								}
-							]
+							"formdata": []
 						},
 						"url": {
 							"raw": "{{host}}/api/users",
@@ -7488,12 +10179,53 @@
 			"item": [
 				{
 					"name": "[USER AUTH] Register a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test('Status code is 404', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"test\",\r\n    \"bio\": \"test\",\r\n    \"password\": \"test\"\r\n}",
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "bio",
+									"value": "testbio",
+									"type": "text"
+								},
+								{
+									"key": "event",
+									"value": "icon",
+									"type": "text"
+								},
+								{
+									"key": "icon",
+									"type": "file",
+									"src": "./tests/test_icon.jpg"
+								}
+							],
 							"options": {
 								"raw": {
 									"language": "json"
@@ -7501,13 +10233,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/users/register",
+							"raw": "{{host}}/api/usersAuth/register",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"users",
+								"usersAuth",
 								"register"
 							]
 						}
@@ -7516,6 +10248,23 @@
 				},
 				{
 					"name": "[USER AUTH] User Login (token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"var token = jsonData.token;\r",
+									"pm.environment.set(\"token\", token);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -7529,13 +10278,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}/api/users/login",
+							"raw": "{{host}}/api/usersAuth/login",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"api",
-								"users",
+								"usersAuth",
 								"login"
 							]
 						}
@@ -7544,22 +10293,38 @@
 				},
 				{
 					"name": "[USER AUTH] Get user data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var  jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer REPLACE HERE WITH USER TOKEN",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{host}}/users/data",
+							"raw": "{{host}}/api/usersAuth/data",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
-								"users",
+								"api",
+								"usersAuth",
 								"data"
 							]
 						}

@@ -10,11 +10,19 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
 jwtOptions.secretOrKey = 'thisisthesecretkey';
 
 //Register a user
-router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res) => {
+router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res, next) => {
     var username = req.body.username;
     var bio = req.body.bio;
     var password = req.body.password;
-    var icon = req.file.path;
+    try {
+        var icon = req.file.path;
+    } catch (err) {
+        if (err instanceof TypeError) {
+            err.status = 422;
+            err.message = 'Input error, Icon was not found';
+            return next(err);
+        }
+    }
     var collections = req.body.collections;
     var newUser = new User({
         username,
