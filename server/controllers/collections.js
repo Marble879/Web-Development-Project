@@ -3,93 +3,182 @@ var router = express.Router();
 var imgUpload = require('../image_handling/imageUploadHandler');
 var imgDelete = require('../image_handling/imageDeleteHandler');
 var Collection = require('../models/collection');
+var User = require('../models/user')
+var mongoose = require('mongoose');
 
 router.use(express.json());
 
-router.post('/api/users/:id/collections', function (req, res, next) {
-    console.log(req.file);
+router.post('/api/users/:userID/collections', imgUpload.none(), function (req, res, next) {
+    var userID = req.params.userID;
     var collection = new Collection(req.body);
-    //collection.thumbnail = req.file.path;
-    collection.save(function (err, collection) {
+    User.findById(userID, function (err, user) {
+        if (err) {
+            if (err instanceof mongoose.CastError) {
+                err.status = 400;
+                err.message = 'Invalid user ID';
+            }
+            return next(err);
+        }
+        if (user == null) {
+            var err = new Error('No User with id: ' + userID + ' found');
+            err.status = 404;
+            return next(err);
+        }
+        collection.save(function (err, collection) {
+            if (err) {
+                if (err.name == 'ValidationError') {
+                    err.message = 'ValidationError. Incorrect data input.';
+                    err.status = 422;
+                }
+                return next(err);
+            }
+            user.collections.push(collection._id);
+            user.save();
+            console.log('Collection created');
+            return res.status(201).json(collection);
+        })
+    })
+});
+
+router.get("/api/users/:userID/collections", function (req, res, next) {
+    var userID = req.params.userID;
+    User.findById(userID, function (err, user) {
         if (err) {
             return next(err);
         }
-        console.log('collection created');
-        res.status(201).json(collection);
+    }).populate('collections').exec(function (err, user) {
+        if (err) {
+            if (err instanceof mongoose.CastError) {
+                err.status = 400;
+                err.message = 'Invalid user ID';
+            }
+            return next(err);
+        }
+        if (user == null) {
+            var err = new Error('No User with id: ' + userID + ' found');
+            err.status = 404;
+            return next(err);
+        }
+        if (user.collections.length == 0) {
+            var err = new Error('No user collections found');
+            err.status = 404;
+            return next(err);
+        }
+        console.log(`User collections retrieved`);
+        res.status(200).json(user);
     });
 });
 
-router.get("/api/users/:id/collections", function (req, res, next) {
-    Collection.find(function (err, collection) {
-        if (err) {
-            return next(err);
-        }
-        console.log('collections retreived');
-    }).populate('post_id').exec(function (err, collection) {
-        if (err) {
-            return next(err);
-        }
-        console.log(`collection posts`);
-        res.status(200).json({ "collections": collection });
-    });
+router.get("/api/users/:userID/collections/:collectionID", function (req, res, next) {
+    var userID = req.params.userID;
+    var collectionID = req.params.collectionID;
+    User.findOne({ _id: userID }, { "collections": collectionID })
+        .populate("collections").exec(function (err, user) {
+            if (err) {
+                if (err instanceof mongoose.CastError) {
+                    err.status = 400;
+                    err.message = 'Invalid user ID or collection ID';
+                }
+                return next(err);
+            }
+            if (user == null) {
+                var err = new Error('No User with id: ' + userID + ' found');
+                err.status = 404;
+                return next(err);
+            }
+            console.log('User specific collection retreived');
+            res.status(200).json(user);
+        });
 });
 
-router.get("/api/users/:id/collections/:id", function (req, res, next) {
+router.put("/api/collections/:id", imgUpload.single('thumbnail'), function (req, res, next) {
     var id = req.params.id;
     Collection.findById(id, function (err, collection) {
         if (err) {
+            if (err instanceof mongoose.CastError) {
+                err.status = 400;
+                err.message = 'Invalid collection ID';
+            }
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "collection not found" });
-        }
-        console.log('collection with specified id retreived');
-        res.status(200).json(collection);
-    });
-});
-
-router.put("/api/users/:id/collections/:id", function (req, res, next) {
-    var id = req.params.id;
-    Collection.findById(id, function (err, collection) {
-        if (err) {
+            var err = new Error('No collection with id: ' + id + ' found');
+            err.status = 404;
             return next(err);
-        }
-        if (collection == null) {
-            return res.status(404).json({ "message": " collection not found" });
         }
         collection.title = req.body.title;
-        collection.save();
-        res.status(200).json(collection);
-        console.log("collection saved");
+        collection.event = req.body.event;
+        try {
+            collection.thumbnail = req.file.path;
+        } catch (err) {
+            if (err instanceof TypeError) {
+                err.status = 422;
+                err.message = 'Input error, Thumbnail was not found';
+                return next(err);
+            }
+        }
+        collection.save(function (err, collection) {
+            if (err) {
+                if (err.name == 'ValidationError') {
+                    err.message = 'ValidationError. Incorrect data input.';
+                    err.status = 422;
+                }
+                return next(err);
+            }
+            res.status(200).json(collection);
+            console.log("collection saved");
+        });
     });
 });
 
-router.patch("/api/users/:id/collections/:id", function (req, res, next) {
+router.patch("/api/collections/:id", function (req, res, next) {
     var id = req.params.id;
     Collection.findById(id, function (err, collection) {
         if (err) {
+            if (err instanceof mongoose.CastError) {
+                err.status = 400;
+                err.message = 'Invalid collection ID';
+            }
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "user not found" });
+            var err = new Error('No collection with id: ' + id + ' found');
+            err.status = 404;
+            return next(err);
         }
         collection.title = (req.body.title || collection.title);
-        var postId = (req.body.post_id || collection.post_id)
-        collection.post_id.push(postId)
-        collection.save();
-        res.status(200).json(collection);
-        console.log("collection updated");
+        var postId = (req.body.post_id || null)
+        if (postId != null) {
+            collection.post_id.push(postId)
+        }
+        collection.save(function (err, collection) {
+            if (err) {
+                if (err.name == 'ValidationError') {
+                    err.message = 'ValidationError. Incorrect data input.';
+                    err.status = 422;
+                }
+                return next(err);
+            }
+            res.status(200).json(collection);
+            console.log("collection updated");
+        });
     });
 });
 
-router.delete("/api/users/:id/collections/:id", async function (req, res, next) {
+router.delete("/api/collections/:id", async function (req, res, next) {
     var id = req.params.id;
     Collection.findOneAndDelete({ _id: id }, async function (err, collection) {
         if (err) {
+            if (err instanceof mongoose.CastError) {
+                err.status = 400;
+                err.message = 'Invalid collection ID';
+            }
             return next(err);
         }
         if (collection == null) {
-            return res.status(404).json({ "message": "collection not found" });
+            var err = new Error('No collection with id: ' + id + ' found');
+            err.status = 404;
+            return next(err);
         }
         try {
             collection.remove();
@@ -103,9 +192,14 @@ router.delete("/api/users/:id/collections/:id", async function (req, res, next) 
 });
 
 //DELETE ALL COLLECTIONS FOR TESTING PURPOSES
-router.delete("/api/users/:id/collections", async function (req, res, next) {
+router.delete("/api/collections", async function (req, res, next) {
     Collection.deleteMany({}, async function (err, deleteInformation) {
         if (err) {
+            return next(err);
+        }
+        if (deleteInformation.n == 0) {
+            var err = new Error('No collections were found');
+            err.status = 404;
             return next(err);
         }
         try {

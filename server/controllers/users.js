@@ -58,7 +58,7 @@ router.get("/api/users", function (req, res, next) {
 
 router.get("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
-  User.findById(req.params.id, function (err, user) {
+  User.findById(id, function (err, user) {
     if (err) {
       if (err instanceof mongoose.CastError) {
         err.status = 400;
@@ -78,7 +78,7 @@ router.get("/api/users/:id", function (req, res, next) {
 
 router.put("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
-  User.findById(req.params.id, function (err, user) {
+  User.findById(id, function (err, user) {
     if (err) {
       if (err instanceof mongoose.CastError) {
         err.status = 400;
@@ -145,6 +145,10 @@ router.patch("/api/users/:id", function (req, res, next) {
     user.username = (req.body.username || user.username);
     user.password = (req.body.password || user.password);
     user.bio = (req.body.bio || user.bio);
+    var collectionID = (req.body.collections || null);
+    if (collectionID != null) {
+      user.collections.push(collectionID);
+    }
     user.collections = (req.body.collections || user.collections);
     user.save(async function(err, user) {
       if (err) {

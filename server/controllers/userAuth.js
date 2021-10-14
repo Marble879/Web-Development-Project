@@ -1,6 +1,7 @@
 var express = require('express');
 var User = require('../models/user');
 var router = express.Router();
+var imgUpload = require('../image_handling/imageUploadHandler');
 var passportJWT = require('passport-jwt');
 var jwt = require('jsonwebtoken');
 var ExtractJwt = passportJWT.ExtractJwt;
@@ -9,15 +10,25 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
 jwtOptions.secretOrKey = 'thisisthesecretkey';
 
 //Register a user
-router.post('/api/usersAuth/register', (req, res) => {
+router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res, next) => {
     var username = req.body.username;
     var bio = req.body.bio;
     var password = req.body.password;
-    var collections = req.body.collections
+    try {
+        var icon = req.file.path;
+    } catch (err) {
+        if (err instanceof TypeError) {
+            err.status = 422;
+            err.message = 'Input error, Icon was not found';
+            return next(err);
+        }
+    }
+    var collections = req.body.collections;
     var newUser = new User({
         username,
         bio,
         password,
+        icon,
         collections
     });
     User.createUser(newUser, (error, user) => {
