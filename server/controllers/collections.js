@@ -7,51 +7,62 @@ var User = require('../models/user')
 
 router.use(express.json());
 
-router.post('/api/collections', imgUpload.none(), function (req, res, next) {
+router.post('/api/users/:userID/collections', imgUpload.none(), function (req, res, next) {
     var collection = new Collection(req.body);
-    collection.save(function (err, collection) {
+    User.findById(req.params.userID, function (err, user) {
         if (err) {
             return next(err);
         }
-        console.log('collection created');
-        res.status(201).json(collection);
-    });
+        if (user === null) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+        collection.save(function (err, collection) {
+            if (err) {
+                return next(err);
+            }
+            user.collections.push(collection._id);
+            user.save();
+            console.log('Collection created');
+            return res.status(201).json(collection);
+        })
+    })
 });
 
 router.get("/api/users/:userID/collections", function (req, res, next) {
-    Collection.find(function (err, collection) {
+    User.findById(req.params.userID, function (err, user) {
         if (err) {
             return next(err);
         }
-        console.log('collections retreived');
-    }).populate('post_id').exec(function (err, collection) {
+    }).populate('collections').exec(function (err, user) {
         if (err) {
             return next(err);
         }
-        console.log(`collection posts`);
-        res.status(200).json({ "collections": collection });
+        if (user == null) {
+            var err = new Error('No user collection found');
+            err.status = 404;
+            return next(err);
+        }
+        console.log(`User collections retrieved`);
+        res.status(200).json(user);
     });
 });
 
 router.get("/api/users/:userID/collections/:collectionID", function (req, res, next) {
-    var userID = req.params.userID;
-    var collectionID = req.params.collectionID;
-    User.findById(userID, function (err, user) {
-        if (err) { return next(err) }
-        if (user === null) {
-            return res.status(404).json({ message: "User not found" });
-        }
-        Collection.findById(collectionID, function (err, collection) {
+    User.findOne({ _id: req.params.userID }, { "collections": req.params.collectionID })
+        .populate("collections").exec(function (err, user) {
             if (err) {
                 return next(err);
             }
-            if (collection == null) {
-                return res.status(404).json({ "message": "collection not found" });
+            if (user == null) {
+                var err = new Error('No user found with specific collection');
+                err.status = 404;
+                return next(err);
             }
-            console.log('collection with specified id retreived');
-            res.status(200).json(collection);
+            console.log('User specific collection retreived');
+            res.status(200).json(user);
         });
-    });
 });
 
 router.put("/api/collections/:id", imgUpload.single('thumbnail'), function (req, res, next) {
@@ -82,8 +93,10 @@ router.patch("/api/collections/:id", function (req, res, next) {
             return res.status(404).json({ "message": "user not found" });
         }
         collection.title = (req.body.title || collection.title);
-        var postId = (req.body.post_id || collection.post_id)
-        collection.post_id.push(postId)
+        var postId = (req.body.post_id || null);
+        if (postId != null) {
+            collection.post_id.push(postId);
+        }
         collection.save();
         res.status(200).json(collection);
         console.log("collection updated");
