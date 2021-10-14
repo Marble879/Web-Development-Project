@@ -1,6 +1,7 @@
 var express = require('express');
 var User = require('../models/user');
 var router = express.Router();
+var imgUpload = require('../image_handling/imageUploadHandler');
 var passportJWT = require('passport-jwt');
 var jwt = require('jsonwebtoken');
 var ExtractJwt = passportJWT.ExtractJwt;
@@ -9,15 +10,17 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
 jwtOptions.secretOrKey = 'thisisthesecretkey';
 
 //Register a user
-router.post('/api/usersAuth/register', (req, res) => {
+router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res) => {
     var username = req.body.username;
     var bio = req.body.bio;
     var password = req.body.password;
-    var collections = req.body.collections
+    var icon = req.file.path;
+    var collections = req.body.collections;
     var newUser = new User({
         username,
         bio,
         password,
+        icon,
         collections
     });
     User.createUser(newUser, (error, user) => {
