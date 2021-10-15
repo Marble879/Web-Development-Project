@@ -12,10 +12,6 @@ var multer = require('multer');
 var userAuthentication = require('./controllers/userAuth');
 
 
-app.use('/uploads', express.static('uploads')); // makes uploads folder public
-app.use('/icons', express.static('icons'));
-app.use('/thumbnails', express.static('thumbnails'));
-
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
 var port = process.env.PORT || 3000;
@@ -33,6 +29,13 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true }, 
 
 // Create Express app
 var app = express();
+
+
+
+app.use('/uploads', express.static('uploads')); // makes uploads folder public
+app.use('/icons', express.static('icons'));
+app.use('/thumbnails', express.static('thumbnails'));
+
 // Parse requests of content-type 'application/json'
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
