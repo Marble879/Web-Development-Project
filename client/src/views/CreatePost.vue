@@ -108,8 +108,8 @@ export default {
         text: 'landscape'
       },
       {
-        value: 'drawings/paintings',
-        text: 'drawings/paintings'
+        value: 'paintings',
+        text: 'paintings'
       }],
       previewImage: null,
       show: true,
