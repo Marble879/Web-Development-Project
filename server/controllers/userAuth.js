@@ -15,6 +15,7 @@ router.post('/api/usersAuth/register', imgUpload.single('icon'), (req, res, next
     var bio = req.body.bio;
     var password = req.body.password;
     var event = req.body.event;
+    console.log(`here ${process.cwd()}`)
     try {
         var icon = req.file.path;
     } catch (err) {
