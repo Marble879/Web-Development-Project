@@ -99,7 +99,7 @@ router.get('/api/posts/:id', function (req, res, next) {
             return next(err); 
         }
         if (post == null) { 
-            var err = new Error('No Post with id: ' + id + ' found');
+            var err = new Error('No Post found');
             err.status = 404;
             return next(err); 
         } 

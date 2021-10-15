@@ -22,7 +22,7 @@ router.post("/api/users", imgUpload.single('icon'), function (req, res, next) {
   }
   user.save(function (err, user) {
     if (err) {
-      if ( err.name == 'ValidationError') {
+      if (err.name == 'ValidationError') {
         err.message = 'ValidationError. Incorrect data input.';
         err.status = 422;
       } else if (err.code === 11000) {
@@ -67,7 +67,7 @@ router.get("/api/users/:id", function (req, res, next) {
       return next(err);
     }
     if (user == null) {
-      var err = new Error(`No user with id: ${id} found`);
+      var err = new Error(`No user found`);
       err.status = 404;
       return next(err);
     }
@@ -96,18 +96,18 @@ router.put("/api/users/:id", function (req, res, next) {
     user.bio = req.body.bio;
     user.event = req.body.event
     user.collections = req.body.collections;
-    user.save( async function (err, user) {
+    user.save(async function (err, user) {
       if (err) {
-        if ( err.name == 'ValidationError' ) {
-            err.message = 'ValidationError. Incorrect data input.';
-            err.status = 422;
+        if (err.name == 'ValidationError') {
+          err.message = 'ValidationError. Incorrect data input.';
+          err.status = 422;
         } else if (err.code === 11000) {
           err.status = 409;
           err.message = 'Username already exists!'
         }
-        return next(err); 
+        return next(err);
       }
-      if ( user.collections == req.body.collections && !(!(user.collections)) ) {
+      if (user.collections == req.body.collections && !(!(user.collections))) {
         var error = null;
         for (var i = 0; i < user.collections.length; i++) {
           await Collection.findById(user.collections[i], async function (err, collection) {
@@ -130,12 +130,12 @@ router.put("/api/users/:id", function (req, res, next) {
 router.patch("/api/users/:id", function (req, res, next) {
   var id = req.params.id;
   User.findById(id, function (err, user) {
-    if (err) { 
-      if (err instanceof mongoose.CastError){
+    if (err) {
+      if (err instanceof mongoose.CastError) {
         err.status = 400;
         err.message = 'Invalid user ID';
       }
-      return next(err); 
+      return next(err);
     }
     if (user == null) {
       var err = new Error('User not found');
@@ -150,25 +150,25 @@ router.patch("/api/users/:id", function (req, res, next) {
       try {
         user.collections.push(collectionID);
       } catch (err) {
-        if (err instanceof mongoose.CastError){
+        if (err instanceof mongoose.CastError) {
           err.status = 422;
           err.message = 'ValidationError. Incorrect data input.';
           return next(err);
-        } 
+        }
       }
     }
-    user.save(async function(err, user) {
+    user.save(async function (err, user) {
       if (err) {
-        if ( err.name == 'ValidationError') {
-            err.message = 'ValidationError. Incorrect data input.';
-            err.status = 422;
+        if (err.name == 'ValidationError') {
+          err.message = 'ValidationError. Incorrect data input.';
+          err.status = 422;
         } else if (err.code === 11000) {
           err.status = 409;
           err.message = 'Username already exists!'
         }
-        return next(err); 
+        return next(err);
       }
-      if ( (collectionID != null) ) {
+      if ((collectionID != null)) {
         var error = null;
         await Collection.findById(collectionID, async function (err, collection) {
           if (collection == null) {
@@ -221,7 +221,7 @@ router.delete("/api/users", async function (req, res, next) {
     if (deleteInformation.n == 0) {
       var err = new Error('No users were found');
       err.status = 404;
-      return next(err); 
+      return next(err);
     }
     try {
       await imgDelete.deleteAllImages('./icons/')

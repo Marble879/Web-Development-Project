@@ -133,7 +133,6 @@ export default {
             this.posts.push(response.data)
           })
           .catch(error => {
-            alert(error.response.data.message)
             this.posts = []
             console.log(error)
           })

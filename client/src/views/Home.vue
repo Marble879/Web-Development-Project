@@ -32,7 +32,7 @@
           class="btn-style mb-4 ml-3"
           id="painting"
           title="Filter by paintings"
-          v-on:click=";(selectedTag = 'drawings/paintings'), sortByTag()"
+          v-on:click=";(selectedTag = 'paintings'), sortByTag()"
           >Painting</b-button
         >
         <b-button
