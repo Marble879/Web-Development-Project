@@ -11,6 +11,11 @@ var collectionController = require('./controllers/collections');
 var multer = require('multer');
 var userAuthentication = require('./controllers/userAuth');
 
+
+app.use('/uploads', express.static('uploads')); // makes uploads folder public
+app.use('/icons', express.static('icons'));
+app.use('/thumbnails', express.static('thumbnails'));
+
 // Variables
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/animalDevelopmentDB';
 var port = process.env.PORT || 3000;
@@ -42,9 +47,6 @@ app.get('/api', function (req, res) {
     res.json({ 'message': 'Welcome to your DIT341 backend ExpressJS project!' });
 });
 
-app.use('/uploads', express.static('uploads')); // makes uploads folder public
-app.use('/icons', express.static('icons'));
-app.use('/thumbnails', express.static('thumbnails'));
 app.use(postController);
 app.use(ratingController);
 app.use(userController);
