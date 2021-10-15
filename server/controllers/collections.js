@@ -20,7 +20,7 @@ router.post('/api/users/:userID/collections', imgUpload.none(), function (req, r
             return next(err);
         }
         if (user == null) {
-            var err = new Error('No User with id: ' + userID + ' found');
+            var err = new Error('No User found');
             err.status = 404;
             return next(err);
         }
@@ -55,7 +55,7 @@ router.get("/api/users/:userID/collections", function (req, res, next) {
             return next(err);
         }
         if (user == null) {
-            var err = new Error('No User with id: ' + userID + ' found');
+            var err = new Error('No User found');
             err.status = 404;
             return next(err);
         }
@@ -82,7 +82,7 @@ router.get("/api/users/:userID/collections/:collectionID", function (req, res, n
                 return next(err);
             }
             if (user == null) {
-                var err = new Error('No User with id: ' + userID + ' found');
+                var err = new Error('No User found');
                 err.status = 404;
                 return next(err);
             }
@@ -102,7 +102,7 @@ router.put("/api/collections/:id", imgUpload.single('thumbnail'), function (req,
             return next(err);
         }
         if (collection == null) {
-            var err = new Error('No collection with id: ' + id + ' found');
+            var err = new Error('No collection found');
             err.status = 404;
             return next(err);
         }
@@ -142,7 +142,7 @@ router.patch("/api/collections/:id", function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            var err = new Error('No collection with id: ' + id + ' found');
+            var err = new Error('No collection found');
             err.status = 404;
             return next(err);
         }
@@ -176,7 +176,7 @@ router.delete("/api/collections/:id", async function (req, res, next) {
             return next(err);
         }
         if (collection == null) {
-            var err = new Error('No collection with id: ' + id + ' found');
+            var err = new Error('No collection found');
             err.status = 404;
             return next(err);
         }
