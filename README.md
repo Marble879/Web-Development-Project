@@ -84,3 +84,5 @@ With this website, the focus orients around displaying images/artwork in a curat
 ## Teaser (MS3)
 
 ![Teaser](./images/teaser.png)
+### Teaser video
+[![Teaser video](https://img.youtube.com/vi/EP0KQcu8TLc/0.jpg)](https://youtu.be/EP0KQcu8TLc)
